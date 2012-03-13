@@ -1,0 +1,23 @@
+<Trace>
+
+<Event>
+	<a>
+	1
+	</a>
+	<b>1</b>
+</Event>
+
+<Event>
+	<a>2</a>
+	<b>3</b>
+</Event>
+
+<Event>
+	<c>
+	 <d>1</d>
+	 <e>1</e>
+	 <f>1</f>
+    </c>
+</Event>
+
+</Trace>
