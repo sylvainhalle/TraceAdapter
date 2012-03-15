@@ -43,7 +43,7 @@ public class CsvTraceReader extends TraceReader
   /**
    * The field separator used in the file
    */
-  protected String m_separator = ",";
+  protected String m_separator = ";";
   
   /**
    * Whether the first line in the file contains the name for each
