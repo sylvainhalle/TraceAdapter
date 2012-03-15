@@ -18,6 +18,11 @@
  ******************************************************************************/
 package ca.uqac.info.trace;
 import java.util.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.*;
 
 import ca.uqac.info.util.Relation;
@@ -32,7 +37,13 @@ import ca.uqac.info.util.Relation;
  */
 public class EventTrace extends Vector<Event>
 {
-  protected String m_eventTagName = "";
+  protected String m_eventTagName = "Event";
+  
+  /**
+   * An internal instance of DOM Document used to create
+   * event nodes
+   */
+  protected Document m_domDocument = null;
   
   /**
    * Auto-generated UID
@@ -45,12 +56,20 @@ public class EventTrace extends Vector<Event>
   public EventTrace()
   {
     super();
+    try
+    {
+      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      m_domDocument = builder.newDocument();
+    }
+    catch (ParserConfigurationException e)
+    {
+      e.printStackTrace(System.err);
+    }
   }
   
   /**
    * Creates an empty trace and defines the element name
-   * used to delimitate events. There is no default value
-   * to this field if not specified otherwise.
+   * used to delimitate events.
    * @param eventTagName The event tag name
    */
   public EventTrace(String eventTagName)
@@ -79,6 +98,28 @@ public class EventTrace extends Vector<Event>
       Event e = new Event(n);
       add(e);
     }    
+  }
+  
+  /**
+   * Creates a DOM node that can be used to populate an new event's
+   * data
+   * @return The DOM Node
+   */
+  public Node getNode()
+  {
+    return createElement(m_eventTagName);
+  }
+  
+  public Node createElement(String name)
+  {
+    assert m_domDocument != null;
+    return m_domDocument.createElement(name);
+  }
+  
+  public Node createTextNode(String contents)
+  {
+    assert m_domDocument != null;
+    return m_domDocument.createTextNode(contents);
   }
   
   /**
