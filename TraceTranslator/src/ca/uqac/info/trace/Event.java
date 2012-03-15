@@ -28,6 +28,19 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 import ca.uqac.info.util.Relation;
 
+/**
+ * An event is a data structure representing the occurrence of some
+ * action, command, message or request in a system under observation.
+ * Formally, it is represented as a <em>nested</em> set of parameter-value
+ * pairs.
+ * <p>
+ * A natural data format compatible with this definition is XML. As a
+ * matter of fact, internally an event simply contains a DOM
+ * {@link org.w3c.xml.Node}, and serves as an interface between that node's
+ * content and the outside world.
+ * @author sylvain
+ *
+ */
 public class Event
 {
   protected Node m_contents = null;
@@ -131,11 +144,40 @@ public class Event
     return getNesting() <= 3;
   }
   
+  /**
+   * Determines if an event is multi-valued. This is the case exactly
+   * when there exists more than one instance of some parameter
+   * carrying a different value. For example:
+   * <pre>
+   * &lt;Event&gt;
+   *   &lt;a&gt;123&lt;/a&gt;
+   *   &lt;a&gt;456&lt;/a&gt;
+   *   &lt;b&gt;345&lt;/b&gt;
+   * &lt;/Event&gt;
+   * </pre>
+   * is multi-valued while 
+   * <pre>
+   * &lt;Event&gt;
+   *   &lt;a&gt;123&lt;/a&gt;
+   *   &lt;b&gt;
+   *     &lt;c&gt;222&lt;/c&gt;
+   *   &lt;/b&gt;
+   * &lt;/Event&gt;
+   * </pre>
+   * is not.
+   * @return True if event is multi-valued, false otherwise
+   */
   public boolean isMultiValued()
   {
     return isMultiValued(m_contents, new HashSet<String>());
   }
   
+  /**
+   * Recursive body for {@link isMultiValued}.
+   * @param n The current node to examine
+   * @param names The accumulated set of parameter names observed
+   * @return True if event is multi-valued, false otherwise
+   */
   private boolean isMultiValued(Node n, Set<String> names)
   {
     NodeList children = n.getChildNodes();
@@ -209,6 +251,9 @@ public class Event
     
   }
   
+  /**
+   * Outputs the event as an XML string.
+   */
   @Override
   public String toString()
   {

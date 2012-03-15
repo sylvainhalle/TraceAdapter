@@ -1,6 +1,21 @@
-/**
- * 
- */
+/******************************************************************************
+  Event trace translator
+  Copyright (C) 2012 Sylvain Halle
+  
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation; either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU Lesser General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ ******************************************************************************/
 package ca.uqac.info.trace;
 import java.util.*;
 import org.w3c.dom.*;
@@ -8,8 +23,12 @@ import org.w3c.dom.*;
 import ca.uqac.info.util.Relation;
 
 /**
+ * An event trace is a sequence of {@link Event}s that defines a
+ * precise ordering for each event. In our particular case, the
+ * trace is a simple extension of a {@link java.util.Vector},
+ * providing additional methods to query properties of the
+ * events it contains.
  * @author sylvain
- *
  */
 public class EventTrace extends Vector<Event>
 {
@@ -20,19 +39,38 @@ public class EventTrace extends Vector<Event>
    */
   private static final long serialVersionUID = 1L;
   
+  /**
+   * Creates an empty trace
+   */
   public EventTrace()
   {
     super();
   }
   
+  /**
+   * Creates an empty trace and defines the element name
+   * used to delimitate events. There is no default value
+   * to this field if not specified otherwise.
+   * @param eventTagName The event tag name
+   */
   public EventTrace(String eventTagName)
   {
     super();
+    assert eventTagName != null;
     m_eventTagName = eventTagName;
   }
   
+  /**
+   * Parses an event trace from an instance of DOM
+   * {@link org.w3c.dom.Document}. This method is given package
+   * visibility only; one is not expected to create a trace from a
+   * document from elsewhere and use a {@link TraceReader} to
+   * create the desired trace. 
+   * @param doc The document to parse
+   */
   /*package*/ void parse(Document doc)
   {
+    assert doc != null;
     NodeList list = doc.getElementsByTagName(m_eventTagName);
     final int list_length = list.getLength();
     for (int i = 0; i < list_length; i++)
@@ -43,14 +81,23 @@ public class EventTrace extends Vector<Event>
     }    
   }
   
+  /**
+   * Sets the event tag name used to delimit events in the
+   * trace. This is necessary since the parsing of an event trace
+   * is made through scanning of a DOM {@link org.w3c.xml.Document};
+   * hence one needs to know which element name defines an event
+   * @param n The tag name
+   */
   /*package*/ void setEventTagName(String n)
   {
+    assert n != null;
     m_eventTagName = n;
   }
   
   /**
    * Returns the maximal arity of a message in the
    * trace
+   * @see {@link Event.getArity}
    * @return
    */
   public int getMaxArity()
@@ -68,7 +115,7 @@ public class EventTrace extends Vector<Event>
   /**
    * Returns the set of possible values for each parameter
    * found in the trace
-   * @return A map <i>P</i> &rarr; 2<sup>V</sup> from the set
+   * @return A map <i>P</i> &rarr; 2<sup><i>V</i></sup> from the set
    * of parameter names <i>P</i> to a subset of values <i>V</i>
    */
   public Relation<String,String> getParameterDomain()
