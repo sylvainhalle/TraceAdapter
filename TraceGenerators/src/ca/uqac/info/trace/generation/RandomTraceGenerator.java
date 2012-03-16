@@ -53,12 +53,7 @@ public class RandomTraceGenerator extends TraceGenerator
    * The random number generator
    */
   protected Random m_random;
-  
-  /**
-   * Tag name used to delimitate events
-   */
-  protected final String m_eventTagName = "Event"; 
-  
+    
   /**
    * Intervals for all the aforementioned parameters
    */
