@@ -188,6 +188,8 @@ public class AmazonEcsGenerator extends TraceGenerator
 			chosen_cart.put(it, qty);
 			items_to_add.add(it);
 		}
+		// Add cart to list of carts
+		carts.add(chosen_cart);
 		{ // Create the cart create request
 			Node n = trace.getNode();
 			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
@@ -256,7 +258,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 		}
 		{ // Create the cart add response message
 			Node n = trace.getNode();
-			n.appendChild(trace.createElement("SessionKey").appendChild(trace.createTextNode("0")));
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
 			n.appendChild(createKeyValue(trace, "Action", "CartAddResponse"));
 			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
 			n.appendChild(chosen_cart.toNode(trace));
@@ -290,8 +292,6 @@ public class AmazonEcsGenerator extends TraceGenerator
 				RandomPicker<Item> item_picker = new RandomPicker<Item>(m_random);
 				Item cart_i = item_picker.pick(items);
 				n_items.appendChild(cart_i.toNode(trace));
-				Node n_item =  trace.createElement("Item");
-				n_items.appendChild(n_item);
 			}
 			n.appendChild(n_items);
 			trace.add(new Event(n));
@@ -408,11 +408,11 @@ public class AmazonEcsGenerator extends TraceGenerator
 			Node n = trace.getNode(); 
 			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
 			n.appendChild(createKeyValue(trace, "Action", "CartEdit"));
-			n.appendChild(trace.createElement("CartId").appendChild(trace.createTextNode(new Integer(chosen_cart.getId()).toString())));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
 			Node n_items = trace.createElement("Items");
 			Node n_item = trace.createElement("Item");
-			n_item.appendChild(trace.createElement("ItemId").appendChild(trace.createTextNode(new Integer(chosen_item.getId()).toString())));
-			n_item.appendChild(trace.createElement("Quantity").appendChild(trace.createTextNode(new Integer(new_qty).toString())));
+			n_item.appendChild(createKeyValue(trace, "ItemId", chosen_item.getId()));
+			n_item.appendChild(createKeyValue(trace, "Quantity", new_qty));
 			n_items.appendChild(n_item);
 			n.appendChild(n_items);
 			trace.add(new Event(n));
@@ -423,7 +423,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 			Node n = trace.getNode();
 			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
 			n.appendChild(createKeyValue(trace, "Action", "CartEditResponse"));
-			n.appendChild(trace.createElement("CartId").appendChild(trace.createTextNode(new Integer(chosen_cart.getId()).toString())));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
 			n.appendChild(chosen_cart.toNode(trace));
 			trace.add(new Event(n));
 		}
