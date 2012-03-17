@@ -22,7 +22,10 @@ import java.util.*;
 
 import org.apache.commons.cli.*;
 
-import ca.uqac.info.trace.EventTrace;
+import ca.uqac.info.trace.*;
+import ca.uqac.info.util.RandomPicker;
+
+import org.w3c.dom.*;
 
 /**
  * Generate a random trace of Amazon ECS shopping cart requests and responses.
@@ -57,11 +60,32 @@ public class AmazonEcsGenerator extends TraceGenerator
 	protected int m_maxCartSize = 10;
 	protected int m_catalogSize = 10;
 	protected int m_maxCarts = 1;
+	protected int m_itemsPerOperation = 1;
+	
+	/**
+	 * Maximum price for items (we don't really care
+	 * about that)
+	 */
+	protected static final int MAX_PRICE = 40;
+	
+	/**
+	 * Maximum quantity for items (we don't really care
+	 * about that)
+	 */
+	protected static final int MAX_QTY = 10;
 
 	/**
 	 * Whether to use the system clock as the seed
 	 */
 	protected boolean m_clockAsSeed = false;
+	
+	/**
+	 * Actions one can take on the cart
+	 * @author sylvain
+	 *
+	 */
+	protected enum Action {ITEM_SEARCH, CART_CREATE, CART_CLEAR,
+		CART_ADD, CART_REMOVE, CART_EDIT};
 
 	/**
 	 * Creates a trace generator with default settings
@@ -91,19 +115,318 @@ public class AmazonEcsGenerator extends TraceGenerator
 			setSeed(System.currentTimeMillis());
 		EventTrace trace = new EventTrace();
 		Vector<Cart> carts = new Vector<Cart>();
+		// Create random pool of items
+		Vector<Item> items = new Vector<Item>();
+		for (int i = 0; i < m_catalogSize; i++)
+			items.add(new Item(i, m_random.nextInt(MAX_PRICE)));
     // We choose the number of messages to produce
-    int n_messages = m_random.nextInt(m_maxMessages - m_minMessages) + m_minMessages;
-    for (int i = 0; i < n_messages; i++)
+    int n_messages = m_random.nextInt(m_maxMessages + 1 - m_minMessages) + m_minMessages;
+    for (int i = 0; i < n_messages; i+= 2)
     {
-    	Vector<String> available_operations = new Vector<String>();
+    	Vector<Action> available_operations = new Vector<Action>();
     	// Step 1: determine which operations are available
-    	available_operations.add("create_item_search");
+    	available_operations.add(Action.ITEM_SEARCH);
     	if (carts.size() < m_maxCarts)
+    		available_operations.add(Action.CART_CREATE);
+    	if (carts.size() > 0)
+    		available_operations.add(Action.CART_CLEAR);
+    	for (Cart c : carts)
     	{
-    		available_operations.add("create_cart_create");
+    		if (c.size() < m_maxCartSize)
+    			available_operations.add(Action.CART_ADD);
+    		if (c.size() > 0)
+    		{
+    			available_operations.add(Action.CART_REMOVE);
+    			available_operations.add(Action.CART_EDIT);
+    		}
+    	}
+    	// Step 2: pick an operation
+    	RandomPicker<Action> action_picker = new RandomPicker<Action>(m_random);
+    	Action operation = action_picker.pick(available_operations);
+    	// Step 3: create request and response
+    	switch (operation)
+    	{
+    	case ITEM_SEARCH:
+    		createItemSearch(trace, carts, items);
+    		break;
+    	case CART_CREATE:
+    		createCartCreate(trace, carts, items);
+    		break;
+    	case CART_ADD:
+    		createCartAdd(trace, carts, items);
+    		break;
+    	case CART_CLEAR:
+    		createCartClear(trace, carts, items);
+    		break;
+    	case CART_REMOVE:
+    		createCartRemove(trace, carts, items);
+    		break;
+    	case CART_EDIT:
+    		createCartEdit(trace, carts, items);
+    		break;
     	}
     }
 		return trace;
+	}
+	
+	/**
+	 * Creates a Cart create request-response pair.
+	 * @param trace The trace to which the events will be added
+	 * @param carts The current set of shopping carts
+	 * @param items The current set of catalog items
+	 */
+	private void createCartCreate(EventTrace trace, Vector<Cart> carts, Vector<Item> items)
+	{
+		Cart chosen_cart = new Cart();
+		Vector<Item> items_to_add = new Vector<Item>();
+		// Pick items to add to the cart
+		RandomPicker<Item> item_picker = new RandomPicker<Item>(m_random);
+		for (int i = 0; i < m_itemsPerOperation; i++)
+		{
+			int qty = 1;
+			Item it = item_picker.pick(items);
+			chosen_cart.put(it, qty);
+			items_to_add.add(it);
+		}
+		{ // Create the cart create request
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartCreate"));
+			Node n_items = trace.createElement("Items");
+			for (Item it : items_to_add)
+			{
+				n_items.appendChild(it.toNode(trace));
+			}
+			n.appendChild(n_items);
+			trace.add(new Event(n));
+		}
+		{ // Create the cart create response message
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartCreateResponse"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
+			n.appendChild(chosen_cart.toNode(trace));
+			trace.add(new Event(n));
+		}
+	}
+	
+	/**
+	 * Creates a Cart add request-response pair.
+	 * @param trace The trace to which the events will be added
+	 * @param carts The current set of shopping carts
+	 * @param items The current set of catalog items
+	 */
+	private void createCartAdd(EventTrace trace, Vector<Cart> carts, Vector<Item> items)
+	{
+		// Pick a cart to add to
+		Vector<Cart> eligible_carts = new Vector<Cart>(carts);
+		for (Cart c : carts)
+			if (c.size() < m_maxCartSize)
+				eligible_carts.add(c);
+		RandomPicker<Cart> cart_picker = new RandomPicker<Cart>(m_random);
+		Cart chosen_cart = cart_picker.pick(eligible_carts);
+		// From that cart, pick an item to add
+		Vector<Item> eligible_items = new Vector<Item>();
+		for (Item it : items)
+			if (!chosen_cart.containsKey(it))
+				eligible_items.add(it);
+		RandomPicker<Item> item_picker = new RandomPicker<Item>(m_random);
+		Vector<Item> items_to_add = new Vector<Item>();
+		for (int i = 0; i < m_itemsPerOperation; i++)
+		{
+			int qty = 1;
+			Item it = item_picker.pick(eligible_items);
+			chosen_cart.put(it, qty);
+			items_to_add.add(it);
+		}
+		{ // Create the cart add request
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartAdd"));
+			Node n_items = trace.createElement("Items");
+			for (Item it : items_to_add)
+			{
+				Node n_item = trace.createElement("Item");
+				n_item.appendChild(createKeyValue(trace, "ItemId", it.getId()));
+				n_item.appendChild(createKeyValue(trace, "Quantity", 1));
+				n_items.appendChild(n_item);
+			}
+			n.appendChild(n_items);
+			trace.add(new Event(n));
+		}
+		{ // Create the cart add response message
+			Node n = trace.getNode();
+			n.appendChild(trace.createElement("SessionKey").appendChild(trace.createTextNode("0")));
+			n.appendChild(createKeyValue(trace, "Action", "CartAddResponse"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
+			n.appendChild(chosen_cart.toNode(trace));
+			trace.add(new Event(n));
+		}
+	}
+	
+	/**
+	 * Creates an Item Search request-response pair.
+	 * @param trace The trace to which the events will be added
+	 * @param carts The current set of shopping carts
+	 * @param items The current set of catalog items
+	 */
+	private void createItemSearch(EventTrace trace, Vector<Cart> carts, Vector<Item> items)
+	{
+		{ // Create the search request
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "ItemSearch"));
+			n.appendChild(createKeyValue(trace, "Keyword", "dummy"));
+			trace.add(new Event(n));
+		}
+		{ // Create the search response
+			int num_items = m_random.nextInt(m_maxCartSize);
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "ItemSearchResponse"));
+			Node n_items = trace.createElement("Items");
+			for (int i = 0; i < num_items; i++)
+			{
+				RandomPicker<Item> item_picker = new RandomPicker<Item>(m_random);
+				Item cart_i = item_picker.pick(items);
+				n_items.appendChild(cart_i.toNode(trace));
+				Node n_item =  trace.createElement("Item");
+				n_items.appendChild(n_item);
+			}
+			n.appendChild(n_items);
+			trace.add(new Event(n));
+		}
+	}
+	
+	/**
+	 * Creates an cart clear request-response pair.
+	 * @param trace The trace to which the events will be added
+	 * @param carts The current set of shopping carts
+	 * @param items The current set of catalog items
+	 */
+	private void createCartClear(EventTrace trace, Vector<Cart> carts, Vector<Item> items)
+	{
+		// Pick a cart to clear
+		Vector<Cart> eligible_carts = new Vector<Cart>(carts);
+		RandomPicker<Cart> cart_picker = new RandomPicker<Cart>(m_random);
+		Cart chosen_cart = cart_picker.pick(eligible_carts);
+		{ // Create the cart clear message
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartClear"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
+			trace.add(new Event(n));
+		}
+		{ // Create the cart clear response message
+			Node n = trace.getNode();
+			n.appendChild(trace.createElement("SessionKey").appendChild(trace.createTextNode("0")));
+			n.appendChild(createKeyValue(trace, "Action", "CartClearResponse"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
+			trace.add(new Event(n));
+		}
+	}
+	
+	/**
+	 * Creates an cart remove request-response pair.
+	 * @param trace The trace to which the events will be added
+	 * @param carts The current set of shopping carts
+	 * @param items The current set of catalog items
+	 */
+	private void createCartRemove(EventTrace trace, Vector<Cart> carts, Vector<Item> items)
+	{
+		// Pick a cart to remove from
+		Vector<Cart> eligible_carts = new Vector<Cart>();
+		for (Cart c : carts)
+			if (c.size() > 0)
+				eligible_carts.add(c);
+		RandomPicker<Cart> cart_picker = new RandomPicker<Cart>(m_random);
+		Cart chosen_cart = cart_picker.pick(eligible_carts);
+		// From that cart, pick an item to remove
+		RandomPicker<Item> item_picker = new RandomPicker<Item>(m_random);
+		Item chosen_item = item_picker.pick(items);
+		{ // Create the cart remove message
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartRemove"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
+			Node n_items = trace.createElement("Items");
+			Node n_item = trace.createElement("Item");
+			n_item.appendChild(createKeyValue(trace, "ItemId", chosen_item.getId()));
+			n_items.appendChild(n_item);
+			n.appendChild(n_items);
+			trace.add(new Event(n));
+		}
+		// Remove item from cart
+		chosen_cart.remove(chosen_item);
+		{ // Create the cart remove response message
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartRemoveResponse"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
+			n.appendChild(chosen_cart.toNode(trace));
+			trace.add(new Event(n));
+		}
+	}
+	
+	private static Node createKeyValue(EventTrace trace, String key, String value)
+	{
+		Node n = trace.createElement(key);
+		Node v = trace.createTextNode(value);
+		n.appendChild(v);
+		return n;
+	}
+	
+	private static Node createKeyValue(EventTrace trace, String key, Integer value)
+	{
+		return createKeyValue(trace, key, value.toString());
+	}
+	
+	private static Node createKeyValue(EventTrace trace, String key, int value)
+	{
+		return createKeyValue(trace, key, new Integer(value));
+	}
+	
+	/**
+	 * Creates an cart edit request-response pair.
+	 * @param trace The trace to which the events will be added
+	 * @param carts The current set of shopping carts
+	 * @param items The current set of catalog items
+	 */
+	private void createCartEdit(EventTrace trace, Vector<Cart> carts, Vector<Item> items)
+	{
+		// Pick a cart to edit
+		Vector<Cart> eligible_carts = new Vector<Cart>();
+		for (Cart c : carts)
+			if (c.size() > 0)
+				eligible_carts.add(c);
+		RandomPicker<Cart> cart_picker = new RandomPicker<Cart>(m_random);
+		Cart chosen_cart = cart_picker.pick(eligible_carts);
+		// From that cart, pick an item to edit
+		Item chosen_item = chosen_cart.pickItem();
+		Integer new_qty = new Integer(m_random.nextInt(MAX_QTY));
+		{ // Create the cart edit message
+			Node n = trace.getNode(); 
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartEdit"));
+			n.appendChild(trace.createElement("CartId").appendChild(trace.createTextNode(new Integer(chosen_cart.getId()).toString())));
+			Node n_items = trace.createElement("Items");
+			Node n_item = trace.createElement("Item");
+			n_item.appendChild(trace.createElement("ItemId").appendChild(trace.createTextNode(new Integer(chosen_item.getId()).toString())));
+			n_item.appendChild(trace.createElement("Quantity").appendChild(trace.createTextNode(new Integer(new_qty).toString())));
+			n_items.appendChild(n_item);
+			n.appendChild(n_items);
+			trace.add(new Event(n));
+		}
+		// Edit item in cart
+		chosen_cart.put(chosen_item, new_qty);
+		{ // Create the cart edit response message
+			Node n = trace.getNode();
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
+			n.appendChild(createKeyValue(trace, "Action", "CartEditResponse"));
+			n.appendChild(trace.createElement("CartId").appendChild(trace.createTextNode(new Integer(chosen_cart.getId()).toString())));
+			n.appendChild(chosen_cart.toNode(trace));
+			trace.add(new Event(n));
+		}
 	}
 
 	@Override
@@ -127,9 +450,9 @@ public class AmazonEcsGenerator extends TraceGenerator
 		options.addOption(opt);
 		opt = OptionBuilder.withArgName("x").hasArg().withDescription("Set each cart's maximum size to x (default: 10)").create("k");
 		options.addOption(opt);
-    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Maximum number of messages to produce").create("N");
+    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Maximum number of messages to produce (default: 10)").create("N");
     options.addOption(opt);
-    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Minimum number of messages to produce").create("n");
+    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Minimum number of messages to produce (default: 1)").create("n");
     options.addOption(opt);
 		return options;
 	}
@@ -171,6 +494,11 @@ public class AmazonEcsGenerator extends TraceGenerator
 	 */
 	private class Cart extends HashMap<Item,Integer>
 	{
+		/**
+     * Mandatory UID (we don't care)
+     */
+    private static final long serialVersionUID = 1L;
+
 		private int m_id = 0;
 		
 		private Random m_randomGen;
@@ -188,7 +516,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 		 * classe (AmazonEcsGenerator).
 		 * @return
 		 */
-		public Item pick()
+		public Item pickItem()
 		{
 			assert size() > 0;
 			Vector<Item> items = new Vector<Item>();
@@ -221,6 +549,20 @@ public class AmazonEcsGenerator extends TraceGenerator
 			if (c == null)
 				return false;
 			return m_id == c.m_id;
+		}
+		
+		public Node toNode(EventTrace t)
+		{
+			Node root = t.createElement("Items");
+			for (Map.Entry<Item,Integer> en : super.entrySet())
+			{
+				Item i = en.getKey();
+				Integer qty = en.getValue();
+				Node n_item = i.toNode(t);
+				n_item.appendChild(createKeyValue(t, "Quantity", qty));
+				root.appendChild(n_item);
+			}
+			return root;
 		}
 	}
 	
@@ -270,6 +612,14 @@ public class AmazonEcsGenerator extends TraceGenerator
 			if (c == null)
 				return false;
 			return m_id == c.m_id;
+		}
+		
+		public Node toNode(EventTrace t)
+		{
+			Node n_item = t.createElement("Item");
+			n_item.appendChild(createKeyValue(t, "ItemId", getId()));
+			n_item.appendChild(createKeyValue(t, "Price", getPrice()));
+			return n_item;
 		}
 	}
 
