@@ -14,7 +14,7 @@ public class RandomPicker<T>
 	}
 	
 	/**
-	 * Randomly picks an element from the vector
+	 * Randomly picks an element from a vector
 	 * @param v Input vector
 	 * @return Chosen element
 	 */
@@ -24,5 +24,16 @@ public class RandomPicker<T>
 		int index = m_random.nextInt(v.size());
 		assert index >= 0 && index < v.size();
 		return v.elementAt(index);
+	}
+	
+	/**
+	 * Randomly picks an element from a set
+	 * @param v Input set
+	 * @return Chosen element
+	 */
+	public T pick(Set<T> s)
+	{
+		Vector<T> out = new Vector<T>(s);
+		return pick(out);
 	}
 }
