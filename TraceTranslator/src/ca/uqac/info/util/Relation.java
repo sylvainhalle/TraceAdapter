@@ -53,6 +53,44 @@ public class Relation<K,V> extends HashMap<K,Set<V>>
     v.add(value);
     put(key, v);
   }
+  
+  /**
+   * Adds a new value to the existing values associated to
+   * some key. That is, while {@link put()} overwrites, <tt>add()</tt>
+   * appends.
+   * @param key
+   * @param value
+   */
+  public void add(K key, V value)
+  {
+  	if (!containsKey(key))
+  		put(key, value);
+  	else
+  	{
+  		Set<V> vals = get(key);
+  		vals.add(value);
+  		put(key, vals);
+  	}
+  }
+  
+  /**
+   * Adds a set of new values to the existing values associated to
+   * some key. That is, while {@link put()} overwrites, <tt>add()</tt>
+   * appends.
+   * @param key
+   * @param value
+   */
+  public void add(K key, Set<V> values)
+  {
+  	if (!containsKey(key))
+  		put(key, values);
+  	else
+  	{
+  		Set<V> vals = get(key);
+  		vals.addAll(values);
+  		put(key, vals);
+  	}
+  }
 
   /**
    * Adds keys and values from a map to another
