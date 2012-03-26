@@ -99,7 +99,7 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 
         lblTitre2.setText("2.  Select output format");
 
-        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY","XES"}));
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY","XES","MOP","JSON"}));
         comboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxActionPerformed(evt);
@@ -474,6 +474,13 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
       else if(output_format.compareToIgnoreCase("xes")== 0)
       {
           trans = new XesTranslator();
+      }if(output_format.compareToIgnoreCase("mop")== 0)
+      {
+          trans = new JavaMopTranslator();
+      }
+      else if(output_format.compareToIgnoreCase("json")== 0)
+      {
+          trans = new JsonTranslator();
       }
       return trans;
     }
