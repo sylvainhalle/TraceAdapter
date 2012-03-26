@@ -255,6 +255,10 @@ public class TraceConverter
     {
         trans = new XmlTranslator();
     }
+    else if (output_format.compareToIgnoreCase("promela") == 0)
+    {
+        trans = new PromelaTramslator();
+    }
     return trans;
   }
   
@@ -279,6 +283,7 @@ public class TraceConverter
     {
         tf = new CsvTraceReader();
     }
+    
     return tf;
   }
 

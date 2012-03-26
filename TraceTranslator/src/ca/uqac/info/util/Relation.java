@@ -47,7 +47,7 @@ public class Relation<K,V> extends HashMap<K,Set<V>>
    * @param key
    * @param value
    */
-  public void putRelation(K key, V value)
+  public void put(K key, V value)
   {
     Set<V> v = new HashSet<V>();
     v.add(value);
