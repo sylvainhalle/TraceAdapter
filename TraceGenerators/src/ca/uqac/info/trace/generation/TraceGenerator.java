@@ -57,6 +57,12 @@ public abstract class TraceGenerator
 	 * Whether to use the system clock as the seed
 	 */
 	protected boolean m_clockAsSeed = false;
+	
+	/**
+	 * Generator's level of verbosity; defaults to 0 (that is,
+	 * don't display any message apart from the output trace)
+	 */
+	protected int m_verboseLevel = 0;
 
 	/**
 	 * Generate an event trace. There are no basic assumptions on that
@@ -80,9 +86,19 @@ public abstract class TraceGenerator
 		if (c_line.hasOption("s"))
 			setSeed(new Integer(c_line.getOptionValue("s")).intValue());
 		if (c_line.hasOption("n"))
+		{
 			m_minMessages = new Integer(c_line.getOptionValue("n")).intValue();
+			if (m_minMessages > m_maxMessages)
+				m_maxMessages = m_minMessages + 1;
+		}
 		if (c_line.hasOption("N"))
+		{
 			m_maxMessages = new Integer(c_line.getOptionValue("N")).intValue();
+			if (m_maxMessages < m_minMessages)
+				m_minMessages = Math.max(0, m_maxMessages - 1);
+		}
+		if (c_line.hasOption("verbose"))
+			m_verboseLevel = Integer.parseInt(c_line.getOptionValue("verbose"));
 	}
 
 
@@ -126,6 +142,8 @@ public abstract class TraceGenerator
     options.addOption(opt);
     opt = OptionBuilder.withArgName("x").hasArg().withDescription("Minimum number of messages to produce (default: 1)").create("n");
     options.addOption(opt);
+    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Set verbosity level to x (default: 0 = no messages)").withLongOpt("verbose").create();
+    options.addOption(opt);
     return options;
 	}
 
@@ -138,7 +156,7 @@ public abstract class TraceGenerator
 	{    
 		Options options = t_gen.getCommandLineOptions();
 		options.addOption("h", "help", false, "Show help");
-		CommandLineParser parser = new GnuParser();
+		CommandLineParser parser = new PosixParser();
 		CommandLine c_line = null;
 		try
 		{

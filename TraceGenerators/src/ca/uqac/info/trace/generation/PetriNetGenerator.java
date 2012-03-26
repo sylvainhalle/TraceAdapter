@@ -74,6 +74,8 @@ public class PetriNetGenerator extends TraceGenerator
     int n_messages = super.m_random.nextInt(super.m_maxMessages + 1 - super.m_minMessages) + super.m_minMessages;
     for (int i = 0; i < n_messages; i++)
 		{
+			if (super.m_verboseLevel > 0)
+				System.out.println("Generating message " + i);
   		// Get enabled transitions
 			Vector<Transition> enabled_trans = new Vector<Transition>();
 			for (Transition trans : m_transitions)
@@ -123,7 +125,14 @@ public class PetriNetGenerator extends TraceGenerator
 		if (c_line.hasOption("f"))
 		{
 			String pn_string = c_line.getOptionValue("f");
-			parseFromString(pn_string);
+			try
+			{
+				parseFromString(pn_string);
+			}
+			catch (java.text.ParseException e)
+			{
+				e.printStackTrace(System.err);
+			}
 		}
 	}
 	
@@ -195,7 +204,7 @@ public class PetriNetGenerator extends TraceGenerator
 	 * error of some kind.
 	 * @param s The structured string
 	 */
-	protected void parseFromString(String s)
+	protected void parseFromString(String s) throws java.text.ParseException
 	{
 		String[] elements = s.split("\\s+");
 		int i = 0;
@@ -237,7 +246,9 @@ public class PetriNetGenerator extends TraceGenerator
 				i += 3;
 			}
 			else
-				assert false; // Parse error
+			{
+				throw new java.text.ParseException("Unknown word " + word, i);
+			}
 		}
 	}
 	

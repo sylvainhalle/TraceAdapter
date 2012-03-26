@@ -240,7 +240,7 @@ public class Event
         if (value.isEmpty())
           continue;
         Relation<String,String> r = new Relation<String,String>();
-        r.putRelation(node_name, value);
+        r.put(node_name, value);
         domains.fuseFrom(r);
       }
       else
