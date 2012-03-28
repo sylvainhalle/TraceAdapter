@@ -64,7 +64,7 @@ public class Relation<K,V> extends HashMap<K,Set<V>>
   public void add(K key, V value)
   {
   	if (!containsKey(key))
-  		putRelation(key, value);
+  		put(key, value);
   	else
   	{
   		Set<V> vals = get(key);
