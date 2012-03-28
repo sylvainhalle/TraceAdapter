@@ -9,7 +9,7 @@ import org.w3c.dom.traversal.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
-import org.apache.xpath.*;
+import com.sun.org.apache.xpath.internal.XPathAPI;
 
 public class XpathTraceReader extends TraceReader
 {
@@ -21,6 +21,7 @@ public class XpathTraceReader extends TraceReader
     public EventTrace parseEventTrace(File f)
     {
     	String [] args=null;
+    	Document doc = null ;
     	if (args.length < 2) 
     	{
     	      System.out.println("Usage: ");
@@ -32,7 +33,7 @@ public class XpathTraceReader extends TraceReader
     	    	DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
     	    	DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
     	    	// Parse the XML file and build the Document object in RAM
-    	    	Document doc = docBuilder.parse(new File(args[0]));
+    	    	 doc = docBuilder.parse(new File(args[0]));
     	    	
     	       // Normalize text representation.
     	       // Collapses adjacent text nodes into one node.
@@ -100,7 +101,9 @@ public class XpathTraceReader extends TraceReader
     	      System.out.println(msg);
     	    }
     	
-    	     return eventTrace(doc);
+    	    EventTrace even = new EventTrace() ;
+    	    even.parse(doc);
+    	     return even;
     }
 
   
