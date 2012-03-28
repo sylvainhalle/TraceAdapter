@@ -18,16 +18,37 @@ public class XesTranslator implements Translator {
 	    Set<String> params = domains.keySet();
 	    
 	    out.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>").append(CRLF);
-	    out.append("<Trace>").append(CRLF);
 	    
-	    out.append("<global scope=\"Trace\" >").append(CRLF);
-	    out.append("<string key= org:\"concept:name\"  value =\"_INVALID_ ").append(CRLF);
+	    out.append("<!-- This file has been generated with the OpenXES library. It conforms -->").append(CRLF);
+	    out.append("<!-- to the XML serialization of the XES standard for log storage and -->").append(CRLF);
+	    out.append("<!-- management. -->").append(CRLF);
+	    out.append("<!-- XES standard version: 1.0 -->").append(CRLF);
+	    out.append(" <!-- OpenXES library version: 1.0RC7 -->").append(CRLF);
+	    out.append(" <!-- OpenXES is available from http://www.openxes.org/ -->").append(CRLF);
+	    
+	    out.append("<log xes.version=\"1.0\" xes.features=\"nested-attributes\" openxes.version=\"1.0RC7\" xmlns=\"http://www.xes-standard.org/\">").append(CRLF);
+	    out.append("<extension name=\"Lifecycle\" prefix=\"lifecycle\" uri=\"http://www.xes-standard.org/lifecycle.xesext\"/>").append(CRLF);
+	    out.append("<extension name=\"Organizational\" prefix=\"org\" uri=\"http://www.xes-standard.org/org.xesext\"/>").append(CRLF);
+	    out.append("<extension name=\"Time\" prefix=\"time\" uri=\"http://www.xes-standard.org/time.xesext\"/>").append(CRLF);
+	    out.append("<extension name=\"Concept\" prefix=\"concept\" uri=\"http://www.xes-standard.org/concept.xesext\"/>").append(CRLF);
+	    out.append("<extension name=\"Semantic\" prefix=\"semantic\" uri=\"http://www.xes-standard.org/semantic.xesext\"/>").append(CRLF);
+	   
+	    
+	    out.append("<global scope=\"trace\" >").append(CRLF);
+	    out.append("<string key=\"concept:name\"  value =\"_INVALID_ ").append(CRLF);
 	    out.append("</global>").append(CRLF);
 	    
-	    out.append("<global scope=\"message\" >").append(CRLF);
-	    out.append("<string key= org:\"concept:name\"  value =\"_INVALID_ ").append(CRLF);
+	    out.append("<global scope=\"event\" >").append(CRLF);
+	    out.append("<string key=\"concept:name\"  value =\"_INVALID_ ").append(CRLF);
 	    out.append("<string key=\"lifecycle:transition\"   value= \"complete\" /> ").append(CRLF);
 	    out.append("</global>").append(CRLF);
+	    
+	    out.append("<!-- This file has been generated with the OpenXES library. It conforms -->").append(CRLF);
+	    out.append("<!-- to the XML serialization of the XES standard for log storage and -->").append(CRLF);
+	    out.append("<!-- management. -->").append(CRLF);
+	    out.append("<!-- XES standard version: 1.0 -->").append(CRLF);
+	    out.append(" <!-- OpenXES library version: 1.0RC7 -->").append(CRLF);
+	    out.append(" <!-- OpenXES is available from http://www.openxes.org/ -->").append(CRLF);
 	    
 	    
 	    out.append("<classifier name=\"MXML legacy Classifier\" keys=\"concept:name lifecycle:transition\" >").append(CRLF);
@@ -49,7 +70,8 @@ public class XesTranslator implements Translator {
 		      out.append(CRLF);
 	    }
 	    
-	    out.append("</Trace>");
+	    out.append("</trace>").append(CRLF);
+	    out.append("</log>").append(CRLF);
 	    
 		return out.toString();
 	}
@@ -72,7 +94,7 @@ public class XesTranslator implements Translator {
 	    for (String p : all_params)
 	    {
 	     
-	      out.append("<message>").append(CRLF);
+	      out.append("<event>").append(CRLF);
 	      out.append(resource).append(timeStamp).append(System.currentTimeMillis());
 	      out.append("\"/>").append(CRLF);
 	      String p_name = concept + p+"\" " ;
@@ -95,7 +117,7 @@ public class XesTranslator implements Translator {
 	        }
 	      
 	      out.append(lifeCycle);
-    	  out.append("</message>").append(CRLF).append(CRLF);
+    	  out.append("</event>").append(CRLF).append(CRLF);
 	    }
 	    return out;
 	  }
