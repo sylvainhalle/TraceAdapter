@@ -15,6 +15,12 @@ import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.RandomPicker;
 
+/**
+ * Cette classe permet de générer de trace aléatoire de
+ * LLRP.
+ * @author Samatar
+ *
+ */
 public class LlrpGenerator extends TraceGenerator {
 
 	protected int m_minMessages = 3;
