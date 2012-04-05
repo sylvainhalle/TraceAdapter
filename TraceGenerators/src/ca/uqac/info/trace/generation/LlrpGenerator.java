@@ -3,6 +3,7 @@ package ca.uqac.info.trace.generation;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.cli.CommandLine;
 import org.jdom.output.DOMOutputter;
 import org.llrp.ltk.generated.enumerations.*;
 import org.llrp.ltk.generated.messages.*;
@@ -18,6 +19,13 @@ public class LlrpGenerator extends TraceGenerator {
 
 	protected int m_minMessages = 3;
 	protected int m_maxMessages = 5;
+	
+	/**
+	 * The seed used to initialize the generator
+	 */
+	protected long m_seed = 0;
+
+	
 	/**
 	 * The random number generator
 	 */
@@ -119,6 +127,17 @@ public class LlrpGenerator extends TraceGenerator {
 		return trace;
 	}
 
+	public void initialize(CommandLine c_line) {
+		if (c_line.hasOption("s"))
+			setSeed(new Integer(c_line.getOptionValue("s")).intValue());
+		if (c_line.hasOption("t"))
+			m_clockAsSeed = true;
+		if (c_line.hasOption("n"))
+			m_minMessages = new Integer(c_line.getOptionValue("n")).intValue();
+		if (c_line.hasOption("N"))
+			m_maxMessages = new Integer(c_line.getOptionValue("N")).intValue();
+
+	}
 	/**
 	 * return the sets of operations available for the message status
 	 * 
