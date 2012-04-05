@@ -121,7 +121,17 @@ public class EventTrace extends Vector<Event>
     assert m_domDocument != null;
     return m_domDocument.createTextNode(contents);
   }
-  
+  /**
+   *  Make a copy of the element subtree suitable for inserting into m_domDocument
+   * @param nodeSource
+   * @param b
+   * @return
+   */
+  public Node importNode(Node nodeSource, Boolean b)
+  {
+	  Node dup = m_domDocument.importNode(nodeSource, b);
+	  return dup;
+  }
   /**
    * Sets the event tag name used to delimit events in the
    * trace. This is necessary since the parsing of an event trace
