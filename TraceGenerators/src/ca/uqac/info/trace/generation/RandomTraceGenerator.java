@@ -48,11 +48,6 @@ public class RandomTraceGenerator extends TraceGenerator
    * The seed used to initialize the generator
    */
   protected long m_seed = 0;
-  
-  /**
-   * The random number generator
-   */
-  protected Random m_random;
     
   /**
    * Intervals for all the aforementioned parameters
@@ -68,6 +63,22 @@ public class RandomTraceGenerator extends TraceGenerator
    * Determines whether the events should be multi-valued
    */
   protected boolean m_isMultiValued = false;
+  
+  /**
+   * Whether to remove parameters from events in the case where only
+   * one parameter is required. If this is set to true, a message like
+   * this:
+   * <pre>
+   * &lt;Event&gt;
+   *   &lt;p0&gt;value&lt;/p0&gt;
+   * &lt;/Event&gt;
+   * </pre>
+   * will be rather written as: 
+   * <pre>
+   * &lt;Event&gt;value&lt;/Event&gt;
+   * </pre>
+   */
+  protected boolean m_flatten = false;
   
   /**
    * Main loop for generator
@@ -159,7 +170,7 @@ public class RandomTraceGenerator extends TraceGenerator
   {
     EventTrace trace = new EventTrace();
     // We choose the number of messages to produce
-    int n_messages = m_random.nextInt(m_maxMessages - m_minMessages) + m_minMessages;
+    int n_messages = super.nextInt(m_maxMessages - m_minMessages) + m_minMessages;
     for (int i = 0; i < n_messages; i++)
     {
       Node n = trace.getNode();
@@ -168,20 +179,30 @@ public class RandomTraceGenerator extends TraceGenerator
       for (int j = 0; j < m_numParameters; j++)
         available_params.add("p" + j);
       // We choose the number of param-value pairs to generate
-      int arity = m_random.nextInt(m_maxArity - m_minArity) + m_minArity;
+      int arity = super.nextInt(m_maxArity - m_minArity) + m_minArity;
       for (int j = 0; j < arity; j++)
       {
         // We generate as many param-value pairs as required
-        int index = m_random.nextInt(available_params.size());
-        int value = m_random.nextInt(m_domainSize);
-        Node el = trace.createElement("p" + index);
-        el.appendChild(trace.createTextNode(new Integer(value).toString()));
-        n.appendChild(el);
-        if (!m_isMultiValued)
+        int index = super.nextInt(available_params.size());
+        int value = super.nextInt(m_domainSize);
+        if (m_minArity == 1 && m_maxArity == 1 && m_flatten)
         {
-          // If event should not be multi-valued, then we remove
-          // the chosen parameter from the list of available choices
-          available_params.removeElementAt(index);
+        	// For traces of messages with fixed arity = 1, we
+        	// simply put the value as the text child of the "Event"
+        	// element
+        	n.appendChild(trace.createTextNode(new Integer(value).toString()));
+        }
+        else
+        {
+        	Node el = trace.createElement("p" + index);
+        	el.appendChild(trace.createTextNode(new Integer(value).toString()));
+        	n.appendChild(el);
+        	if (!m_isMultiValued)
+        	{
+        		// If event should not be multi-valued, then we remove
+        		// the chosen parameter from the list of available choices
+        		available_params.removeElementAt(index);
+        	}
         }
       }
       Event e = new Event(n);
