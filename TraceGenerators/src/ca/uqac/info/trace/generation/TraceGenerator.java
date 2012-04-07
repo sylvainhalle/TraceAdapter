@@ -210,4 +210,17 @@ public abstract class TraceGenerator
 		Translator trans = new XmlTranslator();
 		System.out.println(trans.translateTrace(trace));
 	}
+	
+	/**
+	 * Overrides Random's {@link Random.nextInt} to add the corner case where
+	 * the range is 0
+	 * @param val
+	 * @return
+	 */
+	protected int nextInt(int val)
+	{
+		if (val == 0)
+			return 0;
+		return m_random.nextInt(val);
+	}
 }
