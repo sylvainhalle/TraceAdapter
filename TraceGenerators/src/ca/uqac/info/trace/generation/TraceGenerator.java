@@ -131,20 +131,47 @@ public abstract class TraceGenerator
 	 * this generator
 	 */
 	@SuppressWarnings("static-access")
-  public Options getCommandLineOptions()
-	{
+	public Options getCommandLineOptions() {
 		Options options = new Options();
 		Option opt;
-		options.addOption("t", false, "Use system clock as random generator's seed (default: no)");
-		opt = OptionBuilder.withArgName("x").hasArg().withDescription("Set random generator's seed to x (default: 0)").create("s");
+		options.addOption("t", false,
+				"Use system clock as random generator's seed (default: no)");
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Set random generator's seed to x (default: 0)")
+				.create("s");
 		options.addOption(opt);
-    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Maximum number of messages to produce (default: 10)").create("N");
-    options.addOption(opt);
-    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Minimum number of messages to produce (default: 1)").create("n");
-    options.addOption(opt);
-    opt = OptionBuilder.withArgName("x").hasArg().withDescription("Set verbosity level to x (default: 0 = no messages)").withLongOpt("verbose").create();
-    options.addOption(opt);
-    return options;
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Maximum number of messages to produce (default: 10)")
+				.create("N");
+		options.addOption(opt);
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Minimum number of messages to produce (default: 1)")
+				.create("n");
+		options.addOption(opt);
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Maximum number of tags to produce (default: 1)")
+				.create("M");
+		options.addOption(opt);
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Set verbosity level to x (default: 0 = no messages)")
+				.withLongOpt("verbose").create();
+		options.addOption(opt);
+		return options;
 	}
 
 	/**
