@@ -103,7 +103,7 @@ public class CycleGenerator extends TraceGenerator{
 	    	
 	    	if(choiceAdd)
 	    	{
-	    		int nbAdd =m_random.nextInt(10);
+	    		int nbAdd =m_random.nextInt(t_maxTags - 1);
 	    		if(nbAdd > 0)
 	    			vectCurrent = this.addTag(vectCurrent, nbAdd);
 	    	}
