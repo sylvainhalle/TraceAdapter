@@ -17,23 +17,31 @@
  */
 package ca.uqac.info.ltl;
 
-public interface OperatorVisitor
+public class OperatorImplies extends BinaryOperator
 {
-  public void visit(OperatorAnd o);
-  
-  public void visit(OperatorOr o);
-  
-  public void visit(OperatorNot o);
-  
-  public void visit(OperatorF o);
-  
-  public void visit(OperatorX o);
-  
-  public void visit(OperatorG o);
-  
-  public void visit(OperatorEquals o);
-  
-  public void visit(OperatorImplies o);
-  
-  public void visit(Atom o);
+	private static final String SYMBOL = "\u2192"; //"->";
+
+	public OperatorImplies()
+	{
+		super();
+		m_symbol = SYMBOL;
+		m_commutes = true;
+	}
+
+	public OperatorImplies(Operator left, Operator right)
+	{
+		super(left, right);
+		m_symbol = SYMBOL;
+		m_commutes = true;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o == null)
+			return false;
+		if (o.getClass() != this.getClass())
+			return false;
+		return super.equals((BinaryOperator) o);
+	}
 }

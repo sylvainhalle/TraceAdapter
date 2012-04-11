@@ -183,6 +183,15 @@ public class SmvTranslator implements Translator
       StringBuffer out = new StringBuffer("(").append(left).append(") | (").append(right).append(")");
       m_pieces.push(out);
     }
+    
+    @Override
+    public void visit(OperatorImplies o)
+    {
+      StringBuffer right = m_pieces.pop();
+      StringBuffer left = m_pieces.pop();
+      StringBuffer out = new StringBuffer("(").append(left).append(") -> (").append(right).append(")");
+      m_pieces.push(out);
+    }
 
     @Override
     public void visit(OperatorNot o)

@@ -181,6 +181,15 @@ public class JavaMopTranslator implements Translator
       StringBuffer out = new StringBuffer("(").append(left).append(") or (").append(right).append(")");
       m_pieces.push(out);
     }
+    
+    @Override
+    public void visit(OperatorImplies o)
+    {
+      StringBuffer right = m_pieces.pop();
+      StringBuffer left = m_pieces.pop();
+      StringBuffer out = new StringBuffer("(").append(left).append(") implies (").append(right).append(")");
+      m_pieces.push(out);
+    }
 
     @Override
     public void visit(OperatorNot o)
@@ -258,6 +267,9 @@ public class JavaMopTranslator implements Translator
 
     @Override
     public void visit(OperatorOr o) {}
+    
+    @Override
+    public void visit(OperatorImplies o) {}
 
     @Override
     public void visit(OperatorNot o) {}

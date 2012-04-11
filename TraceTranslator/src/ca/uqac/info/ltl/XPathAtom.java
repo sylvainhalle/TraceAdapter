@@ -17,8 +17,49 @@
  */
 package ca.uqac.info.ltl;
 
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 public class XPathAtom extends Atom
 {
+	String[] m_parts;
+	
+	public XPathAtom(String s)
+	{
+		super(s);
+		// Trim s from braces
+		s = s.substring(1, s.length() - 1);
+		m_parts = s.split("/");
+	}
+	
+	public boolean isPresent(Node n)
+	{
+		return isPresent(n, 0);
+	}
+	
+	protected boolean isPresent(Node n, int p)
+	{
+		NodeList nl = n.getChildNodes();
+		int length = nl.getLength();
+		for (int i = 0; i < length; i++)
+		{
+			Node child_n = nl.item(i);
+			if (p == m_parts.length - 1)
+			{
+				if (child_n.getNodeType() != Node.TEXT_NODE)
+					continue;
+				if (m_parts[p].compareTo(child_n.getTextContent()) == 0)
+					return true;
+			}
+			else if (m_parts[p].compareTo(child_n.getNodeName()) == 0)
+			{
+				if (isPresent(child_n, p + 1))
+					return true;
+			}
+		}
+		return false;
+	}
+	
   @Override
   public void accept(OperatorVisitor v)
   {
