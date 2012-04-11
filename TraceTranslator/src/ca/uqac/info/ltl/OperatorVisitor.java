@@ -33,5 +33,7 @@ public interface OperatorVisitor
   
   public void visit(OperatorEquals o);
   
+  public void visit(OperatorImplies o);
+  
   public void visit(Atom o);
 }
