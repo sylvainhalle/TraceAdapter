@@ -912,8 +912,8 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 	private javax.swing.JButton btnConvertir;
 	private javax.swing.JButton btnSave;
 	private javax.swing.JButton btnSaveLTL;
-	private javax.swing.JComboBox<String> comboBox;
-	private javax.swing.JComboBox<String> comboBox_LTL;
+	private javax.swing.JComboBox comboBox;
+	private javax.swing.JComboBox comboBox_LTL;
 	private javax.swing.JButton btnConvLTL;
 	private javax.swing.JLabel lblTitre1;
 	private javax.swing.JLabel lblTitre2;
