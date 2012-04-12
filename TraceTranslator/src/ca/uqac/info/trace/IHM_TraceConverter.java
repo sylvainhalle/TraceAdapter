@@ -10,9 +10,12 @@ import java.io.FileOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import ca.uqac.info.ltl.Operator;
+import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.conversion.JavaMopTranslator;
 import ca.uqac.info.trace.conversion.JsonTranslator;
 import ca.uqac.info.trace.conversion.MonpolyTranslator;
+import ca.uqac.info.trace.conversion.PromelaTranslator;
 import ca.uqac.info.trace.conversion.SmvTranslator;
 import ca.uqac.info.trace.conversion.SqlTranslator;
 import ca.uqac.info.trace.conversion.Translator;
@@ -49,6 +52,9 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		this.comboBox.setVisible(bVisible);
 		this.lblTitre3.setVisible(bVisible);
 		btnConvertir.setVisible(bVisible);
+		
+		btnSave.setEnabled(false);
+		btnSaveLTL.setEnabled(false);
 	}
 
 	/**
@@ -71,7 +77,6 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		txtArea = new javax.swing.JTextArea();
 		btnClear_LTL = new javax.swing.JButton();
 		lblFileLTL = new javax.swing.JLabel();
-		bClickLTL = new javax.swing.JButton();
 		textFiel_path_LTL = new javax.swing.JTextField();
 		lblFormatLTL = new javax.swing.JLabel();
 		comboBox_LTL = new javax.swing.JComboBox();
@@ -112,7 +117,7 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		lblTitre2.setText("2.  Select output format");
 
 		comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-				"", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON" }));
+				"", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML" }));
 		comboBox.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				comboBoxActionPerformed(evt);
@@ -143,28 +148,45 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 			}
 		});
 
-		lblFileLTL.setText("3. Select File LTL from your computer");
-
-		bClickLTL.setText("Browse");
+		lblFileLTL.setText("3. Enter LTL prperty");
 
 		lblFormatLTL.setText("4. Select output format");
 
 		comboBox_LTL.setModel(new javax.swing.DefaultComboBoxModel(
-				new String[] { "", "Item 1", "Item 2", "Item 3" }));
+				new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML" }));
+		comboBox_LTL.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				comboBoxActionPerformed(evt);
+			}
+		});
 
 		lblStartConv.setText("Start converting !!");
 
 		btnConvLTL.setIcon(new javax.swing.ImageIcon(getClass().getResource(
 				"/image/load.GIF"))); // NOI18N¸
 		btnConvLTL.setToolTipText("Translate");
+		btnConvLTL.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnConvertirActionPerformed(evt);
+			}
+		});
 
 		txtAreaLTL.setColumns(20);
 		txtAreaLTL.setRows(5);
+	
+		
 		spTranslateLTL.setViewportView(txtAreaLTL);
+		spTranslateLTL.setWheelScrollingEnabled(false);
 
 		btnSaveLTL.setIcon(new javax.swing.ImageIcon(getClass().getResource(
 				"/image/save.GIF"))); // NOI18N
 		btnSaveLTL.setToolTipText("Save");
+		btnSaveLTL.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnSaveActionPerformed(evt);
+			}
+		});
+		
 		btnClear.setIcon(new javax.swing.ImageIcon(getClass().getResource(
 				"/image/clear.GIF"))); // NOI18N
 		btnClear.setToolTipText("Clear");
@@ -387,13 +409,9 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 																										.createSequentialGroup()
 																										.addContainerGap()
 																										.addComponent(
-																												bClickLTL)
-																										.addPreferredGap(
-																												javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-																										.addComponent(
 																												textFiel_path_LTL,
 																												javax.swing.GroupLayout.PREFERRED_SIZE,
-																												299,
+																												350,
 																												javax.swing.GroupLayout.PREFERRED_SIZE))
 																						.addGroup(
 																								panelPrincipalLayout
@@ -506,11 +524,10 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 												panelPrincipalLayout
 														.createParallelGroup(
 																javax.swing.GroupLayout.Alignment.BASELINE)
-														.addComponent(bClickLTL)
 														.addComponent(
 																textFiel_path_LTL,
 																javax.swing.GroupLayout.PREFERRED_SIZE,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
+																34,
 																javax.swing.GroupLayout.PREFERRED_SIZE))
 										.addGap(30, 30, 30)
 										.addGroup(
@@ -673,49 +690,78 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 	private void btnConvertirActionPerformed(java.awt.event.ActionEvent evt) {
 		String input_format;
 
-		input_format = getExtension(path_file);
-
-		// Determine which trace reader to initialize
-		TraceReader reader = initializeReader(input_format);
-		if (reader == null) {
-			System.err.println("ERROR: Unrecognized input format");
-			System.exit(1);
-		}
-
-		// Instantiate the proper trace reader and checks that the trace exists
-		// reader.setEventTagName(event_tag_name);
-		File in_f = new File(path_file);
-		if (!in_f.exists()) {
-			System.err.println("ERROR: Input file not found");
-			System.exit(1);
-		}
-
-		if (!in_f.canRead()) {
-			System.err.println("ERROR: Input file is not readable");
-			System.exit(1);
-		}
-
-		// Determine which translator to initialize
-		Translator trans = initializeTranslator(output_format);
-		if (trans == null) {
-			System.err.println("ERROR: Unrecognized output format");
-			System.exit(1);
-		}
-
-		// Translate the trace into the output format
-		EventTrace trace = reader.parseEventTrace(in_f);
-		String out_trace = trans.translateTrace(trace);
-
-		// display the trace
-		if (status == JFileChooser.APPROVE_OPTION) {
-			try {
-				txtArea.setText(out_trace);
-			} catch (Exception ex) {
-				System.out.println("problem accessing file with "
-						+ this.textFiel_path.getText());
+		if (evt.getSource() == btnConvertir) {
+			input_format = getExtension(path_file);
+			
+			// Determine which trace reader to initialize
+			TraceReader reader = initializeReader(input_format);
+			if (reader == null) {
+				System.err.println("ERROR: Unrecognized input format");
+				System.exit(1);
 			}
-		} else if (status == JFileChooser.CANCEL_OPTION) {
-			System.out.println("Opening the file has been canceled !!");
+
+			// Instantiate the proper trace reader and checks that the trace
+			// exists
+			// reader.setEventTagName(event_tag_name);
+			File in_f = new File(path_file);
+			if ((!in_f.exists()) ||(!in_f.canRead())){
+				System.err.println("ERROR: Input file not found or Input file is not readable");
+				System.exit(1);
+			}
+			
+ 		    // Determine which translator to initialize
+			Translator trans = initializeTranslator(output_format);
+			if (trans == null) {
+				System.err.println("ERROR: Unrecognized output format");
+				System.exit(1);
+			}
+
+			// Translate the trace into the output format
+			EventTrace trace = reader.parseEventTrace(in_f);
+			String out_trace = trans.translateTrace(trace);
+
+			// display the trace
+			if (status == JFileChooser.APPROVE_OPTION) {
+			
+				try 
+				{
+					txtArea.setText(out_trace);
+					if(!out_trace.isEmpty())
+					{
+						btnSave.setEnabled(true);
+					}
+				} catch (Exception ex) {
+					System.out.println("problem accessing file with "
+							+ this.textFiel_path.getText());
+				}
+			} else if (status == JFileChooser.CANCEL_OPTION) {
+				System.out.println("Opening the file has been canceled !!");
+			}
+		} else if (evt.getSource() == btnConvLTL) 
+		{
+			String strLTL = textFiel_path_LTL.getText();
+			String str_out;
+			// Determine which translator to initialize
+			Translator tr = initializeTranslator(output_format);
+			if (tr == null) {
+				System.err.println("ERROR: Unrecognized output format");
+				System.exit(1);
+			}
+			
+			try 
+			{
+				Operator o = Operator.parseFromString(strLTL);
+				str_out = tr.translateFormula(o);
+				
+				txtAreaLTL.setText(str_out);
+				if(!str_out.isEmpty())
+				{
+					btnSaveLTL.setEnabled(true);
+				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -726,7 +772,15 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 	 * @param evt
 	 */
 	private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {
-		txtArea.setText("");
+		if(evt.getSource() == btnClear)
+		{
+			txtArea.setText("");
+			btnSave.setEnabled(false);
+		}else if(evt.getSource()== btnClear_LTL)
+		{
+			txtAreaLTL.setText("");
+			btnSaveLTL.setEnabled(false);
+		}
 	}
 
 	/**
@@ -738,6 +792,7 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 
 		JFileChooser fileSave = new JFileChooser();
 		FileOutputStream fo;
+		String str = "" ;
 		int res = fileSave.showSaveDialog(this);
 
 		if (res == JFileChooser.APPROVE_OPTION) {
@@ -754,7 +809,15 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 				try
 				{
 					fo = new FileOutputStream(file);
-					fo.write(txtArea.getText().getBytes());
+					if(evt.getSource() == btnSave )
+					{
+						str = txtArea.getText();
+					}else if (evt.getSource() == btnSaveLTL)
+					{
+						str = txtAreaLTL.getText();
+					}
+					
+					fo.write(str.getBytes());
 					txtArea.setText("");
 
 				} catch (Exception e) {
@@ -774,7 +837,13 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 	 * @param evt
 	 */
 	private void comboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-		output_format = comboBox.getSelectedItem().toString().toLowerCase();
+		if(evt.getSource() == comboBox)
+		{
+			output_format = comboBox.getSelectedItem().toString().toLowerCase();
+		}else if (evt.getSource() == comboBox_LTL)
+		{
+			output_format = comboBox_LTL.getSelectedItem().toString().toLowerCase();
+		}
 	}
 
 	/**
@@ -871,8 +940,8 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 			trans = new SmvTranslator();
 		} else if (output_format.compareToIgnoreCase("sql") == 0) {
 			trans = new SqlTranslator();
-		} else if (output_format.compareToIgnoreCase("javamop") == 0) {
-			trans = new JavaMopTranslator();
+		} else if (output_format.compareToIgnoreCase("pml") == 0) {
+			trans = new PromelaTranslator();
 		} else if (output_format.compareToIgnoreCase("json") == 0) {
 			trans = new JsonTranslator();
 		} else if (output_format.compareToIgnoreCase("xml") == 0) {
@@ -881,12 +950,9 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 			trans = new MonpolyTranslator();
 		} else if (output_format.compareToIgnoreCase("xes") == 0) {
 			trans = new XesTranslator();
-		}
-		if (output_format.compareToIgnoreCase("mop") == 0) {
+		}else if (output_format.compareToIgnoreCase("mop") == 0) {
 			trans = new JavaMopTranslator();
-		} else if (output_format.compareToIgnoreCase("json") == 0) {
-			trans = new JsonTranslator();
-		}
+		} 
 		return trans;
 	}
 
@@ -906,7 +972,6 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 	private javax.swing.JLabel LabTitre;
 	private javax.swing.JMenuItem apropos_Item;
 	private javax.swing.JButton bClick;
-	private javax.swing.JButton bClickLTL;
 	private javax.swing.JButton btnClear;
 	private javax.swing.JButton btnClear_LTL;
 	private javax.swing.JButton btnConvertir;

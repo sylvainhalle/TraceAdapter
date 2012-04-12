@@ -7,7 +7,7 @@ import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
 
-public class PromelaTramslator implements Translator {
+public class PromelaTranslator implements Translator {
 	
 	protected final String m_logname = "log";
 	
