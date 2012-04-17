@@ -257,7 +257,7 @@ public class TraceConverter
     }
     else if (output_format.compareToIgnoreCase("promela") == 0)
     {
-        trans = new PromelaTramslator();
+        trans = new PromelaTranslator();
     }
     else if (output_format.compareToIgnoreCase("maude") == 0)
     {

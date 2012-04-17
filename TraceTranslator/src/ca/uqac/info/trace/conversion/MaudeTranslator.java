@@ -7,6 +7,8 @@ import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
+import org.w3c.*;
+import org.w3c.dom.Node;
 
 public class MaudeTranslator implements Translator
 {
@@ -23,26 +25,31 @@ public class MaudeTranslator implements Translator
 	  }
 
 	@Override
-	public String translateTrace(EventTrace t) {
-		StringBuffer out = new StringBuffer();
+	 public String translateTrace(EventTrace t)
+	  {
+	    StringBuffer out = new StringBuffer();
 	    Relation<String,String> param_domains = t.getParameterDomain();
 	    Set<String> params = param_domains.keySet();
-	    
+	    System.out.println("parm_domain"+ params);
+	    //Vector<String> o_params = new Vector<String>();
+	    // We dump params in a Vector to forced ordered iteration every time
 	    for (String p : params)
-	    {
-	    	o_params.add(p);
-	    	System.out.println("\n params : "+p);
-	    }
-	    
+	      o_params.add(p);
+	    // Start writing the Java program
+	    out.append("/**\n  Auto-generated program for trace analysis through Java\n */\n");
+	    out.append("public class ").append(m_className).append("\n");
+	    out.append("{\n");
+	    out.append("  public static void main(String[] args)\n");
+	    out.append("  {\n");
 	    for (Event e : t)
 	    {
 	      Relation<String,String> e_dom = e.getParameterDomain();
-	     
-	      String p_name = o_params.lastElement();
-	      Set<String> p_values = e_dom.get(p_name);
-	      
-	      System.out.println("\n p_name : "+p_name);
-	      if (p_values == null || p_values.isEmpty())
+	      out.append("    my_event(");
+	      for (int i = 0; i < o_params.size(); i++)
+	      {
+	        String p_name = o_params.elementAt(i);
+	        Set<String> p_values = e_dom.get(p_name);
+	        if (p_values == null || p_values.isEmpty())
 	          out.append("null");
 	        else
 	        {
@@ -53,13 +60,31 @@ public class MaudeTranslator implements Translator
 	            break;
 	          }
 	          out.append(p_val);
-	          System.out.println("\n p_val : "+p_val);
-	          
-	          if (t.lastElement()!= e)
-		          out.append(" , ");
+	          if (p_values.size() > 1)
+	          {
+	            // TODO: trop de valeurs
+	          }
 	        }
+	        if (i < o_params.size() - 1)
+	          out.append(",");
+	      }
+	      out.append(");\n");
 	    }
-
+	    out.append("  }\n");
+	    out.append("\n");
+	    out.append("  public static void my_event(");
+	    for (int i = 0; i < o_params.size(); i++)
+	    {
+	      String p = o_params.elementAt(i);
+	      out.append("String ").append(p);
+	      if (i < o_params.size() - 1)
+	        out.append(",");
+	    }
+	    out.append(")\n");
+	    out.append("  {\n");
+	    out.append("    // This function is a mere placeholder to be caught\n");
+	    out.append("  }\n");
+	    out.append("}\n");
 	    return out.toString();
 	 
 }

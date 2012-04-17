@@ -23,8 +23,8 @@ import ca.uqac.info.util.RandomPicker;
  */
 public class LlrpGenerator extends TraceGenerator {
 
-	protected int m_minMessages = 3;
-	protected int m_maxMessages = 5;
+	protected int m_minMessages = 1;
+	protected int m_maxMessages = 10;
 	
 	/**
 	 * The seed used to initialize the generator
