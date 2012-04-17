@@ -47,6 +47,10 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		initFields(fieldsVisible);
 	}
 
+	/**
+	 * 
+	 * @param bVisible
+	 */
 	private void initFields(boolean bVisible) {
 		this.lblTitre2.setVisible(bVisible);
 		this.comboBox.setVisible(bVisible);
@@ -176,7 +180,6 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 	
 		
 		spTranslateLTL.setViewportView(txtAreaLTL);
-		spTranslateLTL.setWheelScrollingEnabled(false);
 
 		btnSaveLTL.setIcon(new javax.swing.ImageIcon(getClass().getResource(
 				"/image/save.GIF"))); // NOI18N
