@@ -259,6 +259,10 @@ public class TraceConverter
     {
         trans = new PromelaTranslator();
     }
+    else if (output_format.compareToIgnoreCase("maude") == 0)
+    {
+        trans = new MaudeTranslator();
+    }
     return trans;
   }
   

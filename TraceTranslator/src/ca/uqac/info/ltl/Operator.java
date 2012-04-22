@@ -93,6 +93,8 @@ public abstract class Operator
 				bo = new OperatorImplies();
 			else if (op.compareTo("=") == 0)
 				bo = new OperatorEquals();
+			else if (op.compareTo("<->") == 0)
+					bo = new OperatorEquivalences();
 			if (bo == null)
 				throw new ParseException();
 			bo.setLeft(o_left);
@@ -203,5 +205,9 @@ public abstract class Operator
 		 */
 		private static final long serialVersionUID = 1L;
 		
+	}
+	
+	public Operator getNegated(){
+		return this;
 	}
 }

@@ -14,6 +14,7 @@ import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.conversion.JavaMopTranslator;
 import ca.uqac.info.trace.conversion.JsonTranslator;
+import ca.uqac.info.trace.conversion.MaudeTranslator;
 import ca.uqac.info.trace.conversion.MonpolyTranslator;
 import ca.uqac.info.trace.conversion.PromelaTranslator;
 import ca.uqac.info.trace.conversion.SmvTranslator;
@@ -121,7 +122,11 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		lblTitre2.setText("2.  Select output format");
 
 		comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-				"", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML" }));
+
+				"", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","MAUDE" }));
+
+		
+
 		comboBox.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				comboBoxActionPerformed(evt);
@@ -955,7 +960,17 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 			trans = new XesTranslator();
 		}else if (output_format.compareToIgnoreCase("mop") == 0) {
 			trans = new JavaMopTranslator();
-		} 
+
+		} else if (output_format.compareToIgnoreCase("json") == 0) {
+			trans = new JsonTranslator();
+		}
+		 else if (output_format.compareToIgnoreCase("maude") == 0)
+		    {
+		        trans = new MaudeTranslator();
+		    }
+
+		 
+
 		return trans;
 	}
 
