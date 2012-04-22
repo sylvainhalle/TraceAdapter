@@ -57,8 +57,6 @@ public class CycleGenerator extends TraceGenerator{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
 		process(args, new CycleGenerator());
 	}
 
@@ -66,7 +64,6 @@ public class CycleGenerator extends TraceGenerator{
 	
 	@Override
 	public EventTrace generate() {
-		// TODO Auto-generated method stub
 		if (m_clockAsSeed)
 			setSeed(System.currentTimeMillis());
 		
@@ -85,11 +82,11 @@ public class CycleGenerator extends TraceGenerator{
 		// We chose the number of message to produce
 		int n_message = m_random.nextInt(m_maxMessages + 1 - m_minMessages)
 							+ m_minMessages;
-		System.out.println("min : " +m_minMessages +"  max : " +m_maxMessages );
-		System.out.println(" cycle : " +n_message+" Tmax : " +t_maxTags  );
+		
 		// We initialize current vector of  Tags
 		Vector<Integer> vectCurrent = new Vector<Integer>();
-		for (int k = 0 ; k < n_message ; k ++)
+		int taille = m_random.nextInt(t_maxTags);
+		for (int k = 0 ; k < taille ; k ++)
 		{
 			vectCurrent.add(vectTags.get(k));
 		}
@@ -110,11 +107,13 @@ public class CycleGenerator extends TraceGenerator{
 			
 	    	//Do we want to remove tags ??
 	    	boolean choiceRemove = boolean_picker.pick(available_choice);
-	    	
+	    	int nbRemove = 0;
 	    	if(choiceRemove)
 	    	{
-	    		int nbRemove =m_random.nextInt(vectCurrent.size());
-	    		
+	    		if(vectCurrent.size() > 0)
+	    		{
+	    			nbRemove =m_random.nextInt(vectCurrent.size());
+	    		}
 	    		if(nbRemove > 0)
 	    			vectCurrent = this.removeTag(vectCurrent, nbRemove);
 	    	}
@@ -164,9 +163,6 @@ public class CycleGenerator extends TraceGenerator{
  * 
  */
 	public void initialize(CommandLine c_line) {
-		if (c_line.hasOption("s"))
-			setSeed(new Integer(c_line.getOptionValue("s")).intValue());
-		
 		if (c_line.hasOption("t"))
 			m_clockAsSeed = true;
 		
@@ -182,7 +178,6 @@ public class CycleGenerator extends TraceGenerator{
 	
 	@Override
 	public String getAppName() {
-		// TODO Auto-generated method stub
 		return "Cycle Generator";
 	}
 
@@ -200,7 +195,6 @@ public class CycleGenerator extends TraceGenerator{
 		{
 			int nbElement = vectCurrent.size();
 			int i = m_random.nextInt(nbElement);
-//			vectTags.add(vectCurrent.get(i));
 			vectCurrent.remove(i);
 			nbRemove--;
 		}
@@ -227,7 +221,6 @@ public class CycleGenerator extends TraceGenerator{
 			if( (j < vectTags.size()) &&(j>0) )
 			{
 				temp.add( vectTags.get(j) );
-//				vectTags.remove(j);
 			}
 			
 			nbAdd--;

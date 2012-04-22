@@ -4,6 +4,9 @@ import java.util.Random;
 import java.util.Vector;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
 import org.jdom.output.DOMOutputter;
 import org.llrp.ltk.generated.enumerations.*;
 import org.llrp.ltk.generated.messages.*;
@@ -16,7 +19,7 @@ import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.RandomPicker;
 
 /**
- * Cette classe permet de générer de trace aléatoire de
+ * This class is used to generate random trace
  * LLRP.
  * @author Samatar
  *
@@ -132,14 +135,40 @@ public class LlrpGenerator extends TraceGenerator {
 
 		return trace;
 	}
+	
+	@SuppressWarnings("static-access")
+	public Options getCommandLineOptions() {
+		
+		Options options = new Options();
+		Option opt;
+		options.addOption("t", false,
+				"Use system clock as random generator's seed (default: no)");
+
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Maximum number of messages to produce (default: 10)")
+				.create("N");
+		options.addOption(opt);
+		opt = OptionBuilder
+				.withArgName("x")
+				.hasArg()
+				.withDescription(
+						"Minimum number of messages to produce (default: 1)")
+				.create("n");
+		options.addOption(opt);
+		return options;
+	}
 
 	public void initialize(CommandLine c_line) {
-		if (c_line.hasOption("s"))
-			setSeed(new Integer(c_line.getOptionValue("s")).intValue());
+
 		if (c_line.hasOption("t"))
 			m_clockAsSeed = true;
+		
 		if (c_line.hasOption("n"))
 			m_minMessages = new Integer(c_line.getOptionValue("n")).intValue();
+		
 		if (c_line.hasOption("N"))
 			m_maxMessages = new Integer(c_line.getOptionValue("N")).intValue();
 
@@ -274,7 +303,7 @@ public class LlrpGenerator extends TraceGenerator {
 
 				Node n2 = trace.getNode();
 				n2.appendChild(trace.importNode(ajouterElement(response), true));
-				trace.add(new Event(ajouterElement(response)));
+				trace.add(new Event(n2));
 			}
 
 		} catch (Exception e) {
