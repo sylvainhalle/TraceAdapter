@@ -45,6 +45,7 @@ import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.conversion.JavaMopTranslator;
 import ca.uqac.info.trace.conversion.JsonTranslator;
+import ca.uqac.info.trace.conversion.MaudeTranslator;
 import ca.uqac.info.trace.conversion.MonpolyTranslator;
 import ca.uqac.info.trace.conversion.PromelaTranslator;
 import ca.uqac.info.trace.conversion.SmvTranslator;
@@ -226,7 +227,7 @@ public class IHM_TraceEvent extends JFrame {
 
 	        lblTitre2.setText("3.  Select output format");
 
-	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML" }));
+	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML","MAUDE" }));
 	        comboBox.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                comboBoxActionPerformed(evt);
@@ -852,10 +853,7 @@ public class IHM_TraceEvent extends JFrame {
 			String input_format = getExtension(listNameFile[i]);
 			// Determine which trace reader to initialize
 			TraceReader reader = initializeReader(input_format);
-			if (reader == null) 
-			{
-				System.err.println("ERROR: Unrecognized input format");
-			} else 
+			if (reader != null) 
 			{
 				// Instantiate the proper trace reader and checks that the trace
 				// exists reader.setEventTagName(event_tag_name);
@@ -905,30 +903,32 @@ public class IHM_TraceEvent extends JFrame {
 	/**
 	 * Can translate the input LTL property to the choice of output
 	 */
-	private void translateLTL()
+	private void translateLTL() 
 	{
 		String strLTL = textFiel_path_LTL.getText();
 		String str_out;
 		// Determine which translator to initialize
 		Translator tr = initializeTranslator(output_format);
-		if (tr == null) 
+		if (tr != null) 
 		{
-			System.err.println("ERROR: Unrecognized output format");
-			System.exit(1);
-		}
-
-		try 
-		{
-			Operator o = Operator.parseFromString(strLTL);
-			str_out = tr.translateFormula(o);
-
-			txtAreaLTL.setText(str_out);
-			if (!str_out.isEmpty()) 
+			try 
 			{
-				btnSaveLTL.setEnabled(true);
+				Operator o = Operator.parseFromString(strLTL);
+				str_out = tr.translateFormula(o);
+				if (str_out != null) 
+				{
+					txtAreaLTL.setText(str_out);
+				} else 
+				{
+					txtAreaLTL.setText("Méthode non implementée !!!");
+				}
+
+				if (str_out != null) {
+					btnSaveLTL.setEnabled(true);
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
-		} catch (ParseException e) {
-			e.printStackTrace();
 		}
 	}
 	/**
@@ -1264,7 +1264,9 @@ public class IHM_TraceEvent extends JFrame {
 			trans = new XesTranslator();
 		}else if (output_format.compareToIgnoreCase("mop") == 0) {
 			trans = new JavaMopTranslator();
-		} 
+		} else if (output_format.compareToIgnoreCase("maude") == 0) {
+			trans = new MaudeTranslator();
+		}
 		return trans;
 	}
 	/**

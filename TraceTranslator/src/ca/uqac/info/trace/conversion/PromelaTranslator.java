@@ -9,7 +9,6 @@ import ca.uqac.info.ltl.Atom;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.OperatorEquivalences;
 import ca.uqac.info.ltl.OperatorF;
 import ca.uqac.info.ltl.OperatorG;
 import ca.uqac.info.ltl.OperatorImplies;
@@ -43,7 +42,7 @@ public class PromelaTranslator implements Translator {
 	      {
 	        out.append("-- WARNING: this event is not flat or is multi-valued\n");
 	      }
-	      out.append(" typedef ").append(i).append("{ ");
+	      out.append(" typedef message ").append(i).append("{ ");
 	      out.append(toPromela(e, params));
 	      out.append("\n");
 	      
@@ -77,7 +76,7 @@ public class PromelaTranslator implements Translator {
 	          break;
 	        }
 	        
-	        out.append("\n\t").append(p_name).append(val).append(" ; ");
+	        out.append("\n\t").append(p_name).append(" = ").append(val).append(" ; ");
 
 	      }
 	    }
@@ -209,15 +208,15 @@ public class PromelaTranslator implements Translator {
 	      StringBuffer out = new StringBuffer("[] (").append(op).append(")");
 	      m_pieces.push(out);
 	    }
-	    public void visit(OperatorEquivalences o)
-	    {
-	    	StringBuffer right = m_pieces.pop();
-		      StringBuffer left = m_pieces.pop();
-		      StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
-		      m_pieces.push(out);
-	    	
-	    	
-	    }
+//	    public void visit(OperatorEquivalences o)
+//	    {
+//	    	StringBuffer right = m_pieces.pop();
+//		      StringBuffer left = m_pieces.pop();
+//		      StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
+//		      m_pieces.push(out);
+//	    	
+//	    	
+//	    }
 
 	    @Override
 	    public void visit(OperatorEquals o)
@@ -278,9 +277,9 @@ public class PromelaTranslator implements Translator {
 
 	    @Override
 	    public void visit(OperatorG o) {}
-	    public void visit(OperatorEquivalences o){
-	    	
-	    }
+//	    public void visit(OperatorEquivalences o){
+//	    	
+//	    }
 
 	    @Override
 	    public void visit(Atom o) {}
