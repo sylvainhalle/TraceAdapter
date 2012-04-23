@@ -996,7 +996,7 @@ public class IHM_TraceEvent extends JFrame {
 			btnSaveGen.setEnabled(true);
 		}else
 		{
-			resultGen.setText("Aucun trace generer !!!");
+			resultGen.setText("Aucune trace est générée !!!");
 		}
 	}
 	
@@ -1091,21 +1091,23 @@ public class IHM_TraceEvent extends JFrame {
 					{
 						type = "Translator";
 						this.saveTrace(file, type);
-						
+						txtArea.setText("");
 					} else if (evt.getSource() == btnSaveLTL) {
 						fo = new FileOutputStream(file);
 						str = txtAreaLTL.getText();
 						fo.write(str.getBytes());
 						fo.close();
+						txtAreaLTL.setText("");
 					}
 					else if (evt.getSource() == btnSaveGen)
 					{
 						type = "Generator";
 						this.saveTrace(file, type);
+						resultGen.setText("");
 					}
 
 
-					txtArea.setText("");
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1363,7 +1365,6 @@ public class IHM_TraceEvent extends JFrame {
 		// finally set the both sequential group to the grpLayout object
 		paneMenuLayout.setHorizontalGroup(horizontalSeqGrp);
 		paneMenuLayout.setVerticalGroup(verticalSeqGrp);
-		this.revalidate();
 		
 
 	}
