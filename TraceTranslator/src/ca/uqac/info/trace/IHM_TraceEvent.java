@@ -4,6 +4,7 @@
  */
 package ca.uqac.info.trace;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Iterator;
@@ -105,6 +106,9 @@ public class IHM_TraceEvent extends JFrame {
 	protected Vector<String> listParam;
 	private Vector<JTextField> listTextFields = new Vector<JTextField>() ;
 	private Vector<JLabel> listLabel = new Vector<JLabel>() ;
+	//Runtime
+	private JPanel     paneRuntime ;
+	private JLabel 		lblBuilding,lblTitreRunTime ;
 	//General
 	protected File myFile;
 	protected Vector<String> outTrace,outTraceGen;
@@ -202,6 +206,10 @@ public class IHM_TraceEvent extends JFrame {
 		spResultGen = new JScrollPane();
 		resultGen = new JTextArea();
 		lblGenerate = new JLabel();
+		//Runtime
+		paneRuntime = new JPanel();
+		lblTitreRunTime = new JLabel("", JLabel.CENTER);
+		lblBuilding = new JLabel();
 
 
 	        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -639,6 +647,35 @@ public class IHM_TraceEvent extends JFrame {
 	        );
 
 	        tabbedPane.addTab("Trace Generator", panGenerator);
+	        //Runtime pane
+	        paneRuntime.setBackground(new java.awt.Color(255, 255, 204));
+	        lblBuilding.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/building.GIF")));
+	        lblTitreRunTime.setFont(new java.awt.Font("Arial Black", 0, 13));
+	        lblTitreRunTime.setForeground(new java.awt.Color(0, 51, 102));
+	        lblTitreRunTime.setText("Execution time of various software");
+	        
+	        javax.swing.GroupLayout paneRuntimeLayout = new javax.swing.GroupLayout(paneRuntime);
+	        paneRuntime.setLayout(paneRuntimeLayout);
+	        paneRuntimeLayout.setHorizontalGroup(
+	            paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                .addGap(148, 148, 148)
+	                .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addComponent(lblBuilding)
+	                    .addComponent(lblTitreRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addContainerGap(155, Short.MAX_VALUE))
+	        );
+	        paneRuntimeLayout.setVerticalGroup(
+	            paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                .addContainerGap()
+	                .addComponent(lblTitreRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(18, 18, 18)
+	                .addComponent(lblBuilding, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addContainerGap(145, Short.MAX_VALUE))
+	        );
+
+	        tabbedPane.addTab("Runtime", paneRuntime);
 
 	        lblTitre.setFont(new java.awt.Font("Arial", 1, 18)); 
 	        lblTitre.setForeground(new java.awt.Color(0, 51, 102));
@@ -688,7 +725,7 @@ public class IHM_TraceEvent extends JFrame {
 	                .addComponent(tabbedPane))
 	        );
 
-	        pack();
+	       pack();
 	    }
     /**
 	 * Guess output format
@@ -1400,6 +1437,7 @@ public class IHM_TraceEvent extends JFrame {
 
             public void run() {
             	IHM_TraceEvent traceEvent = new IHM_TraceEvent();
+            	traceEvent.setLocationRelativeTo(null);
                 traceEvent.setVisible(true);
             }
         });
