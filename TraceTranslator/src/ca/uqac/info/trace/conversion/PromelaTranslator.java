@@ -9,11 +9,14 @@ import ca.uqac.info.ltl.Atom;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
+import ca.uqac.info.ltl.OperatorEquiv;
 import ca.uqac.info.ltl.OperatorF;
 import ca.uqac.info.ltl.OperatorG;
 import ca.uqac.info.ltl.OperatorImplies;
 import ca.uqac.info.ltl.OperatorNot;
 import ca.uqac.info.ltl.OperatorOr;
+import ca.uqac.info.ltl.OperatorU;
+
 import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.Event;
@@ -92,18 +95,10 @@ public class PromelaTranslator implements Translator {
 	    // Step 1: define the events as AspectJ pointcuts
 	    PromelaEqualityGetter f_eq= new PromelaEqualityGetter();
 	    o.accept(f_eq);
-	    Set<OperatorEquals> equalities = f_eq.getEqualities();
+	   /* Set<OperatorEquals> equalities = f_eq.getEqualities();
 	    for (OperatorEquals eq : equalities)
 	    {
-	      out.append("  event ").append(toPromelaIdentifier(eq)); /*.append("(");
-	      for (int i = 0; i < o_params.size(); i++)
-	      {
-	        if (i > 0)
-	          out.append(",");
-	        String p_name = o_params.elementAt(i);
-	        out.append("int ").append(p_name);
-	      }
-	      out.append(")");*/
+	      out.append("  event ").append(toPromelaIdentifier(eq)); 
 	      out.append(" before :\n");
 	      out.append("    call(void my_event(");
 	      StringBuffer args_string = new StringBuffer();
@@ -126,6 +121,7 @@ public class PromelaTranslator implements Translator {
 	      out.append(" { }\n");
 	    }
 	    out.append("\n");
+	    */
 	    
 	    // Step 2: append translated formula on those events 
 	    PromelaFormulaTranslator f_trans = new PromelaFormulaTranslator();
@@ -208,15 +204,6 @@ public class PromelaTranslator implements Translator {
 	      StringBuffer out = new StringBuffer("[] (").append(op).append(")");
 	      m_pieces.push(out);
 	    }
-//	    public void visit(OperatorEquivalences o)
-//	    {
-//	    	StringBuffer right = m_pieces.pop();
-//		      StringBuffer left = m_pieces.pop();
-//		      StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
-//		      m_pieces.push(out);
-//	    	
-//	    	
-//	    }
 
 	    @Override
 	    public void visit(OperatorEquals o)
@@ -233,6 +220,24 @@ public class PromelaTranslator implements Translator {
 	    {
 	      m_pieces.push(new StringBuffer(o.getSymbol()));
 	    }
+
+		@Override
+		public void visit(OperatorEquiv o) {
+			StringBuffer right = m_pieces.pop();
+			StringBuffer left = m_pieces.pop();
+			StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
+			m_pieces.push(out);
+			
+		}
+
+		@Override
+		public void visit(OperatorU o) {
+			StringBuffer op = m_pieces.pop();
+		      StringBuffer out = new StringBuffer("until (").append(op).append(")");
+		      m_pieces.push(out);
+		}
+
+		
 	  }
 	  
 	  protected class PromelaEqualityGetter implements OperatorVisitor
@@ -283,6 +288,20 @@ public class PromelaTranslator implements Translator {
 
 	    @Override
 	    public void visit(Atom o) {}
+
+		@Override
+		public void visit(OperatorEquiv o) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void visit(OperatorU o) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		
 	  }
 	  
 	  protected static String toPromelaIdentifier(OperatorEquals o)

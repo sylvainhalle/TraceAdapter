@@ -204,8 +204,11 @@ public class JavaMopTranslator implements Translator
     public void visit(OperatorF o)
     {
       StringBuffer op = m_pieces.pop();
+      
       StringBuffer out = new StringBuffer("<> (").append(op).append(")");
       m_pieces.push(out);
+      // b = m_random.nextInt(10);
+      //ew StringBuffer("<> [ 0,).append(b.concat("]")).);
     }
 
     @Override
@@ -239,6 +242,20 @@ public class JavaMopTranslator implements Translator
     {
       m_pieces.push(new StringBuffer(o.getSymbol()));
     }
+
+	@Override
+	public void visit(OperatorEquiv o) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(OperatorU o) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
   }
   
   protected class JavaMopEqualityGetter implements OperatorVisitor
@@ -286,6 +303,20 @@ public class JavaMopTranslator implements Translator
 
     @Override
     public void visit(Atom o) {}
+
+	@Override
+	public void visit(OperatorEquiv o) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(OperatorU o) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
   }
   
   protected static String toJavaMopIdentifier(OperatorEquals o)

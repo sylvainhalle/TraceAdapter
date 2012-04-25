@@ -239,5 +239,18 @@ public class SmvTranslator implements Translator
     {
       m_pieces.push(new StringBuffer(toSmvToken(o.getSymbol())));
     }
+
+	@Override
+	public void visit(OperatorEquiv o) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(OperatorU o) {
+		// TODO Auto-generated method stub
+		
+	}
+
   }  
 }

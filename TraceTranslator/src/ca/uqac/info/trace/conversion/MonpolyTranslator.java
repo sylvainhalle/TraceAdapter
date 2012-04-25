@@ -1,8 +1,24 @@
 package ca.uqac.info.trace.conversion;
 
+import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
+import java.util.Vector;
 
+import ca.uqac.info.ltl.Atom;
 import ca.uqac.info.ltl.Operator;
+import ca.uqac.info.ltl.OperatorAnd;
+import ca.uqac.info.ltl.OperatorEquals;
+import ca.uqac.info.ltl.OperatorEquiv;
+import ca.uqac.info.ltl.OperatorF;
+import ca.uqac.info.ltl.OperatorG;
+import ca.uqac.info.ltl.OperatorImplies;
+import ca.uqac.info.ltl.OperatorNot;
+import ca.uqac.info.ltl.OperatorOr;
+import ca.uqac.info.ltl.OperatorU;
+import ca.uqac.info.ltl.OperatorVisitor;
+import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
@@ -10,6 +26,11 @@ import ca.uqac.info.util.Relation;
 public class MonpolyTranslator implements Translator {
 	
 	protected final String m_logname = "log";
+	  Vector<String> o_params;
+	  java.util.Random r=new java.util.Random( ) ;
+	  int b ;
+	  Random m_random = new Random();
+	  //int t1=(Integer.toString(r.nextInt(25)));
     
 	@Override
 	/**
@@ -82,7 +103,227 @@ public class MonpolyTranslator implements Translator {
 	 * 
 	 */
 	public String translateFormula(Operator o) {
+		
 		// TODO Auto-generated method stub
-		return null;
+				StringBuffer out = new StringBuffer();
+				MonpolyFormulaTranslator mft = new MonpolyFormulaTranslator();
+				    o.accept(mft);
+				    out.append(mft.getFormula());
+			    return out.toString();
+			}
+			protected class MonpolyFormulaTranslator implements OperatorVisitor
+			  {
+			    Stack<StringBuffer> m_pieces;
+			    
+			    public MonpolyFormulaTranslator()
+			    {
+			      super();
+			      m_pieces = new Stack<StringBuffer>();
+			    }
+			    
+			    public String getFormula()
+			    {
+			      StringBuffer out = m_pieces.peek();
+			      return out.toString();
+			    }
+
+			    @Override
+			    public void visit(OperatorAnd o)
+			    {
+			      StringBuffer right = m_pieces.pop();
+			      StringBuffer left = m_pieces.pop();
+			      StringBuffer out = new StringBuffer("(").append(left).append(") And (").append(right).append(")");
+			      m_pieces.push(out);
+			    }
+
+			    @Override
+			    public void visit(OperatorOr o)
+			    {
+			      StringBuffer right = m_pieces.pop();
+			      StringBuffer left = m_pieces.pop();
+			      StringBuffer out = new StringBuffer("(").append(left).append(") Or (").append(right).append(")");
+			      m_pieces.push(out);
+			    }
+			    
+			    @Override
+			    public void visit(OperatorImplies o)
+			    {
+			      StringBuffer right = m_pieces.pop();
+			      StringBuffer left = m_pieces.pop();
+			      StringBuffer op = m_pieces.pop();
+			      b = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("(").append(left).append(") Implies[0,").append(b).append("]").append("(").append(right).append(op).append(")");
+			      m_pieces.push(out);
+			     
+			      
+			    }
+
+			    @Override
+			    public void visit(OperatorNot o)
+			    {
+			      StringBuffer op = m_pieces.pop();
+			      StringBuffer out = new StringBuffer("Not (").append(op).append(")");
+			      m_pieces.push(out);
+			    }
+
+			    @Override
+			    public void visit(OperatorF o)
+			    {
+			      StringBuffer op = m_pieces.pop();
+			      b = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("Eventually[0,").append(b).append("] (").append(op).append(")");
+			      m_pieces.push(out);
+			    }
+
+			    @Override
+			    public void visit(OperatorX o)
+			    {
+			      StringBuffer op = m_pieces.pop();
+			      b = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("Next[0,").append(b).append("] (").append(op).append(")");
+			      m_pieces.push(out);
+			    }
+
+			    @Override
+			    public void visit(OperatorG o)
+			    {
+			      StringBuffer op = m_pieces.pop();
+			      b = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("Always[0,").append(b).append("] (").append(op).append(")");
+			      
+			      m_pieces.push(out);
+			    
+			    }
+
+			    @Override
+			    public void visit(OperatorEquals o)
+			    {
+			      m_pieces.pop(); // Pop right-hand side
+			      m_pieces.pop(); // Pop left-hand side
+			      StringBuffer out = new StringBuffer(toMonpolyIdentifier(o));
+			      m_pieces.push(out);
+			    }
+
+			    @Override
+			    public void visit(Atom o)
+			    {
+			      m_pieces.push(new StringBuffer(o.getSymbol()));
+			    }
+
+				@Override
+				public void visit(OperatorEquiv o) {
+					StringBuffer right = m_pieces.pop();
+					StringBuffer left = m_pieces.pop();
+					StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
+					m_pieces.push(out);
+					
+				}
+
+				@Override
+				public void visit(OperatorU o)
+				{
+					StringBuffer op = m_pieces.pop();
+					b = m_random.nextInt(10);
+					StringBuffer out = new StringBuffer("Until[0,").append(b)
+										.append("] (").append(op).append(")");
+
+					m_pieces.push(out);
+
+				}
+
+				
+			  }
+			  
+			  protected class PromelaEqualityGetter implements OperatorVisitor
+			  {
+
+			    Set<OperatorEquals> m_equalities; 
+			    
+			    public PromelaEqualityGetter()
+			    {
+			      super();
+			      m_equalities = new HashSet<OperatorEquals>();
+			    }
+			    
+			    public Set<OperatorEquals> getEqualities()
+			    {
+			      return m_equalities;
+			    }
+			    
+			    @Override
+			    public void visit(OperatorEquals o)
+			    {
+			      m_equalities.add(o);
+			    }
+			    
+				@Override
+				public void visit(OperatorU o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorAnd o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorOr o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorNot o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorF o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorX o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorG o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorImplies o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(OperatorEquiv o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void visit(Atom o) {
+					// TODO Auto-generated method stub
+					
+				}
+
+			
+			  }
+			  
+			  protected static String toMonpolyIdentifier(OperatorEquals o)
+			  {
+			    String left = o.getLeft().toString();
+			    String right = o.getRight().toString();
+			    return new StringBuffer("eq").append(left).append("_").append(right).toString();
+			  }
 	}
-}
+

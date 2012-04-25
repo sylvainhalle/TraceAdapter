@@ -35,5 +35,11 @@ public interface OperatorVisitor
   
   public void visit(OperatorImplies o);
   
+  public void visit(OperatorEquiv o);
+  
+  public void visit(OperatorU o);
+  
+  
+  
   public void visit(Atom o);
 }

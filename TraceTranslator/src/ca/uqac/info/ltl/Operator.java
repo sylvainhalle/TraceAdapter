@@ -94,7 +94,10 @@ public abstract class Operator
 			else if (op.compareTo("=") == 0)
 				bo = new OperatorEquals();
 			else if (op.compareTo("<->") == 0)
-					bo = new OperatorEquivalences();
+				bo = new OperatorEquiv();
+			else if (op.compareTo("U") == 0)
+				bo  = new OperatorU();
+			
 			if (bo == null)
 				throw new ParseException();
 			bo.setLeft(o_left);
