@@ -100,7 +100,7 @@ public class SmvTranslator implements Translator
           val = v;
           break;
         }
-        out.append(p_name).append(" = ").append(toSmvToken(val));
+        out.append(toSmvToken(p_name)).append(" = ").append(toSmvToken(val));
       }
     }
     return out;
