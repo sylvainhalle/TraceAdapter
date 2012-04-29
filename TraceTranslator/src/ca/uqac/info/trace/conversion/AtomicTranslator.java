@@ -107,7 +107,10 @@ public class AtomicTranslator implements Translator
 			String complex_token = tokens.get(e);
 			String simple_token = associations.get(complex_token);
 			if (simple_token == null)
+			{
 				simple_token = t_gen.next();
+				associations.put(complex_token, simple_token);
+			}
 			simple_tokens.put(e, simple_token);
 		}
 		return simple_tokens;
@@ -147,9 +150,12 @@ public class AtomicTranslator implements Translator
   	{
   		token.append(p_name).append(m_separator);
   		Set<String> p_values = dom.get(p_name);
-  		for (String v: p_values)
+  		if (p_values != null)
   		{
-  			token.append(v).append(m_separator);
+	  		for (String v: p_values)
+	  		{
+	  			token.append(v).append(m_separator);
+	  		}
   		}
   	}
   	return token.toString();
