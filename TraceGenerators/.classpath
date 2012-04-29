@@ -2,8 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TraceTranslator"/>
-	<classpathentry kind="lib" path="/TraceTranslator/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/LTKJava_with_dep_0_1_0-SNAPSHOT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TraceLogic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TraceTranslator"/>
+	<classpathentry kind="lib" path="/TraceLogic/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

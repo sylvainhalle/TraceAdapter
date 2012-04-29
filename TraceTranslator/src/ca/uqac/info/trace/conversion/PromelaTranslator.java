@@ -21,8 +21,6 @@ import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
-import ca.uqac.info.trace.conversion.JavaMopTranslator.JavaMopEqualityGetter;
-import ca.uqac.info.trace.conversion.JavaMopTranslator.JavaMopFormulaTranslator;
 import ca.uqac.info.util.Relation;
 
 public class PromelaTranslator implements Translator {

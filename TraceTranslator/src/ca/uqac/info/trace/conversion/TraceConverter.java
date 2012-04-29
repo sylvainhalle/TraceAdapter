@@ -16,12 +16,16 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ******************************************************************************/
-package ca.uqac.info.trace;
+package ca.uqac.info.trace.conversion;
 import java.io.*;
 import org.apache.commons.cli.*;
 
 import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.trace.conversion.*;
+import ca.uqac.info.trace.CsvTraceReader;
+import ca.uqac.info.trace.EventTrace;
+import ca.uqac.info.trace.SqlTraceReader;
+import ca.uqac.info.trace.TraceReader;
+import ca.uqac.info.trace.XmlTraceReader;
 
 public class TraceConverter
 {
@@ -287,7 +291,6 @@ public class TraceConverter
     {
         tf = new CsvTraceReader();
     }
-    
     return tf;
   }
 
