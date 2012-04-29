@@ -20,20 +20,9 @@ package ca.uqac.info.trace.conversion;
 
 import java.util.*;
 
-import ca.uqac.info.ltl.Atom;
 import ca.uqac.info.ltl.GenericVisitor;
 import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.OperatorEquiv;
-import ca.uqac.info.ltl.OperatorF;
-import ca.uqac.info.ltl.OperatorG;
-import ca.uqac.info.ltl.OperatorImplies;
-import ca.uqac.info.ltl.OperatorNot;
-import ca.uqac.info.ltl.OperatorOr;
-import ca.uqac.info.ltl.OperatorU;
-import ca.uqac.info.ltl.OperatorVisitor;
-import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.util.Relation;
 
@@ -55,6 +44,56 @@ import ca.uqac.info.util.Relation;
  * Note that {@link translateFormula} must be called <strong>after</strong>
  * {@link translateTrace}, as it reuses information from reading the
  * trace to generate the formula.
+ * <p>
+ * <strong>Example usage</strong>
+ * <p>
+ * Consider the following trace of four events:
+ * <pre>
+ * &lt;Event&gt;
+ *   &lt;a&gt;1&lt;/a&gt;
+ *   &lt;b&gt;2&lt;/b&gt;
+ *   &lt;c&gt;3&lt;/c&gt;
+ * &lt;/Event&gt;
+ * &lt;Event&gt;
+ *   &lt;a&gt;2&lt;/a&gt;
+ *   &lt;b&gt;6&lt;/b&gt;
+ *   &lt;c&gt;1&lt;/c&gt;
+ * &lt;/Event&gt;
+ *  &lt;Event&gt;
+ *   &lt;a&gt;1&lt;/a&gt;
+ *   &lt;b&gt;3&lt;/b&gt;
+ *   &lt;c&gt;1&lt;/c&gt;
+ * &lt;/Event&gt;
+ *  &lt;Event&gt;
+ *   &lt;a&gt;2&lt;/a&gt;
+ *   &lt;b&gt;6&lt;/b&gt;
+ *   &lt;c&gt;4&lt;/c&gt;
+ * &lt;/Event&gt;
+ * </pre>
+ * Suppose we want to create an atomic trace that distinguishes the values
+ * of parameters a and b.
+ * <ol>
+ * <li>One first calls <code>translator.setParameters(s)</code>, where <code>s</code>
+ * is a set containing a single String "a".</li>
+ * <li>One then calls <code>translator.translateTrace(t)</code>, where <code>t</code>
+ * is the trace shown above. The resulting trace will be
+ *   <blockquote>
+ *   e0 e1 e2 e1
+ *   </blockquote>
+ * that is, the 2nd and 4th events have the same token, since they have the same
+ * combination of values for parameters a and b (and we discard the other parameters).
+ * <li>Suppose we want to convert the LTL formula <b>F</b>&nbsp;a=1. One calls
+ * <code>translator.translateFormula(f)</code>, where <code>f</code> is an
+ * {@link Operator} containing the formula. The method returns the string
+ *   <blockquote>
+ *   F (e0 | e2)
+ *   </blockquote>
+ * that is, the condition a=1 is fulfilled by an event if its token is either
+ * e0 or e2.</li>
+ * </ol>
+ * One can see how a problem on a trace/formula with parameters has been
+ * converted into a situation where both the trace and the formula contain
+ * only atomic events.
  * @author sylvain
  *
  */
@@ -130,10 +169,9 @@ public class AtomicTranslator implements Translator
 			// Check all events that satisfy the said equality
 			final Map<Event,String> tokens = AtomicTranslator.this.m_tokens;
 			Set<Event> events = tokens.keySet();
-			StringBuffer out = new StringBuffer();
-			boolean first = true;
 			String left = o.getLeft().toString();
 			String right = o.getRight().toString();
+			Set<String> disjunct_tokens = new HashSet<String>();
 			for (Event e : events)
 			{
 				// Check if equality applies to this event
@@ -143,10 +181,20 @@ public class AtomicTranslator implements Translator
 				{
 					// Yes: then the associated token is a possible one
 					String token = tokens.get(e);
-					if (!first)
-						out.append(" | ");
-					out.append(token);
+					disjunct_tokens.add(token);
 				}
+			}
+			// Creates the disjunct associated with that set of tokens
+			StringBuffer out = new StringBuffer();
+			boolean first = true;
+			for (String token : disjunct_tokens)
+			{
+				if (!first)
+				{
+					out.append(" | ");
+				}
+				first = false;
+				out.append(token);	
 			}
 	    m_pieces.push(out);
     }
