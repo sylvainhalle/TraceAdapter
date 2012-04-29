@@ -20,7 +20,20 @@ package ca.uqac.info.trace.conversion;
 
 import java.util.*;
 
+import ca.uqac.info.ltl.Atom;
+import ca.uqac.info.ltl.GenericVisitor;
 import ca.uqac.info.ltl.Operator;
+import ca.uqac.info.ltl.OperatorAnd;
+import ca.uqac.info.ltl.OperatorEquals;
+import ca.uqac.info.ltl.OperatorEquiv;
+import ca.uqac.info.ltl.OperatorF;
+import ca.uqac.info.ltl.OperatorG;
+import ca.uqac.info.ltl.OperatorImplies;
+import ca.uqac.info.ltl.OperatorNot;
+import ca.uqac.info.ltl.OperatorOr;
+import ca.uqac.info.ltl.OperatorU;
+import ca.uqac.info.ltl.OperatorVisitor;
+import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.util.Relation;
 
@@ -34,9 +47,14 @@ import ca.uqac.info.util.Relation;
  * <p>
  * The translator does the same thing with the formula &phi;, yielding a
  * formula &phi;' where every ground
- * term is replaced by an atom. The translator does so in such a way
+ * term is replaced by an atom (or a disjunction of atoms).
+ * The translator does so in such a way
  * that &sigma;&nbsp;&#8871;&nbsp;&phi; if and only if
  * &sigma;'&nbsp;&#8871;&nbsp;&phi;'. 
+ * <p>
+ * Note that {@link translateFormula} must be called <strong>after</strong>
+ * {@link translateTrace}, as it reuses information from reading the
+ * trace to generate the formula.
  * @author sylvain
  *
  */
@@ -61,21 +79,85 @@ public class AtomicTranslator implements Translator
 	{
 		super();
 		m_parameters = null;
-		m_tokens = new HashMap<Event,String>();
 	}
 
 	@Override
   public String translateFormula(Operator o)
   {
-	  // TODO Auto-generated method stub
-	  return null;
+		assert m_tokens != null; // If null, means that translateTrace() hasn't been called first
+		AtomicFormulaTranslator aft = new AtomicFormulaTranslator();
+		o.accept(aft);
+		return aft.getFormula();
   }
+	
+	/**
+	 * Translates an arbitrary LTL formula into a propositional LTL
+	 * formula. The visitor replaces every ground term of the form
+	 * p<sub><i>n</i></sub>&nbsp;=&nbsp;c into a term of the form
+	 * <i>a</i><sub>1</sub> &or; <i>a</i><sub>2</sub> &or; ...
+	 * <i>a</i><sub><i>n</i></sub>, where the <i>a</i><sub><i>i</i></sub>
+	 * are the tokens for all the events that satisfy the equality.
+	 * <p>
+	 * The method supposes that:
+	 * <ul>
+	 * <li>{@link translateFormula} has already
+	 * been called on the translator</li>
+	 * <li>The left-hand side of an equality is
+	 * a parameter name, and the right-hand side is the value</li>
+	 * <li>A multi-valued message satisfies the equality as soon
+	 * as one occurrence of the parameter contains the value
+	 * (hence the equality is implicitly existentially quantified)</li>
+	 * </ul>
+	 * @author sylvain
+	 *
+	 */
+	protected class AtomicFormulaTranslator extends GenericVisitor
+	{
+    public AtomicFormulaTranslator()
+    {
+      super();
+    }
+
+    public String getFormula()
+    {
+      StringBuffer out = m_pieces.peek();
+      return out.toString();
+    }
+    
+		@Override
+    public void visit(OperatorEquals o)
+    {
+			// Check all events that satisfy the said equality
+			final Map<Event,String> tokens = AtomicTranslator.this.m_tokens;
+			Set<Event> events = tokens.keySet();
+			StringBuffer out = new StringBuffer();
+			boolean first = true;
+			String left = o.getLeft().toString();
+			String right = o.getRight().toString();
+			for (Event e : events)
+			{
+				// Check if equality applies to this event
+				Relation<String,String> p_dom = e.getParameterDomain();
+				Set<String> vals = p_dom.get(left);
+				if (vals != null && vals.contains(right))
+				{
+					// Yes: then the associated token is a possible one
+					String token = tokens.get(e);
+					if (!first)
+						out.append(" | ");
+					out.append(token);
+				}
+			}
+	    m_pieces.push(out);
+    }
+	}
+	
 
 	@Override
   public String translateTrace(EventTrace t)
   {
 		// TODO: this whole process could be done in one pass
-		
+		m_tokens = new HashMap<Event,String>();
 	  StringBuilder out = new StringBuilder();
 	  // First pass on the trace: compute projection over
 	  // parameters to retain, and give each event

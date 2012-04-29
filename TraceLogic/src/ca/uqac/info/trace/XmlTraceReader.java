@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  */
 public class XmlTraceReader extends TraceReader
 {
-  protected String m_eventTagName = "message";//"Event";
+  protected String m_eventTagName = "Event";
   
   public void setEventTagName(String n)
   {
