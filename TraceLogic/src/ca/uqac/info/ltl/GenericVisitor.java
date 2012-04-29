@@ -12,7 +12,7 @@ import java.util.Stack;
  */
 public class GenericVisitor implements OperatorVisitor
 {
-	Stack<StringBuffer> m_pieces;
+	protected Stack<StringBuffer> m_pieces;
 
   public GenericVisitor()
   {
