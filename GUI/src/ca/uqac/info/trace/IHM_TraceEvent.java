@@ -4,16 +4,15 @@
  */
 package ca.uqac.info.trace;
 
-import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -27,13 +26,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.Border;
-
-
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -74,10 +73,9 @@ public class IHM_TraceEvent extends JFrame {
 	//Trace translator
 	private JLabel      LabTitre, lblTitre, lblInputLTL,
 								    lblTitre1, lblTitre2,lblTitre3 ,
-								    lblTitreLTL, lblTitreTranslate, lblConvLTL;
+								    lblTitreLTL, lblTitreTranslate;
 	private JButton     bClick, btnClear, btnClearLTL,
-								    btnConvertir, btnSave, btnSaveLTL,
-								    btnConvLTL;
+								    btnConvertir, btnSave, btnSaveLTL ;
 	@SuppressWarnings("rawtypes")
 	private JComboBox   comboBox;
 	private JMenuBar     menuBar;
@@ -97,18 +95,28 @@ public class IHM_TraceEvent extends JFrame {
 	
 	private JButton     btnMenu1, btnMenu2, btnMenu3, btnMenu4,
 						btnMenu5,  btnClearGen, btnSaveGen, btnGen;
-	private JTextArea   resultGen;
-	private JScrollPane  spResultGen;
+	private JTextArea   resultGen, textAreaHelpGen;
+	private JScrollPane  spResultGen, spHelpGen;
 	private JLabel 		lblGenerate,lblMenu , lblTitreGen, 
-						lblNbTraces,lblParametres ;
+						lblNbTraces,lblParametres, lblHelpGen;
 	private JTextField   tfNbTraces ;
 	private TraceGenerator t_gen;
 	protected Vector<String> listParam;
 	private Vector<JTextField> listTextFields = new Vector<JTextField>() ;
 	private Vector<JLabel> listLabel = new Vector<JLabel>() ;
+	private JSeparator   separatorGenMenu;
 	//Runtime
-	private JPanel     paneRuntime ;
-	private JLabel 		lblBuilding,lblTitreRunTime ;
+	private JPanel      paneRuntime,paneTools ,paneTable, paneGraph;
+	private JLabel 		lblRepertoireRun,lblTitreRunTime, lblTools ;
+	private JTextField  tfRepertoireRun;
+	private JButton 	btnRepertoireRun, btnGO, btnStop, btnSaveRun,
+						btnBuilding;
+	private JSeparator separatorRun ;
+	private javax.swing.JCheckBox checkBeepBeep, checkJavaMop,checkMaude, 
+								   checkMonopoly, checkMySQL, checkNuSMV,
+								   checkProM, checkSaxon, checkSpin;
+	private JTable executionTable;
+	private JScrollPane spTable ;
 	//General
 	protected File myFile;
 	protected Vector<String> outTrace,outTraceGen;
@@ -138,7 +146,10 @@ public class IHM_TraceEvent extends JFrame {
 		this.lblTitre2.setEnabled(true);
 		this.comboBox.setEnabled(true);
 		btnSave.setEnabled(bVisible);
+		
 		btnSaveLTL.setEnabled(false);
+		
+		
 		//Generator
 		btnSaveGen.setEnabled(bVisible);
 		btnClearGen.setEnabled(bVisible);
@@ -161,10 +172,8 @@ public class IHM_TraceEvent extends JFrame {
 		bClick = new JButton();
 		textFiel_path = new JTextField();
 		lblTitre2 = new JLabel();
-		lblConvLTL = new JLabel();
 		comboBox = new JComboBox();
 		btnConvertir = new JButton();
-		btnConvLTL = new JButton();
 		lblTitre3 = new JLabel();
 		spTranslate = new JScrollPane();
 		txtArea = new JTextArea();
@@ -206,10 +215,32 @@ public class IHM_TraceEvent extends JFrame {
 		spResultGen = new JScrollPane();
 		resultGen = new JTextArea();
 		lblGenerate = new JLabel();
+		separatorGenMenu = new JSeparator();
+		lblHelpGen = new JLabel();
+		textAreaHelpGen = new JTextArea();
+		spHelpGen = new JScrollPane();
+		
 		//Runtime
-		paneRuntime = new JPanel();
+		paneRuntime = new JPanel(); paneGraph = new JPanel();
+		paneTable = new JPanel();	paneTools = new JPanel();
+		
 		lblTitreRunTime = new JLabel("", JLabel.CENTER);
-		lblBuilding = new JLabel();
+		lblRepertoireRun = new JLabel(); lblTools = new JLabel();
+		
+		tfRepertoireRun = new JTextField();	
+		btnRepertoireRun = new JButton();btnStop = new JButton() ; btnGO = new JButton() ; btnBuilding = new JButton();
+		
+		btnSaveRun = new JButton();	separatorRun = new JSeparator();
+		
+		checkBeepBeep = new JCheckBox() ; checkMaude = new JCheckBox() ;
+		checkJavaMop = new JCheckBox() ; checkMonopoly = new JCheckBox() ;
+		checkMySQL = new JCheckBox() ;checkNuSMV = new JCheckBox() ;
+		checkProM = new JCheckBox() ;checkSaxon = new JCheckBox() ;
+		checkSpin =  new JCheckBox() ;
+		
+		executionTable = new JTable() ; spTable = new JScrollPane();
+		
+		
 
 
 	        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -300,77 +331,47 @@ public class IHM_TraceEvent extends JFrame {
 	        lblTitreTranslate.setForeground(new java.awt.Color(0, 51, 102));
 	        lblTitreTranslate.setText("Log  translated");
 
-	        btnConvLTL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/load.GIF"))); 
-	        btnConvLTL.setToolTipText("Translate");
-	        btnConvLTL.addActionListener(new java.awt.event.ActionListener() {
-	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-	                btnConvertirActionPerformed(evt);
-	            }
-	        });
-
-	        lblConvLTL.setText("Start Converting !!");
-
-	       
 	        javax.swing.GroupLayout panTranslatorLayout = new javax.swing.GroupLayout(panTranslator);
 	        panTranslator.setLayout(panTranslatorLayout);
 	        panTranslatorLayout.setHorizontalGroup(
 	            panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addComponent(separator)
 	            .addGroup(panTranslatorLayout.createSequentialGroup()
+	                .addGap(10, 10, 10)
 	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-	                            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-	                                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                        .addComponent(lblTitre2)
-	                                        .addGap(21, 21, 21))
-	                                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                                            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                                .addComponent(lblTitre3)
-	                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                                .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                                            .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-	                                .addComponent(spTranslate, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE))
-	                            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                .addComponent(lblConvLTL)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(btnConvLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(spTranslateLTL))))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(lblTitre1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                                .addComponent(lblTitre2)
+	                                .addGroup(panTranslatorLayout.createSequentialGroup()
+	                                    .addComponent(lblTitre3)
+	                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                    .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(spTranslate))
+	                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addGap(136, 136, 136)
+	                            .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                    .addComponent(lblTitre1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                    .addGroup(panTranslatorLayout.createSequentialGroup()
 	                        .addGap(184, 184, 184)
 	                        .addComponent(LabTitre))
 	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
 	                        .addComponent(bClick)
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                        .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(lblInputLTL))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(lblTitreTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                    .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(lblInputLTL)
+	                    .addComponent(lblTitreTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addContainerGap(18, Short.MAX_VALUE))
+	                    .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addContainerGap())
 	        );
 	        panTranslatorLayout.setVerticalGroup(
 	            panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,33 +403,26 @@ public class IHM_TraceEvent extends JFrame {
 	                            .addComponent(lblTitre3)
 	                            .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
 	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
-	                        .addGap(0, 0, Short.MAX_VALUE)
+	                        .addGap(0, 15, Short.MAX_VALUE)
 	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                            .addComponent(spTranslate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
 	                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
 	                    .addGroup(panTranslatorLayout.createSequentialGroup()
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                        .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                .addGap(56, 56, 56)
-	                                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                                    .addComponent(lblConvLTL)
-	                                    .addComponent(btnConvLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
 	                    .addGroup(panTranslatorLayout.createSequentialGroup()
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	                        .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGap(9, 9, 9)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                        .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-	                .addContainerGap(20, Short.MAX_VALUE))
-	        );    
+	                .addContainerGap(36, Short.MAX_VALUE))
+	        ); 
 		tabbedPane.addTab("Trace Translator", panTranslator);
 
 		panGenerator.setBackground(new java.awt.Color(255, 255, 204));
@@ -478,41 +472,57 @@ public class IHM_TraceEvent extends JFrame {
 			}
 		});
           
+		textAreaHelpGen.setColumns(20);
+        textAreaHelpGen.setRows(5);
+        spHelpGen.setViewportView(textAreaHelpGen);
+        
+        lblHelpGen.setFont(new java.awt.Font("Arial Black", 0, 11));
+        lblHelpGen.setText("   Help about input parameters");
           
 
 	        javax.swing.GroupLayout paneLeftLayout = new javax.swing.GroupLayout(paneLeft);
 	        paneLeft.setLayout(paneLeftLayout);
 	        paneLeftLayout.setHorizontalGroup(
-	            paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(paneLeftLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-	                    .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                    .addComponent(btnMenu5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                    .addComponent(btnMenu4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                    .addComponent(btnMenu3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                    .addComponent(btnMenu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                    .addComponent(btnMenu1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-	                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-	        );
-	        paneLeftLayout.setVerticalGroup(
-	            paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(paneLeftLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addComponent(lblMenu)
-	                .addGap(27, 27, 27)
-	                .addComponent(btnMenu1)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(btnMenu2)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(btnMenu3)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(btnMenu4)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(btnMenu5)
-	                .addContainerGap(421, Short.MAX_VALUE))
-	        );
-
+	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                .addComponent(spHelpGen)
+	                .addComponent(separatorGenMenu)
+	                .addGroup(paneLeftLayout.createSequentialGroup()
+	                    .addContainerGap()
+	                    .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                        .addGroup(paneLeftLayout.createSequentialGroup()
+	                            .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+	                                .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                                .addComponent(btnMenu5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                                .addComponent(btnMenu4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                                .addComponent(btnMenu3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                                .addComponent(btnMenu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                                .addComponent(btnMenu1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	                            .addGap(0, 0, Short.MAX_VALUE))
+	                        .addComponent(lblHelpGen, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+	                    .addContainerGap())
+	            );
+	            paneLeftLayout.setVerticalGroup(
+	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                .addGroup(paneLeftLayout.createSequentialGroup()
+	                    .addContainerGap()
+	                    .addComponent(lblMenu)
+	                    .addGap(27, 27, 27)
+	                    .addComponent(btnMenu1)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addComponent(btnMenu2)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addComponent(btnMenu3)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addComponent(btnMenu4)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addComponent(btnMenu5)
+	                    .addGap(15, 15, 15)
+	                    .addComponent(separatorGenMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                    .addComponent(lblHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                    .addComponent(spHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+	            );
 	        splitPane.setLeftComponent(paneLeft);
 
 	        paneRight.setBackground(new java.awt.Color(247, 223, 157));
@@ -565,7 +575,6 @@ public class IHM_TraceEvent extends JFrame {
 	                 .addGap(0, 112, Short.MAX_VALUE)
 	        );
 	        
-	        
 	        javax.swing.GroupLayout paneRightLayout = new javax.swing.GroupLayout(paneRight);
 	        paneRight.setLayout(paneRightLayout);
 	        paneRightLayout.setHorizontalGroup(
@@ -593,7 +602,7 @@ public class IHM_TraceEvent extends JFrame {
 	                        .addGroup(paneRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                            .addComponent(paneMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                            .addComponent(lblParametres, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                        .addGap(0, 43, Short.MAX_VALUE)))
+	                        .addGap(0, 472, Short.MAX_VALUE)))
 	                .addContainerGap())
 	        );
 	        paneRightLayout.setVerticalGroup(
@@ -613,15 +622,16 @@ public class IHM_TraceEvent extends JFrame {
 	                        .addGroup(paneRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                            .addComponent(lblGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                            .addComponent(btnGen, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
 	                        .addComponent(btnSaveGen, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                        .addComponent(btnClearGen))
 	                    .addComponent(spResultGen))
 	                .addContainerGap())
 	        );
-	        splitPane.setRightComponent(paneRight);
 
+	        splitPane.setRightComponent(paneRight);
+	       
 	        javax.swing.GroupLayout panGeneratorLayout = new javax.swing.GroupLayout(panGenerator);
 	        panGenerator.setLayout(panGeneratorLayout);
 	        panGeneratorLayout.setHorizontalGroup(
@@ -647,34 +657,231 @@ public class IHM_TraceEvent extends JFrame {
 	        );
 
 	        tabbedPane.addTab("Trace Generator", panGenerator);
+	        
 	        //Runtime pane
 	        paneRuntime.setBackground(new java.awt.Color(255, 255, 204));
-	        lblBuilding.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/building.GIF")));
 	        lblTitreRunTime.setFont(new java.awt.Font("Arial Black", 0, 13));
 	        lblTitreRunTime.setForeground(new java.awt.Color(0, 51, 102));
 	        lblTitreRunTime.setText("Execution time of various software");
+	        lblRepertoireRun.setText("Directory : ");
+	        
+	        btnRepertoireRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search.GIF"))); 
+	        btnRepertoireRun.setToolTipText("Search...");
+	        
+	        paneTools.setBackground(new java.awt.Color(255, 255, 204));
+	        lblTools.setText("Tools :");
+	        
+	        checkJavaMop.setBackground(new java.awt.Color(255, 255, 204));
+	        checkJavaMop.setText("Java-MOP");
+
+	        checkBeepBeep.setBackground(new java.awt.Color(255, 255, 204));
+	        checkBeepBeep.setText("BeepBeep");
+
+	        checkMaude.setBackground(new java.awt.Color(255, 255, 204));
+	        checkMaude.setText("Maude");
+
+	        checkMonopoly.setBackground(new java.awt.Color(255, 255, 204));
+	        checkMonopoly.setText("Monopoly");
+
+	        checkMySQL.setBackground(new java.awt.Color(255, 255, 204));
+	        checkMySQL.setText("MySQL");
+
+	        checkNuSMV.setBackground(new java.awt.Color(255, 255, 204));
+	        checkNuSMV.setText("NuSMV");
+
+	        checkProM.setBackground(new java.awt.Color(255, 255, 204));
+	        checkProM.setText("ProM");
+	        checkSaxon.setBackground(new java.awt.Color(255, 255, 204));
+	        checkSaxon.setText("Saxon");
+
+	        checkSpin.setBackground(new java.awt.Color(255, 255, 204));
+	        checkSpin.setText("SPIN");
+
+	        btnGO.setText("GO");
+
+	        btnStop.setText("STOP");
+	        
+	        javax.swing.GroupLayout paneToolsLayout = new javax.swing.GroupLayout(paneTools);
+	        paneTools.setLayout(paneToolsLayout);
+	        paneToolsLayout.setHorizontalGroup(
+	            paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneToolsLayout.createSequentialGroup()
+	                .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addGroup(paneToolsLayout.createSequentialGroup()
+	                        .addContainerGap()
+	                        .addComponent(lblTools))
+	                    .addGroup(paneToolsLayout.createSequentialGroup()
+	                        .addGap(50, 50, 50)
+	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(checkBeepBeep)
+	                            .addComponent(checkJavaMop))
+	                        .addGap(10, 10, 10)
+	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(checkMaude)
+	                            .addComponent(checkMonopoly))
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(checkMySQL)
+	                            .addComponent(checkNuSMV))
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(checkProM)
+	                            .addComponent(checkSaxon))
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(checkSpin)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+	                        .addComponent(btnGO)))
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addComponent(btnStop)
+	                .addGap(14, 14, 14))
+	        );
+	        paneToolsLayout.setVerticalGroup(
+	            paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneToolsLayout.createSequentialGroup()
+	                .addContainerGap()
+	                .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneToolsLayout.createSequentialGroup()
+	                        .addComponent(lblTools)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addGroup(paneToolsLayout.createSequentialGroup()
+	                                .addComponent(checkProM)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addComponent(checkSaxon))
+	                            .addGroup(paneToolsLayout.createSequentialGroup()
+	                                .addComponent(checkMySQL)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addComponent(checkNuSMV))
+	                            .addGroup(paneToolsLayout.createSequentialGroup()
+	                                .addComponent(checkMaude)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addComponent(checkMonopoly))
+	                            .addGroup(paneToolsLayout.createSequentialGroup()
+	                                .addComponent(checkBeepBeep)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addComponent(checkJavaMop))
+	                            .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+	                                .addComponent(btnGO)
+	                                .addComponent(btnStop)))
+	                        .addGap(15, 15, 15))
+	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneToolsLayout.createSequentialGroup()
+	                        .addGap(0, 0, Short.MAX_VALUE)
+	                        .addComponent(checkSpin)
+	                        .addGap(29, 29, 29))))
+	        );
+	        paneTable.setBackground(new java.awt.Color(255, 255, 204));
+
+	        executionTable.setModel(new javax.swing.table.DefaultTableModel(
+	            new Object [][] {
+	                {null, null, null, null, null, null, null, null, null, null},
+	                {null, null, null, null, null, null, null, null, null, null},
+	                {null, null, null, null, null, null, null, null, null, null},
+	                {null, null, null, null, null, null, null, null, null, null}
+	            },
+	            new String [] {
+	                "Trace", "Maude", "BeepBeep", "Java-MOP", "MonoPoly", "MySQL", "NuSMV", "ProM", "Saxon", "Spin"
+	            }
+	        ));
+	        executionTable.setColumnSelectionAllowed(true);
+	        spTable.setViewportView(executionTable);
+	        executionTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+	        btnSaveRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/sav.GIF"))); 
+
+	        javax.swing.GroupLayout paneTableLayout = new javax.swing.GroupLayout(paneTable);
+	        paneTable.setLayout(paneTableLayout);
+	        paneTableLayout.setHorizontalGroup(
+	            paneTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneTableLayout.createSequentialGroup()
+	                .addContainerGap()
+	                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addComponent(btnSaveRun, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addContainerGap())
+	        );
+	        paneTableLayout.setVerticalGroup(
+	            paneTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneTableLayout.createSequentialGroup()
+	                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                .addGroup(paneTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(btnSaveRun, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addGap(335, 335, 335))
+	        );
+
+	        btnBuilding.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/build.GIF"))); 
+
+	        javax.swing.GroupLayout paneGraphLayout = new javax.swing.GroupLayout(paneGraph);
+	        paneGraph.setLayout(paneGraphLayout);
+	        paneGraphLayout.setHorizontalGroup(
+	            paneGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneGraphLayout.createSequentialGroup()
+	                .addContainerGap()
+	                .addComponent(btnBuilding, javax.swing.GroupLayout.DEFAULT_SIZE, 686, Short.MAX_VALUE)
+	                .addContainerGap())
+	        );
+	        paneGraphLayout.setVerticalGroup(
+	            paneGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(paneGraphLayout.createSequentialGroup()
+	                .addContainerGap()
+	                .addComponent(btnBuilding)
+	                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
 	        
 	        javax.swing.GroupLayout paneRuntimeLayout = new javax.swing.GroupLayout(paneRuntime);
 	        paneRuntime.setLayout(paneRuntimeLayout);
 	        paneRuntimeLayout.setHorizontalGroup(
 	            paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(paneRuntimeLayout.createSequentialGroup()
-	                .addGap(148, 148, 148)
 	                .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(lblBuilding)
-	                    .addComponent(lblTitreRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addContainerGap(155, Short.MAX_VALUE))
+	                    .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                        .addContainerGap()
+	                        .addComponent(separatorRun))
+	                    .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                        .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                                .addGap(148, 148, 148)
+	                                .addComponent(lblTitreRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                                .addContainerGap()
+	                                .addComponent(lblRepertoireRun)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                .addComponent(tfRepertoireRun, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                .addComponent(btnRepertoireRun, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                                .addContainerGap()
+	                                .addComponent(paneTools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                                .addContainerGap()
+	                                .addComponent(paneTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
+	                                .addContainerGap()
+	                                .addComponent(paneGraph, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+	                        .addGap(0, 127, Short.MAX_VALUE)))
+	                .addContainerGap())
 	        );
 	        paneRuntimeLayout.setVerticalGroup(
 	            paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(paneRuntimeLayout.createSequentialGroup()
 	                .addContainerGap()
 	                .addComponent(lblTitreRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(22, 22, 22)
+	                .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+	                    .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+	                        .addComponent(tfRepertoireRun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                        .addComponent(lblRepertoireRun))
+	                    .addComponent(btnRepertoireRun, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addGap(9, 9, 9)
+	                .addComponent(paneTools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addComponent(separatorRun, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(22, 22, 22)
+	                .addComponent(paneTable, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                .addGap(18, 18, 18)
-	                .addComponent(lblBuilding, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addContainerGap(145, Short.MAX_VALUE))
+	                .addComponent(paneGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addContainerGap(40, Short.MAX_VALUE))
 	        );
-
 	        tabbedPane.addTab("Runtime", paneRuntime);
 
 	        lblTitre.setFont(new java.awt.Font("Arial", 1, 18)); 
@@ -805,19 +1012,31 @@ public class IHM_TraceEvent extends JFrame {
 
 		if (evt.getSource() == btnConvertir) 
 		{
+			if(output_format.equalsIgnoreCase("monpoly"))
+			{
+				btnSaveLTL.setEnabled(true);
+			}else
+			{
+				btnSaveLTL.setEnabled(false);
+			}
+			
+			if((! textFiel_path_LTL.getText().isEmpty()))
+			{
+				this.translateLTL();
+			}
 			this.translate();
 		
-		} else if ((evt.getSource() == btnConvLTL) &&(! textFiel_path_LTL.getText().isEmpty()))
-		{
-		     	this.translateLTL();
-		}else if (evt.getSource() == btnGen)
+		} else if (evt.getSource() == btnGen)
 		{
 			this.generateTrace();
 		
 		}
 
 	}
-	
+	/**
+	 * build the set of input parameters and their help corresponding 
+	 * @param evt
+	 */
 	@SuppressWarnings("unchecked")
 	private void  btnMenuActionPerformed(java.awt.event.ActionEvent  evt)
 	{
@@ -862,6 +1081,7 @@ public class IHM_TraceEvent extends JFrame {
 		}
 		
 		this.addParamField(listParam);
+		this.helpParameters(listParam);
 		
 	}
 	/**
@@ -960,9 +1180,6 @@ public class IHM_TraceEvent extends JFrame {
 					txtAreaLTL.setText("Méthode non implementée !!!");
 				}
 
-				if (str_out != null) {
-					btnSaveLTL.setEnabled(true);
-				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -1015,7 +1232,9 @@ public class IHM_TraceEvent extends JFrame {
 			System.exit(1);
 		}
 		int cpt = Integer.parseInt(tfNbTraces.getText());
-		for (int i = 0; i < cpt; i++) {
+		
+		for (int i = 0; i < cpt; i++) 
+		{
 			t_gen.initialize(c_line);
 			EventTrace trace = t_gen.generate();
 			Translator trans = new XmlTranslator();
@@ -1109,13 +1328,26 @@ public class IHM_TraceEvent extends JFrame {
 	 * @param evt
 	 */
 	private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
+		
+		
+		if(output_format.isEmpty())
+		{
+			output_format = "xml";
+		}
+		String strExt = "Save File (."+output_format+" )";
+		FileFilter filter = new FileNameExtensionFilter(strExt, output_format);
+		
 		JFileChooser fileSave = new JFileChooser();
+		fileSave.setAcceptAllFileFilterUsed(false);
+		fileSave.addChoosableFileFilter(filter);
 		FileOutputStream fo;
+		
 		String str = "", type;
 		int res = fileSave.showSaveDialog(this);
 
 		if (res == JFileChooser.APPROVE_OPTION) {
-			File file = fileSave.getSelectedFile();
+			String nameFile = fileSave.getSelectedFile().getPath()+ "."+output_format; 
+			File file =  new File(nameFile);
 
 			if ((file.exists()) || (file.canWrite())) {
 				JOptionPane.showMessageDialog(this,
@@ -1129,6 +1361,10 @@ public class IHM_TraceEvent extends JFrame {
 						type = "Translator";
 						this.saveTrace(file, type);
 						txtArea.setText("");
+						if(!output_format.equalsIgnoreCase("monpoly"))
+						{
+							txtAreaLTL.setText("");
+						}
 					} else if (evt.getSource() == btnSaveLTL) {
 						fo = new FileOutputStream(file);
 						str = txtAreaLTL.getText();
@@ -1139,7 +1375,10 @@ public class IHM_TraceEvent extends JFrame {
 					else if (evt.getSource() == btnSaveGen)
 					{
 						type = "Generator";
-						this.saveTrace(file, type);
+						fileSave.removeChoosableFileFilter(filter);
+						fileSave.setAcceptAllFileFilterUsed(true);
+						File fileGen = new File( fileSave.getSelectedFile().getPath()+ "."+output_format);
+						this.saveTrace(fileGen, type);
 						resultGen.setText("");
 					}
 
@@ -1163,6 +1402,10 @@ public class IHM_TraceEvent extends JFrame {
 		FileOutputStream fo;
 		String str, repertoire = this.getDirectory(fos.getAbsolutePath()
 				.replace("\\", "/"), true);
+		
+		Boolean bMonopoly = (type.equalsIgnoreCase("Translator") &&
+							(!output_format.equalsIgnoreCase("monpoly")));
+		String strLTL = "\n".concat(txtAreaLTL.getText());
 		
 		Vector<String> tempTrace = new Vector<String>();
 		
@@ -1188,6 +1431,10 @@ public class IHM_TraceEvent extends JFrame {
 
 						fo = new FileOutputStream(new File(str));
 						fo.write(tempTrace.get(i).getBytes());
+						if(bMonopoly)
+						{
+							fo.write(strLTL.getBytes());
+						}
 						fo.close();
 
 					} catch (Exception e) {
@@ -1212,7 +1459,7 @@ public class IHM_TraceEvent extends JFrame {
 		return result;
 	}
 	/**
-	 * 
+	 * Built the path of the directory backup
 	 * @param path
 	 * @return
 	 */
@@ -1220,7 +1467,9 @@ public class IHM_TraceEvent extends JFrame {
 	{
 		String [] list = path.split("/");
 		int rand = randomGenerator.nextInt(100);
-		String rep = "" , repTrace = "/Trace_"+rand+"/";
+		String rep = "" , 
+			  repTrace = "/Trace_"+output_format.toUpperCase().concat("_")+rand+"/";
+		
 		int nbElement , taille = 0 ;
 		if(list.length > 0)
 		{
@@ -1317,7 +1566,10 @@ public class IHM_TraceEvent extends JFrame {
 			return filename;
 		return filename.substring(p + 1);
 	}
-	
+	/**
+	 * We allow building  the set of input parameters depending on the choice 
+	 * @param listParam
+	 */
 	private void addParamField(Vector<String> listParam) {
 		JLabel lbl;
 		JTextField tf;
@@ -1406,6 +1658,37 @@ public class IHM_TraceEvent extends JFrame {
 		paneMenuLayout.setVerticalGroup(verticalSeqGrp);
 		
 
+	}
+	/**
+	 * Help that give us the meaning of all input parameters
+	 * @param listParams
+	 */
+	private void helpParameters( Vector<String > listParams)
+	{
+		String strEgal = " = ";
+		String strTemps ,strResult ="",str;
+		if(! listParams.isEmpty())
+		{
+			for( int i = 0 ; i < listParams.size() ; i++)
+			{
+				str = "";
+				strTemps = listParams.get(i).replaceAll("/", strEgal).concat("\n");
+				String [] tab = strTemps.split(" ");
+				
+				int taille = (tab.length) / 2 ;
+				for(int j = 0 ; j < tab.length ; j++ )
+				{
+					if(j == taille)
+					{
+						str = str.concat("\n");
+					}
+					str = str.concat(tab[j]).concat(" "); 
+				}
+				
+				strResult = strResult.concat(str).concat("\n");
+			}
+			textAreaHelpGen.setText(strResult);
+		}
 	}
     /**
      * @param args the command line arguments

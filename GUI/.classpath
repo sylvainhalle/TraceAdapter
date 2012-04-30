@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TraceLogic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TraceTranslator"/>
 	<classpathentry kind="lib" path="/TraceLogic/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="src/lib/LTKJava_with_dep_0_1_0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
