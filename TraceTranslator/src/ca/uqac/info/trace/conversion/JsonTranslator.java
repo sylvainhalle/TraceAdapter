@@ -35,42 +35,156 @@ public class JsonTranslator implements Translator
    */
   protected final String m_tableName = "trace";
 
-  public String translateTrace(EventTrace m_trace)
-  {
-    StringBuffer out = new StringBuffer();
-    out.append("{\n  \"trace\" :\n  [\n");
-    int trace_length = m_trace.size();
-    for (int i = 0; i < trace_length; i++)
-    {
-      Event e = m_trace.elementAt(i);
-      out.append("    {\n");
-      Node n = e.getDomNode();
-      NodeList children = n.getChildNodes();
-      boolean added_one = false;
-      for (int j = 0; j < children.getLength(); j++)
-      {
-        Node child = children.item(j);
-        String val = child.getTextContent();
-        val = val.trim();
-        if (val.isEmpty())
-          continue;
-        if (added_one)
-          out.append(",\n");
-        added_one = true;
-        out.append(toJson(child, "      "));    
-      }
-      if (added_one)
-        out.append("\n");
-      out.append("    }");
-      if (i < trace_length - 1)
-        out.append(",");
-      out.append("\n");
-    }
-    out.append("  ]\n");
-    out.append("}");
-    return out.toString();
-  }
-  
+	public String translateTrace(EventTrace m_trace) {
+		StringBuffer out = new StringBuffer();
+		out.append("{\n  \"trace\" :\n  [\n");
+		int trace_length = m_trace.size();
+		for (int i = 0; i < trace_length; i++) {
+			Event e = m_trace.elementAt(i);
+			out.append("    {\n");
+			Node n = e.getDomNode();
+			NodeList children = n.getChildNodes();
+			Node child;
+			String val = "";
+			boolean added_one = false;
+			// Sam
+
+			if (children.getLength() > 1) {
+				NodeList level1 = children.item(1).getChildNodes();
+				
+				out.append("      ").append("\"").append( children.item(1).getNodeName()).append("\": ");
+				out.append("\n").append("      ").append("{\n");
+				
+				if (level1.getLength() > 1) {
+
+					NodeList level2 = level1.item(1).getChildNodes();
+					
+					out.append("      ").append("\"").append( level1.item(1).getNodeName()).append("\": ");
+					out.append("\n").append("      ").append("{\n");
+					
+					if (level2.getLength() > 1) {
+					
+						for (int index = 1; index < level2.getLength(); index++) {
+							child = level2.item(index);
+							
+							if (child.getChildNodes().getLength() == 1) {
+								val = child.getTextContent();
+								val = val.trim();
+								if (val.isEmpty())
+									continue;
+								if (added_one)
+									out.append(",\n");
+								added_one = true;
+								out.append(toJson(child, "      "));
+							} else if (child.getChildNodes().getLength() > 1) {
+								NodeList level3 = level2.item(index)
+										.getChildNodes();
+
+								if (level3.getLength() > 1) {
+									for (int in = 1; in < level3.getLength(); in++) {
+										child = level3.item(in);
+																		
+										if (child.getChildNodes().getLength() == 1) {
+											val = child.getTextContent();
+											val = val.trim();
+											if (val.isEmpty())
+												continue;
+											if (added_one)
+												out.append(",\n");
+											added_one = true;
+											out.append(toJson(child, "      "));
+										} else if (child.getChildNodes()
+												.getLength() > 1) {
+											NodeList level4 = level3.item(in)
+													.getChildNodes();
+
+											if (level4.getLength() > 1) {
+												for (int y = 1; y < level4
+														.getLength(); y++) {
+													child = level4.item(y);
+													if (child.getChildNodes()
+															.getLength() == 1) {
+														val = child
+																.getTextContent();
+														val = val.trim();
+														if (val.isEmpty())
+															continue;
+														if (added_one)
+															out.append(",\n");
+														added_one = true;
+														out.append(toJson(
+																child, "      "));
+													}
+												}
+											}
+										}
+									}
+
+								}
+
+							}
+						}
+					}else{
+						for (int j = 0; j < level1.getLength(); j++) {
+							child = level1.item(j);
+							val = child.getTextContent();
+							val = val.trim();
+							if (val.isEmpty())
+								continue;
+							
+							if (added_one)
+								out.append(",\n");
+							added_one = true;
+							out.append(toJson(child, "      "));
+						}
+						
+						
+					}
+					out.append("\n").append("      ").append("}\n");
+				} else {
+					for (int j = 0; j < children.getLength(); j++) {
+						child = children.item(j);
+						val = child.getTextContent();
+						val = val.trim();
+						if (val.isEmpty())
+							continue;
+
+						
+						if (added_one)
+							out.append(",\n");
+						added_one = true;
+						out.append(toJson(child, "      "));
+					}
+					
+				}
+				out.append("\n").append("      ").append("}\n");
+			}
+
+			// Fin
+			// for (int j = 0; j < children.getLength(); j++)
+			// {
+			// Node child = children.item(j);
+			// String val = child.getTextContent();
+			// val = val.trim();
+			// if (val.isEmpty())
+			// continue;
+			// if (added_one)out.append(toJson(child, "      "));
+			// out.append(",\n");
+			// added_one = true;
+			//
+			// }
+			if (added_one)
+				out.append("\n");
+			out.append("    }");
+			if (i < trace_length - 1)
+				out.append(",");
+			out.append("\n");
+		}
+		out.append("  ]\n");
+		out.append("}");
+		return out.toString();
+	}
+ 
   private StringBuffer toJson(Node n, String indent)
   {
     StringBuffer out = new StringBuffer();

@@ -91,7 +91,6 @@ public class JavaMopTranslator implements Translator
     StringBuffer out = new StringBuffer();
     Relation<String,String> param_domains = t.getParameterDomain();
     Set<String> params = param_domains.keySet();
-    System.out.println("parm_domain"+ params);
     //Vector<String> o_params = new Vector<String>();
     // We dump params in a Vector to forced ordered iteration every time
     for (String p : params)
