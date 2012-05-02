@@ -4,8 +4,11 @@
  */
 package ca.uqac.info.trace;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Vector;
@@ -22,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
@@ -33,6 +37,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -53,11 +58,15 @@ import ca.uqac.info.trace.conversion.SqlTranslator;
 import ca.uqac.info.trace.conversion.Translator;
 import ca.uqac.info.trace.conversion.XesTranslator;
 import ca.uqac.info.trace.conversion.XmlTranslator;
+import ca.uqac.info.trace.execution.Beepbeep;
+import ca.uqac.info.trace.execution.Execution;
+import ca.uqac.info.trace.execution.Saxon;
 import ca.uqac.info.trace.generation.AmazonEcsGenerator;
 import ca.uqac.info.trace.generation.BookstoreGenerator;
 import ca.uqac.info.trace.generation.CycleGenerator;
 import ca.uqac.info.trace.generation.LlrpGenerator;
 import ca.uqac.info.trace.generation.PetriNetGenerator;
+import ca.uqac.info.trace.generation.RandomTraceGenerator;
 import ca.uqac.info.trace.generation.TraceGenerator;
 
 /**
@@ -94,7 +103,8 @@ public class IHM_TraceEvent extends JFrame {
 	private JPanel     paneLeft, paneRight, paneMenu;
 	
 	private JButton     btnMenu1, btnMenu2, btnMenu3, btnMenu4,
-						btnMenu5,  btnClearGen, btnSaveGen, btnGen;
+						btnMenu5,  btnMenu6,btnClearGen, btnSaveGen, 
+						btnGen;
 	private JTextArea   resultGen, textAreaHelpGen;
 	private JScrollPane  spResultGen, spHelpGen;
 	private JLabel 		lblGenerate,lblMenu , lblTitreGen, 
@@ -117,6 +127,7 @@ public class IHM_TraceEvent extends JFrame {
 								   checkProM, checkSaxon, checkSpin;
 	private JTable executionTable;
 	private JScrollPane spTable ;
+	private Vector<String> listTools ;
 	//General
 	protected File myFile;
 	protected Vector<String> outTrace,outTraceGen;
@@ -203,11 +214,9 @@ public class IHM_TraceEvent extends JFrame {
 		paneLeft = new JPanel();
 		paneRight = new JPanel();
 		paneMenu = new JPanel();
-		btnMenu1 = new JButton();
-		btnMenu2 = new JButton();
-		btnMenu3 = new JButton();
-		btnMenu4 = new JButton();
-		btnMenu5 = new JButton();
+		btnMenu1 = new JButton();btnMenu2 = new JButton();
+		btnMenu3 = new JButton();btnMenu4 = new JButton();
+		btnMenu5 = new JButton();btnMenu6 = new JButton();
 		lblMenu = new JLabel();
 		btnClearGen = new JButton();
 		btnSaveGen = new JButton();
@@ -446,6 +455,9 @@ public class IHM_TraceEvent extends JFrame {
         btnMenu4.setText("LLRP Generator");
         btnMenu5.setFont(new java.awt.Font("Arial Black", 0, 12)); 
         btnMenu5.setText("Petri Net");
+        btnMenu6.setFont(new java.awt.Font("Arial Black", 0, 12)); 
+        btnMenu6.setText("Random Trace");
+        
 		btnMenu1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				btnMenuActionPerformed(evt);
@@ -471,6 +483,12 @@ public class IHM_TraceEvent extends JFrame {
 				btnMenuActionPerformed(evt);
 			}
 		});
+		
+		btnMenu6.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnMenuActionPerformed(evt);
+			}
+		});
           
 		textAreaHelpGen.setColumns(20);
         textAreaHelpGen.setRows(5);
@@ -480,49 +498,97 @@ public class IHM_TraceEvent extends JFrame {
         lblHelpGen.setText("   Help about input parameters");
           
 
-	        javax.swing.GroupLayout paneLeftLayout = new javax.swing.GroupLayout(paneLeft);
-	        paneLeft.setLayout(paneLeftLayout);
-	        paneLeftLayout.setHorizontalGroup(
-	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                .addComponent(spHelpGen)
-	                .addComponent(separatorGenMenu)
-	                .addGroup(paneLeftLayout.createSequentialGroup()
-	                    .addContainerGap()
-	                    .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                        .addGroup(paneLeftLayout.createSequentialGroup()
-	                            .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-	                                .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                .addComponent(btnMenu5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                .addComponent(btnMenu4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                .addComponent(btnMenu3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                .addComponent(btnMenu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                .addComponent(btnMenu1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-	                            .addGap(0, 0, Short.MAX_VALUE))
-	                        .addComponent(lblHelpGen, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
-	                    .addContainerGap())
-	            );
-	            paneLeftLayout.setVerticalGroup(
-	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                .addGroup(paneLeftLayout.createSequentialGroup()
-	                    .addContainerGap()
-	                    .addComponent(lblMenu)
-	                    .addGap(27, 27, 27)
-	                    .addComponent(btnMenu1)
-	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                    .addComponent(btnMenu2)
-	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                    .addComponent(btnMenu3)
-	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                    .addComponent(btnMenu4)
-	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                    .addComponent(btnMenu5)
-	                    .addGap(15, 15, 15)
-	                    .addComponent(separatorGenMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                    .addComponent(lblHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                    .addComponent(spHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
-	            );
+//	        javax.swing.GroupLayout paneLeftLayout = new javax.swing.GroupLayout(paneLeft);
+//	        paneLeft.setLayout(paneLeftLayout);
+//	        paneLeftLayout.setHorizontalGroup(
+//	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//	                .addComponent(spHelpGen)
+//	                .addComponent(separatorGenMenu)
+//	                .addGroup(paneLeftLayout.createSequentialGroup()
+//	                    .addContainerGap()
+//	                    .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//	                        .addGroup(paneLeftLayout.createSequentialGroup()
+//	                            .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+//	                                .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//	                                .addComponent(btnMenu5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//	                                .addComponent(btnMenu4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//	                                .addComponent(btnMenu3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//	                                .addComponent(btnMenu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//	                                .addComponent(btnMenu1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//	                            .addGap(0, 0, Short.MAX_VALUE))
+//	                        .addComponent(lblHelpGen, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+//	                    .addContainerGap())
+//	            );
+//	            paneLeftLayout.setVerticalGroup(
+//	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//	                .addGroup(paneLeftLayout.createSequentialGroup()
+//	                    .addContainerGap()
+//	                    .addComponent(lblMenu)
+//	                    .addGap(27, 27, 27)
+//	                    .addComponent(btnMenu1)
+//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//	                    .addComponent(btnMenu2)
+//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//	                    .addComponent(btnMenu3)
+//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//	                    .addComponent(btnMenu4)
+//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//	                    .addComponent(btnMenu5)
+//	                    .addGap(15, 15, 15)
+//	                    .addComponent(separatorGenMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//	                    .addComponent(lblHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+//	                    .addComponent(spHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+//	            );
+        javax.swing.GroupLayout paneLeftLayout = new javax.swing.GroupLayout(paneLeft);
+        paneLeft.setLayout(paneLeftLayout);
+        paneLeftLayout.setHorizontalGroup(
+            paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(separatorGenMenu)
+            .addGroup(paneLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblHelpGen, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                    .addComponent(spHelpGen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                    .addGroup(paneLeftLayout.createSequentialGroup()
+                        .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnMenu6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMenu5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMenu4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMenu3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMenu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMenu1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        paneLeftLayout.setVerticalGroup(
+            paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblMenu)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenu1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenu6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenu2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenu3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenu4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMenu5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(separatorGenMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spHelpGen, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
 	        splitPane.setLeftComponent(paneLeft);
 
 	        paneRight.setBackground(new java.awt.Color(247, 223, 157));
@@ -667,6 +733,11 @@ public class IHM_TraceEvent extends JFrame {
 	        
 	        btnRepertoireRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search.GIF"))); 
 	        btnRepertoireRun.setToolTipText("Search...");
+	        btnRepertoireRun.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				 btnRepertoireRunActionPerformed(e) ;			
+				}
+			});
 	        
 	        paneTools.setBackground(new java.awt.Color(255, 255, 204));
 	        lblTools.setText("Tools :");
@@ -698,6 +769,11 @@ public class IHM_TraceEvent extends JFrame {
 	        checkSpin.setText("SPIN");
 
 	        btnGO.setText("GO");
+	        btnGO.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				 btnGOActionPerformed(e);				
+				}
+			});
 
 	        btnStop.setText("STOP");
 	        
@@ -772,29 +848,32 @@ public class IHM_TraceEvent extends JFrame {
 	        paneTable.setBackground(new java.awt.Color(255, 255, 204));
 
 	        executionTable.setModel(new javax.swing.table.DefaultTableModel(
-	            new Object [][] {
-	                {null, null, null, null, null, null, null, null, null, null},
-	                {null, null, null, null, null, null, null, null, null, null},
-	                {null, null, null, null, null, null, null, null, null, null},
-	                {null, null, null, null, null, null, null, null, null, null}
-	            },
-	            new String [] {
-	                "Trace", "Maude", "BeepBeep", "Java-MOP", "MonoPoly", "MySQL", "NuSMV", "ProM", "Saxon", "Spin"
-	            }
-	        ));
+	                new Object [][] {
+	                        {null, null, null, null, null, null, null, null, null, null},
+	                        {null, null, null, null, null, null, null, null, null, null},
+	                        {null, null, null, null, null, null, null, null, null, null},
+	                        {null, null, null, null, null, null, null, null, null, null},
+	                        {null, null, null, null, null, null, null, null, null, null},
+	                        {null, null, null, null, null, null, null, null, null, null},
+	                        {null, null, null, null, null, null, null, null, null, null}
+	                    },
+	                    new String [] {
+	                        "Trace", "Maude", "BeepBeep", "Java-MOP", "MonoPoly", "MySQL", "NuSMV", "ProM", "Saxon", "Spin"
+	                    }
+	                ));
 	        executionTable.setColumnSelectionAllowed(true);
 	        spTable.setViewportView(executionTable);
 	        executionTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
 	        btnSaveRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/sav.GIF"))); 
-
+	        
 	        javax.swing.GroupLayout paneTableLayout = new javax.swing.GroupLayout(paneTable);
 	        paneTable.setLayout(paneTableLayout);
 	        paneTableLayout.setHorizontalGroup(
 	            paneTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(paneTableLayout.createSequentialGroup()
 	                .addContainerGap()
-	                .addComponent(spTable, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+	                .addComponent(spTable)
 	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                .addComponent(btnSaveRun, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                .addContainerGap())
@@ -803,10 +882,11 @@ public class IHM_TraceEvent extends JFrame {
 	            paneTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneTableLayout.createSequentialGroup()
 	                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                .addGroup(paneTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(btnSaveRun, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addGap(335, 335, 335))
+	                .addComponent(btnSaveRun, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(396, 396, 396))
+	            .addGroup(paneTableLayout.createSequentialGroup()
+	                .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(0, 0, Short.MAX_VALUE))
 	        );
 
 	        btnBuilding.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/build.GIF"))); 
@@ -824,10 +904,11 @@ public class IHM_TraceEvent extends JFrame {
 	            paneGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(paneGraphLayout.createSequentialGroup()
 	                .addContainerGap()
-	                .addComponent(btnBuilding)
-	                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	                .addComponent(btnBuilding, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                .addContainerGap())
 	        );
 	        
+
 	        javax.swing.GroupLayout paneRuntimeLayout = new javax.swing.GroupLayout(paneRuntime);
 	        paneRuntime.setLayout(paneRuntimeLayout);
 	        paneRuntimeLayout.setHorizontalGroup(
@@ -838,7 +919,7 @@ public class IHM_TraceEvent extends JFrame {
 	                        .addContainerGap()
 	                        .addComponent(separatorRun))
 	                    .addGroup(paneRuntimeLayout.createSequentialGroup()
-	                        .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                        .addGroup(paneRuntimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
 	                                .addGap(148, 148, 148)
 	                                .addComponent(lblTitreRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -854,11 +935,9 @@ public class IHM_TraceEvent extends JFrame {
 	                                .addComponent(paneTools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
 	                                .addContainerGap()
-	                                .addComponent(paneTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-	                            .addGroup(paneRuntimeLayout.createSequentialGroup()
-	                                .addContainerGap()
-	                                .addComponent(paneGraph, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-	                        .addGap(0, 127, Short.MAX_VALUE)))
+	                                .addComponent(paneGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                        .addGap(0, 127, Short.MAX_VALUE))
+	                    .addComponent(paneTable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 	                .addContainerGap())
 	        );
 	        paneRuntimeLayout.setVerticalGroup(
@@ -876,12 +955,13 @@ public class IHM_TraceEvent extends JFrame {
 	                .addComponent(paneTools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                .addComponent(separatorRun, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addGap(22, 22, 22)
-	                .addComponent(paneTable, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addGap(18, 18, 18)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addComponent(paneTable, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(27, 27, 27)
 	                .addComponent(paneGraph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addContainerGap(40, Short.MAX_VALUE))
+	                .addContainerGap(29, Short.MAX_VALUE))
 	        );
+
 	        tabbedPane.addTab("Runtime", paneRuntime);
 
 	        lblTitre.setFont(new java.awt.Font("Arial", 1, 18)); 
@@ -1060,6 +1140,8 @@ public class IHM_TraceEvent extends JFrame {
 			this.selectedMenu = "llrpgenerator";
 		} else if (evt.getSource() == btnMenu5) {
 			this.selectedMenu = "petrinet";
+		}else if (evt.getSource() == btnMenu6) {
+			this.selectedMenu = "randomTrace";
 		}
 		
 		// Determine which translator to initialize
@@ -1296,6 +1378,8 @@ public class IHM_TraceEvent extends JFrame {
 			t_gen = new LlrpGenerator();
 		} else if (output_format.compareToIgnoreCase("petrinet") == 0) {
 			t_gen = new PetriNetGenerator();
+		} else if (output_format.compareToIgnoreCase("randomTrace") == 0) {
+			t_gen = new RandomTraceGenerator();
 		} 
 		return t_gen;
 	}
@@ -1689,6 +1773,168 @@ public class IHM_TraceEvent extends JFrame {
 			}
 			textAreaHelpGen.setText(strResult);
 		}
+	}
+	//Runtime 
+	
+	private void btnRepertoireRunActionPerformed(ActionEvent e) {
+		
+		filechoose = new JFileChooser();
+		filechoose.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		status = filechoose.showOpenDialog(this);
+		
+		if (status == JFileChooser.APPROVE_OPTION) 
+		{
+			File fileTemp = filechoose.getSelectedFile();
+
+			// Define and process command line arguments
+			path_file= this.getDirectory(fileTemp.getAbsolutePath().replace("\\", "/"), false);
+			this.tfRepertoireRun.setText(path_file);
+			
+			//
+			System.out.println("le chemin du repertoire est  :" + path_file);
+		}
+		
+		
+	}
+/**
+ * 
+ * @param evt
+ */
+	private void btnGOActionPerformed(java.awt.event.ActionEvent evt) {
+		
+		
+		//The set of tools selected
+		this.selectedTools();
+		String[] columnNames = new String[listTools.size()]; 
+		//display the set of selected
+		if(!listTools.isEmpty())
+		{
+			for(int i = 0 ; i < listTools.size() ; i ++)
+			{
+				columnNames[i] = listTools.get(i) ;
+				System.out.println("Outil selectionné :  " + listTools.get(i));
+			}
+			executionTable.setModel(new javax.swing.table.DefaultTableModel(
+		            new Object [][] {
+		                {null, null, null, null, null, null, null, null, null, null},
+		                {null, null, null, null, null, null, null, null, null, null},
+		                {null, null, null, null, null, null, null, null, null, null},
+		                {null, null, null, null, null, null, null, null, null, null}
+		            },columnNames));
+		}
+		
+		// Determine which Execution to initialize
+		Execution exec = new Beepbeep();
+		Execution exec2 = new Saxon();
+		//IHM_TraceEvent.initializeExecution(path_file);
+//		if (exec == null) {
+//			System.err.println("ERROR: Unrecognized used tool");
+//		}
+		//file list 
+		File fileTemp = new File(path_file);
+		// Build the file list of directory
+		String[] listFile = fileTemp.list();
+		Vector<String> listNameFile = new Vector<String>();
+		Vector<String> listNameLTL = new Vector<String>();
+		
+		Vector<Object> vect = new Vector<Object>();
+		// Build the file list and property list
+		for (int j = 0; j < listFile.length; j++) 
+		{
+			File fic = new File(listFile[j]);
+			String strFile = path_file + "/" + fic.getName();
+			
+			if(! getExtension(strFile).equalsIgnoreCase("xml"))
+			{
+				listNameLTL.add(strFile);
+			}else{
+				listNameFile.add(strFile);
+			}
+		}
+		vect.add(listNameLTL);vect.add(listNameFile);
+		// result
+		ArrayList<int []> result = exec.executeToTool(vect);
+		ArrayList<int []> result2 = exec2.executeToTool(vect);
+		
+	  if (!result.isEmpty())
+	  {
+		  String[][] data = new String [result.size()][2];
+		  for(int i=0 ; i< result.size() ; i++)
+		  {
+//			  for (int j = 0 ; j < listTools.size() ; j++)
+//			  {
+				  int [] tab = result.get(i); int [] tab2 = result2.get(i);
+				  data[i][0] = tab[0]+" | "+tab[1];
+				  
+				  data[i][1] = tab2[0]+" | "+tab2[1];
+//			  }
+			  			 
+		  } spTable.setHorizontalScrollBar( new JScrollBar());
+		  executionTable.setModel(new DefaultTableModel(data, columnNames));
+		 
+	  }
+		
+		
+		
+	}
+	/**
+	 * Recovers the set of tool selected
+	 */
+	private void selectedTools() {
+		listTools = new Vector<String>();
+
+		if (checkBeepBeep.isSelected()) {
+			listTools.add("BeepbBeep");
+		}
+		if (checkMaude.isSelected()) {
+			listTools.add("Maude");
+		}
+		if (checkMySQL.isSelected()) {
+			listTools.add("MySQL");
+		}
+		if (checkProM.isSelected()) {
+			listTools.add("ProM");
+		}
+		if (checkJavaMop.isSelected()) {
+			listTools.add("JavaMop");
+		}
+		if (checkMonopoly.isSelected()) {
+			listTools.add("Monopoly");
+		}
+		if (checkNuSMV.isSelected()) {
+			listTools.add("NuSMV");
+		}
+		if (checkSaxon.isSelected()) {
+			listTools.add("Saxon");
+		}
+		if (checkSpin.isSelected()) {
+			listTools.add("Spin");
+		}
+	}
+/**
+ * Initialize Execution based the input directory
+ * @param pathDirectory
+ * @return
+ */
+	@SuppressWarnings("unused")
+	private static Execution initializeExecution (String pathDirectory)
+	{	
+		Execution ex = null ;
+		
+		String []tab = pathDirectory.split("/");
+		int taille = tab.length ;
+		String strTool = tab[taille -1].split("_")[1];
+		
+		if (strTool.compareToIgnoreCase("BeepBeep") == 0) {
+			ex =new Beepbeep();
+		}else if (strTool.compareToIgnoreCase("Saxon") == 0)
+		{
+			ex = new Saxon();
+		}
+		
+		System.out.println("L'outil du repertoire est "+ strTool);
+		
+		return ex ;
 	}
     /**
      * @param args the command line arguments
