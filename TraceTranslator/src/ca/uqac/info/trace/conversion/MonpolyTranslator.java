@@ -52,13 +52,9 @@ public class MonpolyTranslator implements Translator {
 			if (children.getLength() > 1) {
 				NodeList level1 = children.item(1).getChildNodes();
 				out.append(" ").append( children.item(1).getNodeName());
-				out.append("\n");
-				
 				if (level1.getLength() > 1) {
 
 					NodeList level2 = level1.item(1).getChildNodes();
-					out.append("\n");
-					
 					if (level2.getLength() > 1) {
 					
 						for (int index = 1; index < level2.getLength(); index++) {
@@ -69,7 +65,6 @@ public class MonpolyTranslator implements Translator {
 								val = val.trim();
 								if (val.isEmpty())
 									continue;
-								out.append("\n");
 								out.append(toMonpoly(child, ""));
 							} else if (child.getChildNodes().getLength() > 1) {
 								NodeList level3 = level2.item(index)
@@ -84,7 +79,6 @@ public class MonpolyTranslator implements Translator {
 											val = val.trim();
 											if (val.isEmpty())
 												continue;
-											out.append("\n");
 											out.append(toMonpoly(child, ""));
 										} else if (child.getChildNodes()
 												.getLength() > 1) {
@@ -102,7 +96,6 @@ public class MonpolyTranslator implements Translator {
 														val = val.trim();
 														if (val.isEmpty())
 															continue;
-														out.append("\n");
 														out.append(toMonpoly(child, ""));
 													}
 												}
@@ -121,7 +114,6 @@ public class MonpolyTranslator implements Translator {
 							val = val.trim();
 							if (val.isEmpty())
 								continue;
-							out.append("\n");
 							out.append(toMonpoly(child, ""));
 						}
 						
@@ -134,7 +126,6 @@ public class MonpolyTranslator implements Translator {
 						val = val.trim();
 						if (val.isEmpty())
 							continue;
-						out.append("\n");
 						out.append(toMonpoly(child, ""));
 					}
 					
@@ -423,8 +414,6 @@ public class MonpolyTranslator implements Translator {
 						if (level1.getLength() > 1) {
 
 							NodeList level2 = level1.item(1).getChildNodes();
-							out.append("\n");
-							
 							if (level2.getLength() > 1) {
 								
 								for (int index = 1; index < level2.getLength(); index++) {
@@ -502,7 +491,6 @@ public class MonpolyTranslator implements Translator {
 					
 				}
 				out.append(toMonpolySignature(params));
-				out.append("\n");
 				return out.toString();
 			}
 
