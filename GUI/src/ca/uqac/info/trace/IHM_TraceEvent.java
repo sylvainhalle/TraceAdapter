@@ -1835,7 +1835,11 @@ public class IHM_TraceEvent extends JFrame {
 		{
 			 
 			String chemin = this.getDirectory(listDirectory[k].getAbsolutePath().replace("\\", "/"), false);
-			Execution exec = IHM_TraceEvent.initializeExecution(chemin);
+			Execution exec = this.initializeExecution(chemin);
+			if(exec==null)
+			{
+				continue ;
+			}
 			
 			//file list
 			File fileTemp = new File(chemin);
@@ -1953,7 +1957,7 @@ public class IHM_TraceEvent extends JFrame {
  * @param pathDirectory
  * @return
  */
-	private static Execution initializeExecution (String pathDirectory)
+	private Execution initializeExecution (String pathDirectory)
 	{	
 		Execution ex = null ;
 		
@@ -1961,26 +1965,35 @@ public class IHM_TraceEvent extends JFrame {
 		int taille = tab.length ;
 		String strTool = tab[taille -1].split("_")[1];
 		
-		if (strTool.compareToIgnoreCase("XML") == 0) {
+		if ((strTool.compareToIgnoreCase("XML") == 0)
+				&& (checkBeepBeep.isSelected())) {
 			ex = new Beepbeep();
-		} else if (strTool.compareToIgnoreCase("Maude") == 0) {
+		} else if ((strTool.compareToIgnoreCase("Maude") == 0)
+				&& (checkMaude.isSelected())) {
 			ex = new Beepbeep();
-		} else if (strTool.compareToIgnoreCase("SQL") == 0) {
-			ex = new Beepbeep();
-		}
-		if (strTool.compareToIgnoreCase("XES") == 0) {
-			ex = new Beepbeep();
-		} else if (strTool.compareToIgnoreCase("MOP") == 0) {
+		} else if ((strTool.compareToIgnoreCase("SQL") == 0)
+				&& (checkMySQL.isSelected())) {
 			ex = new Beepbeep();
 		}
-		if (strTool.compareToIgnoreCase("Monpoly") == 0) {
+		if ((strTool.compareToIgnoreCase("XES") == 0)
+				&& (checkProM.isSelected())) {
 			ex = new Beepbeep();
-		} else if (strTool.compareToIgnoreCase("SMV") == 0) {
+		} else if ((strTool.compareToIgnoreCase("MOP") == 0)
+				&& (checkJavaMop.isSelected())) {
 			ex = new Beepbeep();
 		}
-		if (strTool.compareToIgnoreCase("Saxon") == 0) {
+		if ((strTool.compareToIgnoreCase("Monpoly") == 0)
+				&& (checkMonopoly.isSelected())) {
 			ex = new Beepbeep();
-		} else if (strTool.compareToIgnoreCase("PML") == 0) {
+		} else if ((strTool.compareToIgnoreCase("SMV") == 0)
+				&& (checkNuSMV.isSelected())) {
+			ex = new Beepbeep();
+		}
+		if ((strTool.compareToIgnoreCase("Saxon") == 0)
+				&& (checkBeepBeep.isSelected())) {
+			ex = new Beepbeep();
+		} else if ((strTool.compareToIgnoreCase("PML") == 0)
+				&& (checkBeepBeep.isSelected())) {
 			ex = new Beepbeep();
 		}
 			

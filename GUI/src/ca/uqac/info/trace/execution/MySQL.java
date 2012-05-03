@@ -31,16 +31,17 @@ public class MySQL extends Execution{
 	}
 
 	@Override
-	public String parseReturnValue(String value) {
+	public int parseReturnValue(String strValue) {
 
-		String out = "";
+		int reponseLTL = -1;
 		
-		if (value.contains("Result: Property is TRUE"))
-			out = "TRUE";
-		else if (value.contains("Result: Property is FALSE"))
-			out = "FALSE";
+		if(strValue.equalsIgnoreCase("true"))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("false")){
+			reponseLTL = 0;
+		}
 		
-		return out;
+		return reponseLTL;
 	}
-
 }

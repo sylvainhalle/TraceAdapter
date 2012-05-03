@@ -33,16 +33,18 @@ public class Monpoly extends Execution {
 	}
 
 	@Override
-	public String parseReturnValue(String value) {
+	public int parseReturnValue(String strValue) {
 
-		String out = "";
+		int reponseLTL = -1;
 		
-		if (value.contains(" is monitorable"))
-			out = "TRUE";
-		else if (value.contains("is not monitorable"))
-			out = "FALSE";
+		if(strValue.equalsIgnoreCase("true"))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("false")){
+			reponseLTL = 0;
+		}
 		
-		return out;
+		return reponseLTL;
 	}
 
 }

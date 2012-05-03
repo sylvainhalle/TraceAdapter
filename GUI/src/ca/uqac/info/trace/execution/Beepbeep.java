@@ -29,9 +29,11 @@ public class Beepbeep extends Execution{
 			vectProp = (Vector<String>) inputLists.get(0);
 			vectFiles = (Vector<String>) inputLists.get(1);
 			
-			for(int i = 0 ; i < vectFiles.size() ; i++)
+			for(int i = 1 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" " + vectProp.get(0) ;
+				String namefile = homeDir+"/"+ vectFiles.get(i);
+				String nameLTL = homeDir+"/"+ vectFiles.get(0);
+				String strCommand = command + homeDir + pointJar + namefile +" " + nameLTL ;
 				arrayResultat.add(this.timeAndMemoryExecution(strCommand));
 			}
 			
@@ -47,16 +49,19 @@ public class Beepbeep extends Execution{
 	 * @param value
 	 * @return result of property
 	 */
-	public String parseReturnValue( String value) {
+	public int parseReturnValue( String strValue) {
 		
-		String out = "";
+
+		int reponseLTL = -1;
 		
-		if (value.contains("Result: Property is TRUE"))
-			out = "TRUE";
-		else if (value.contains("Result: Property is FALSE"))
-			out = "FALSE";
+		if(strValue.equalsIgnoreCase("true"))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("false")){
+			reponseLTL = 0;
+		}
 		
-		return out;
+		return reponseLTL;
 
 	}
 

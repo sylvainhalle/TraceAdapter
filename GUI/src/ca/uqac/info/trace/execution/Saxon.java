@@ -42,15 +42,18 @@ public class Saxon extends Execution{
 	 * @return result of property
 	 */
 	@Override
-	public String parseReturnValue(String value) {
-		String out = "";
+	public int parseReturnValue(String strValue) {
 
-		if (value.contains("Result: Property is TRUE"))
-			out = "TRUE";
-		else if (value.contains("Result: Property is FALSE"))
-			out = "FALSE";
-
-		return out;
+		int reponseLTL = -1;
+		
+		if(strValue.equalsIgnoreCase("true"))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("false")){
+			reponseLTL = 0;
+		}
+		
+		return reponseLTL;
 	}
 
 }
