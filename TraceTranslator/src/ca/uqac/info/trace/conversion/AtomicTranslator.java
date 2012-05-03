@@ -338,4 +338,11 @@ public class AtomicTranslator implements Translator
 		
 	}
 
+
+	@Override
+	public String getSignature(EventTrace t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

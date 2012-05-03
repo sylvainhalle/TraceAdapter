@@ -218,5 +218,11 @@ public class SqlTranslator implements Translator
     out.append("SELECT ").append(m_eventId).append(" FROM ").append(m_tableName).append(" AS ").append(m_tableName).append(level).append(" WHERE ");
     out.append("`").append(translateFormula(o.getLeft(), level + 1)).append("` != '").append(translateFormula(o.getRight(), level + 1)).append("'");
     return out.toString();
-  } 
+  }
+
+@Override
+public String getSignature(EventTrace t) {
+	// TODO Auto-generated method stub
+	return null;
+} 
 }

@@ -324,4 +324,10 @@ public class JavaMopTranslator implements Translator
     String right = o.getRight().toString();
     return new StringBuffer("eq").append(left).append("_").append(right).toString();
   }
+
+@Override
+public String getSignature(EventTrace t) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

@@ -37,4 +37,13 @@ public interface Translator
    * @return A String rendition of the target formula
    */
   public abstract String translateFormula(Operator o);
+  
+  /**
+   * get an input signature for Monpoly
+   * @param t
+   * @return a String representing the signature for Monpoly tool
+   */
+  
+  
+  public abstract String getSignature(EventTrace t);
 }

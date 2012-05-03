@@ -127,4 +127,11 @@ public class XesTranslator implements Translator {
 		return null;
 	}
 
+
+	@Override
+	public String getSignature(EventTrace t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
