@@ -20,6 +20,8 @@ import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
+
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class MaudeTranslator implements Translator
@@ -39,9 +41,13 @@ public class MaudeTranslator implements Translator
 	@Override
 	public String translateTrace(EventTrace t) {
 		StringBuffer out = new StringBuffer();
+		StringBuffer out_Trace = new StringBuffer();
+		EventTrace maTrace = t ;
+		
 		int NbEvent = t.size();
-		// Start writing the Java program
-
+		
+		
+	
 		for (Event e : t) {
 			NodeList listnode = e.getDomNode().getChildNodes();
 
@@ -71,10 +77,27 @@ public class MaudeTranslator implements Translator
 			if (NbEvent != 0) {
 				out.append(" ,\n ");
 			}
-
 		}
+		out.append("  ").append("|=");
+		
+		// Start writing the Java program
+		String params = this.getSignature(maTrace).replace(",", " ");
+		params = params.replace("["," ");
+		params = params.replace("]"," ");
+				out_Trace.append("in ltl.maude");
+				out_Trace.append("\n \n \n");
+				out_Trace.append("fmod MY-TRACE is").append("\t");
+				out_Trace.append("\n ");
+				out_Trace.append("extending LTL .").append("\t");
+				out_Trace.append("\n \n \n");
+				out_Trace.append("ops").append(params).append(" : -> Atom .").append("\t");
+				out_Trace.append("\n \n \n");
+				out_Trace.append("endfm \n ");
+				out_Trace.append("");
+				out_Trace.append("reduce").append(" ");
+				out_Trace.append(out);
 
-		return out.toString();
+		return out_Trace.toString();
 
 	}
 
@@ -265,9 +288,117 @@ public class MaudeTranslator implements Translator
 		  }
 
 		@Override
-		public String getSignature(EventTrace t) {
-			// TODO Auto-generated method stub
-			return null;
+		public String getSignature(EventTrace m_trace) {
+			StringBuffer out = new StringBuffer();
+			Vector<String> params = new Vector<String>() ;
+			int trace_length = m_trace.size();
+			for (int i = 0; i < trace_length; i++) {
+				Event e = m_trace.elementAt(i);
+		
+				Node n = e.getDomNode();
+				NodeList children = n.getChildNodes();
+				Node child;
+				if (children.getLength() > 1) {
+					NodeList level1 = children.item(1).getChildNodes();
+					
+					if (level1.getLength() > 1) {
+
+						NodeList level2 = level1.item(1).getChildNodes();
+						out.append("\n");
+						
+						if (level2.getLength() > 1) {
+							
+							for (int index = 1; index < level2.getLength(); index++) {
+								child = level2.item(index);									
+								if (child.getChildNodes().getLength() == 1) {
+									
+									String strName = child.getNodeName() ; 
+									if(!isExiste(strName, params))
+									{
+										params.add(strName);
+									}
+									
+								} else if (child.getChildNodes().getLength() > 1) {
+									NodeList level3 = level2.item(index).getChildNodes();
+									if (level3.getLength() > 1) {
+										for (int in = 1; in < level3.getLength(); in++) {
+											child = level3.item(in);
+																		
+											if (child.getChildNodes().getLength() == 1) {
+												if (!isExiste(child.getNodeName(),params)) 
+												 {
+													params.add(child.getNodeName());
+												 }
+												
+											} else if (child.getChildNodes().getLength() > 1) {
+												NodeList level4 = level3.item(in).getChildNodes();
+
+												if (level4.getLength() > 1) {
+													for (int y = 1; y < level4.getLength(); y++) {
+														child = level4.item(y);
+														
+														if (child.getChildNodes().getLength() == 1) {
+															
+															if(!isExiste(child.getNodeName(), params))
+															{
+																params.add(child.getNodeName());
+															}
+															
+															
+														}
+													}
+												}
+											}
+										}
+
+									}
+
+								}
+							}
+						}else{
+							for (int j = 0; j < level1.getLength(); j++) {
+								child = level1.item(j);
+								if(!isExiste(child.getNodeName(), params))
+								{
+									params.add(child.getNodeName());
+								 }
+							}
+							
+							
+						}
+					} else {
+						for (int j = 0; j < children.getLength(); j++) {
+							child = children.item(j);
+							
+							if(!isExiste(child.getNodeName(), params))
+							{
+								params.add(child.getNodeName());
+							}
+							
+						}
+						
+					}
+				}
+				
+				
+			}
+			
+			return params.toString();
+		}
+		private boolean isExiste(String element, Vector<String> list) 
+		{
+			boolean found = false;
+			if (!list.isEmpty()) {
+				for (int i = 0; i < list.size(); i++) {
+					if (element.equalsIgnoreCase(list.get(i)))
+					{
+						found = true;
+						break;
+					}
+				}
+			}
+
+			return found;
 		}
 	}
 
