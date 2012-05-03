@@ -1230,7 +1230,7 @@ public class IHM_TraceEvent extends JFrame {
 					txtAreaLTL.setText(str_out);
 				} else 
 				{
-					txtAreaLTL.setText("Méthode non implementée !!!");
+					txtAreaLTL.setText("Mï¿½thode non implementï¿½e !!!");
 				}
 
 			} catch (ParseException e) {
@@ -1305,7 +1305,7 @@ public class IHM_TraceEvent extends JFrame {
 			btnSaveGen.setEnabled(true);
 		}else
 		{
-			resultGen.setText("Aucune trace est générée !!!");
+			resultGen.setText("Aucune trace est gï¿½nï¿½rï¿½e !!!");
 		}
 	}
 	
@@ -1905,7 +1905,7 @@ public class IHM_TraceEvent extends JFrame {
 
 					}else
 					{
-						dataRows[y][x ] = tab[0] + " | " + tab[1];
+						dataRows[y][x ] = tab[0] + " | " + tab[1]+ " | " + tab[2];
 					}
 
 				}

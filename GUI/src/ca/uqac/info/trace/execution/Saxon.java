@@ -41,16 +41,22 @@ public class Saxon extends Execution{
 	 * @param value
 	 * @return result of property
 	 */
-	@Override
-	public String parseReturnValue(String value) {
-		String out = "";
-
+	public int parseReturnValue( String value) {
+		
+		int out = -1 ;
+		
 		if (value.contains("Result: Property is TRUE"))
-			out = "TRUE";
+			out = 1;
 		else if (value.contains("Result: Property is FALSE"))
-			out = "FALSE";
-
+			out = 0;
+		
 		return out;
+
+	}
+	@Override
+	public int[] timeAndMemoryExecution(String command) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

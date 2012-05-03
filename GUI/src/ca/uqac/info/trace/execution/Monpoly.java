@@ -32,17 +32,26 @@ public class Monpoly extends Execution {
 		return arrayResultat;
 	}
 
-	@Override
-	public String parseReturnValue(String value) {
-
-		String out = "";
+	/** 
+	 * @param strNameTools
+	 * @param value
+	 * @return result of property
+	 */
+	public int parseReturnValue( String value) {
 		
-		if (value.contains(" is monitorable"))
-			out = "TRUE";
-		else if (value.contains("is not monitorable"))
-			out = "FALSE";
+		int out = -1 ;
+		
+		if (value.contains("Result: Property is TRUE"))
+			out = 1;
+		else if (value.contains("Result: Property is FALSE"))
+			out = 0;
 		
 		return out;
-	}
 
+	}
+	@Override
+	public int[] timeAndMemoryExecution(String command) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
