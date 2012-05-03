@@ -135,7 +135,7 @@ public class IHM_TraceEvent extends JFrame {
 	private Vector<String> listTools ;
 	//General
 	protected File myFile;
-	protected Vector<String> outTrace,outTraceGen;
+	protected Vector<String> outTrace,outTraceGen,OutSigMonp;
 	protected JFileChooser filechoose;
 	protected int status;
 	protected boolean fieldsVisible;
@@ -1137,7 +1137,7 @@ public class IHM_TraceEvent extends JFrame {
 		//Build the file list of directory
 		String [] listFile = myFile.list();
 		String [] listNameFile = new String [listFile.length] ;
-		outTrace = new Vector<String>();
+		outTrace = new Vector<String>(); OutSigMonp = new Vector<String>();
 		String ficOutTrace = ""  ;
 		
 		for(int j =0 ; j< listFile.length ; j++)
@@ -1177,9 +1177,17 @@ public class IHM_TraceEvent extends JFrame {
 				// Translate the trace into the output format
 				EventTrace trace = reader.parseEventTrace(in_f);
 				String out_trace = trans.translateTrace(trace);
-				String out_trace2 = trans.getSignature(trace);
-
 				outTrace.add(out_trace);
+				//Add signature if the output is monpoly
+				if(output_format.equalsIgnoreCase("monpoly"))
+				{
+					
+					String strTemp = trans.getSignature(trace);
+					String out_sig = ("Signature").concat(strTemp);
+					OutSigMonp.add(strTemp);
+					out_trace = out_trace.concat(out_sig);
+				}
+				
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");
 			}
 		}
@@ -1499,6 +1507,25 @@ public class IHM_TraceEvent extends JFrame {
 						e.printStackTrace();
 					}
 				}
+				if(output_format.equalsIgnoreCase("monpoly"))
+				{
+					for (int j = 0; j < OutSigMonp.size(); j++) 
+					{
+						String nameSig = this.buildFile(fos.getName(), j);
+						String [] listString =  nameSig.split("\\.");
+						str = repertoire.concat(listString[0]+".sig");
+
+						try {
+
+							fo = new FileOutputStream(new File(str));
+							fo.write(OutSigMonp.get(j).getBytes());
+							fo.close();
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -1512,7 +1539,8 @@ public class IHM_TraceEvent extends JFrame {
 	private String buildFile( String nameFile, int rand)
 	{
 		String [] listString = nameFile.split("\\.");
-		String result = listString[0] + rand +"."+listString[1];
+		String result  ;
+		result = listString[0] + rand +"."+listString[1];
 		
 		return result;
 	}
