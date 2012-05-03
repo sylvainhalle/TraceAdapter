@@ -54,4 +54,10 @@ public class XmlTranslator implements Translator
     return o.toString();
   }
 
+@Override
+public String getSignature(EventTrace t) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }

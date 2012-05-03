@@ -1215,6 +1215,7 @@ public class IHM_TraceEvent extends JFrame {
 				// Translate the trace into the output format
 				EventTrace trace = reader.parseEventTrace(in_f);
 				String out_trace = trans.translateTrace(trace);
+				String out_trace2 = trans.getSignature(trace);
 
 				outTrace.add(out_trace);
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");

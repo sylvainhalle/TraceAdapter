@@ -93,33 +93,7 @@ public class PromelaTranslator implements Translator {
 	    // Step 1: define the events as AspectJ pointcuts
 	    PromelaEqualityGetter f_eq= new PromelaEqualityGetter();
 	    o.accept(f_eq);
-	   /* Set<OperatorEquals> equalities = f_eq.getEqualities();
-	    for (OperatorEquals eq : equalities)
-	    {
-	      out.append("  event ").append(toPromelaIdentifier(eq)); 
-	      out.append(" before :\n");
-	      out.append("    call(void my_event(");
-	      StringBuffer args_string = new StringBuffer();
-	      for (int i = 0; i < o_params.size(); i++)
-	      {
-	        String p_name = o_params.elementAt(i);
-	        if (i > 0)
-	        {
-	          out.append(",");
-	          args_string.append(",");
-	        }
-	        out.append("String ").append(p_name);
-	        args_string.append(p_name);
-	      }
-	      out.append(")) && args(").append(args_string).append(")");
-	      Operator left = eq.getLeft();
-	      Operator right = eq.getRight();
-	      // TODO: we assume left-hand is a parameter and right-hand is a value
-	      out.append(" && ").append(left.toString()).append(" == \"").append(right.toString()).append("\"");
-	      out.append(" { }\n");
-	    }
-	    out.append("\n");
-	    */
+	   
 	    
 	    // Step 2: append translated formula on those events 
 	    PromelaFormulaTranslator f_trans = new PromelaFormulaTranslator();
@@ -308,4 +282,10 @@ public class PromelaTranslator implements Translator {
 	    String right = o.getRight().toString();
 	    return new StringBuffer("eq").append(left).append("_").append(right).toString();
 	  }
+
+	@Override
+	public String getSignature(EventTrace t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
