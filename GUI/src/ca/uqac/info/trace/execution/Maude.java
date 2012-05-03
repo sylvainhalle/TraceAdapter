@@ -5,10 +5,28 @@ import java.util.Vector;
 
 public class Maude extends Execution {
 
+	private String homeDir = "C:/Benchmark/";
+	private String command ="maude.exe in ";
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<int[]> executeToTool(Vector<Object> inputLists) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<int []> arrayResultat = new ArrayList<int []>();
+		Vector<String> vectFiles ;
+		
+		if(!inputLists.isEmpty())
+		{
+			vectFiles = (Vector<String>) inputLists.get(1);
+			
+			for(int i = 0 ; i < vectFiles.size() ; i++)
+			{
+				String strCommand =  homeDir + command +vectFiles.get(i) ;
+				arrayResultat.add(this.timeAndMemoryExecution(strCommand));
+			}
+			
+		}
+		
+		return arrayResultat;
 	}
 
 	@Override

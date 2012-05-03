@@ -25,7 +25,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
@@ -60,7 +59,13 @@ import ca.uqac.info.trace.conversion.XesTranslator;
 import ca.uqac.info.trace.conversion.XmlTranslator;
 import ca.uqac.info.trace.execution.Beepbeep;
 import ca.uqac.info.trace.execution.Execution;
+import ca.uqac.info.trace.execution.JavaMop;
+import ca.uqac.info.trace.execution.Maude;
+import ca.uqac.info.trace.execution.Monpoly;
+import ca.uqac.info.trace.execution.MySQL;
+import ca.uqac.info.trace.execution.Nusmv;
 import ca.uqac.info.trace.execution.Saxon;
+import ca.uqac.info.trace.execution.Spin;
 import ca.uqac.info.trace.generation.AmazonEcsGenerator;
 import ca.uqac.info.trace.generation.BookstoreGenerator;
 import ca.uqac.info.trace.generation.CycleGenerator;
@@ -498,49 +503,6 @@ public class IHM_TraceEvent extends JFrame {
         lblHelpGen.setText("   Help about input parameters");
           
 
-//	        javax.swing.GroupLayout paneLeftLayout = new javax.swing.GroupLayout(paneLeft);
-//	        paneLeft.setLayout(paneLeftLayout);
-//	        paneLeftLayout.setHorizontalGroup(
-//	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//	                .addComponent(spHelpGen)
-//	                .addComponent(separatorGenMenu)
-//	                .addGroup(paneLeftLayout.createSequentialGroup()
-//	                    .addContainerGap()
-//	                    .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//	                        .addGroup(paneLeftLayout.createSequentialGroup()
-//	                            .addGroup(paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-//	                                .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//	                                .addComponent(btnMenu5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//	                                .addComponent(btnMenu4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//	                                .addComponent(btnMenu3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//	                                .addComponent(btnMenu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//	                                .addComponent(btnMenu1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-//	                            .addGap(0, 0, Short.MAX_VALUE))
-//	                        .addComponent(lblHelpGen, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
-//	                    .addContainerGap())
-//	            );
-//	            paneLeftLayout.setVerticalGroup(
-//	                paneLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//	                .addGroup(paneLeftLayout.createSequentialGroup()
-//	                    .addContainerGap()
-//	                    .addComponent(lblMenu)
-//	                    .addGap(27, 27, 27)
-//	                    .addComponent(btnMenu1)
-//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//	                    .addComponent(btnMenu2)
-//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//	                    .addComponent(btnMenu3)
-//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//	                    .addComponent(btnMenu4)
-//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//	                    .addComponent(btnMenu5)
-//	                    .addGap(15, 15, 15)
-//	                    .addComponent(separatorGenMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//	                    .addComponent(lblHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-//	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-//	                    .addComponent(spHelpGen, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
-//	            );
         javax.swing.GroupLayout paneLeftLayout = new javax.swing.GroupLayout(paneLeft);
         paneLeft.setLayout(paneLeftLayout);
         paneLeftLayout.setHorizontalGroup(
@@ -752,7 +714,7 @@ public class IHM_TraceEvent extends JFrame {
 	        checkMaude.setText("Maude");
 
 	        checkMonopoly.setBackground(new java.awt.Color(255, 255, 204));
-	        checkMonopoly.setText("Monopoly");
+	        checkMonopoly.setText("Monpoly");
 
 	        checkMySQL.setBackground(new java.awt.Color(255, 255, 204));
 	        checkMySQL.setText("MySQL");
@@ -858,7 +820,7 @@ public class IHM_TraceEvent extends JFrame {
 	                        {null, null, null, null, null, null, null, null, null, null}
 	                    },
 	                    new String [] {
-	                        "Trace", "Maude", "BeepBeep", "Java-MOP", "MonoPoly", "MySQL", "NuSMV", "ProM", "Saxon", "Spin"
+	                        "Trace", "Maude", "BeepBeep", "Java-MOP", "MonPoly", "MySQL", "NuSMV", "ProM", "Saxon", "Spin"
 	                    }
 	                ));
 	        executionTable.setColumnSelectionAllowed(true);
@@ -1414,20 +1376,30 @@ public class IHM_TraceEvent extends JFrame {
 	 */
 	private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
 		
+		String str = "", type ="";
+		//Determine the tab of save button
+		if ((evt.getSource() == btnSave)) {
+			type = "Translator";
+		}
+		if (evt.getSource() == btnSaveGen) {
+			type = "Generator";
+		}
 		
-		if(output_format.isEmpty())
+		//Put extension .xml by default
+		if((output_format.isEmpty()) || (type.equalsIgnoreCase("Generator")))
 		{
 			output_format = "xml";
 		}
 		String strExt = "Save File (."+output_format+" )";
 		FileFilter filter = new FileNameExtensionFilter(strExt, output_format);
 		
+		//add the filter of the save file 
 		JFileChooser fileSave = new JFileChooser();
 		fileSave.setAcceptAllFileFilterUsed(false);
 		fileSave.addChoosableFileFilter(filter);
 		FileOutputStream fo;
 		
-		String str = "", type;
+		
 		int res = fileSave.showSaveDialog(this);
 
 		if (res == JFileChooser.APPROVE_OPTION) {
@@ -1441,9 +1413,10 @@ public class IHM_TraceEvent extends JFrame {
 			} else {
 				try {
 					
-					if ((evt.getSource() == btnSave))
+					//We are in the tab of translation
+					if (type.equalsIgnoreCase("Translator"))
 					{
-						type = "Translator";
+						
 						this.saveTrace(file, type);
 						txtArea.setText("");
 						if(!output_format.equalsIgnoreCase("monpoly"))
@@ -1456,10 +1429,10 @@ public class IHM_TraceEvent extends JFrame {
 						fo.write(str.getBytes());
 						fo.close();
 						txtAreaLTL.setText("");
-					}
-					else if (evt.getSource() == btnSaveGen)
+					}//We are in the tab of Generator
+					else if (type.equalsIgnoreCase("Generator"))
 					{
-						type = "Generator";
+						
 						fileSave.removeChoosableFileFilter(filter);
 						fileSave.setAcceptAllFileFilterUsed(true);
 						File fileGen = new File( fileSave.getSelectedFile().getPath()+ "."+output_format);
@@ -1506,7 +1479,7 @@ public class IHM_TraceEvent extends JFrame {
 			String nameFic = fos.getName();
 			File file = new File(repertoire);
 
-			if (file.mkdir()) 
+			if (file.mkdirs()) 
 			{
 				for (int i = 0; i < tempTrace.size(); i++) 
 				{
@@ -1579,7 +1552,7 @@ public class IHM_TraceEvent extends JFrame {
 			
 			if(btrace)
 			{
-				rep = rep.concat(repTrace);
+				rep = rep.concat("/Rep_Out").concat(repTrace);
 			}
 		}
 		
@@ -1780,19 +1753,19 @@ public class IHM_TraceEvent extends JFrame {
 	private void btnRepertoireRunActionPerformed(ActionEvent e) {
 		
 		filechoose = new JFileChooser();
-		filechoose.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		filechoose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		status = filechoose.showOpenDialog(this);
 		
 		if (status == JFileChooser.APPROVE_OPTION) 
 		{
 			File fileTemp = filechoose.getSelectedFile();
+			
 
 			// Define and process command line arguments
 			path_file= this.getDirectory(fileTemp.getAbsolutePath().replace("\\", "/"), false);
 			this.tfRepertoireRun.setText(path_file);
 			
-			//
-			System.out.println("le chemin du repertoire est  :" + path_file);
+			
 		}
 		
 		
@@ -1801,19 +1774,21 @@ public class IHM_TraceEvent extends JFrame {
  * 
  * @param evt
  */
+	@SuppressWarnings("unchecked")
 	private void btnGOActionPerformed(java.awt.event.ActionEvent evt) {
 		
 		
 		//The set of tools selected
 		this.selectedTools();
-		String[] columnNames = new String[listTools.size()]; 
+		String[] columnNames = new String[listTools.size()+1]; 
+		
 		//display the set of selected
 		if(!listTools.isEmpty())
 		{
+			columnNames[0] = "Trace";
 			for(int i = 0 ; i < listTools.size() ; i ++)
 			{
-				columnNames[i] = listTools.get(i) ;
-				System.out.println("Outil selectionné :  " + listTools.get(i));
+				columnNames[i+1] = listTools.get(i) ;
 			}
 			executionTable.setModel(new javax.swing.table.DefaultTableModel(
 		            new Object [][] {
@@ -1823,60 +1798,93 @@ public class IHM_TraceEvent extends JFrame {
 		                {null, null, null, null, null, null, null, null, null, null}
 		            },columnNames));
 		}
+		//Set of tools selected
+		File [] listDirectory = (new File(path_file)).listFiles();
 		
 		// Determine which Execution to initialize
-		Execution exec = new Beepbeep();
-		Execution exec2 = new Saxon();
-		//IHM_TraceEvent.initializeExecution(path_file);
-//		if (exec == null) {
-//			System.err.println("ERROR: Unrecognized used tool");
-//		}
-		//file list 
-		File fileTemp = new File(path_file);
-		// Build the file list of directory
-		String[] listFile = fileTemp.list();
-		Vector<String> listNameFile = new Vector<String>();
-		Vector<String> listNameLTL = new Vector<String>();
-		
-		Vector<Object> vect = new Vector<Object>();
-		// Build the file list and property list
-		for (int j = 0; j < listFile.length; j++) 
+		Vector<Thread> listThreads = new Vector<Thread>();
+		for (int k = 0 ; k < listDirectory.length  ; k++ )
 		{
-			File fic = new File(listFile[j]);
-			String strFile = path_file + "/" + fic.getName();
+			 
+			String chemin = this.getDirectory(listDirectory[k].getAbsolutePath().replace("\\", "/"), false);
+			Execution exec = IHM_TraceEvent.initializeExecution(chemin);
 			
-			if(! getExtension(strFile).equalsIgnoreCase("xml"))
+			//file list
+			File fileTemp = new File(chemin);
+			
+			// Build the file list of directory
+			String[] listFile = fileTemp.list();
+			
+			Vector<String> listNameFile = new Vector<String>();
+			Vector<String> listNameLTL = new Vector<String>();
+			Vector<Object> vect = new Vector<Object>();
+			
+			// Build the file list and property list
+			for (int j = 0; j < listFile.length; j++)
 			{
-				listNameLTL.add(strFile);
-			}else{
-				listNameFile.add(strFile);
+				File fic = new File(listFile[j]);
+				String strFile = path_file + "/" + fic.getName();
+
+				if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+					listNameLTL.add(strFile);
+				} else {
+					listNameFile.add(strFile);
+				}
+
+			}
+			
+			vect.add(listNameLTL);vect.add(listNameFile);
+			
+			ExecutionThread thread = new ExecutionThread(k, exec, vect) ;
+			listThreads.add(thread) ;
+			thread.start() ;
+		}
+		
+		int sped = listThreads.size() ;
+		ArrayList<int []> data = new ArrayList<int[]>();
+		//Set of result of  tools selected
+		Vector<Object> listData = new Vector<Object>();
+		while ( sped > 0)
+		{
+			for(int j = 0 ; j< listThreads.size() ; j++)
+			{
+				if(!listThreads.get(j).isAlive())
+				{
+					ArrayList<int []> result  =  ((ExecutionThread) listThreads.get(j)).getListResultat();
+					listData.add(result);
+					sped--;
+				}
 			}
 		}
-		vect.add(listNameLTL);vect.add(listNameFile);
-		// result
-		ArrayList<int []> result = exec.executeToTool(vect);
-		ArrayList<int []> result2 = exec2.executeToTool(vect);
 		
-	  if (!result.isEmpty())
-	  {
-		  String[][] data = new String [result.size()][2];
-		  for(int i=0 ; i< result.size() ; i++)
-		  {
-//			  for (int j = 0 ; j < listTools.size() ; j++)
-//			  {
-				  int [] tab = result.get(i); int [] tab2 = result2.get(i);
-				  data[i][0] = tab[0]+" | "+tab[1];
-				  
-				  data[i][1] = tab2[0]+" | "+tab2[1];
-//			  }
-			  			 
-		  } spTable.setHorizontalScrollBar( new JScrollBar());
-		  executionTable.setModel(new DefaultTableModel(data, columnNames));
-		 
-	  }
-		
-		
-		
+		if (!listData.isEmpty()) {
+			int nbCol = listThreads.size()+1 ;
+			data = (ArrayList<int[]>) listData.get(0);
+			String[][] dataRows = new String[data.size()][nbCol ];
+			
+			for (int x = 0; x < nbCol; x++)
+			{
+				if( x != 0)
+				{
+					data = (ArrayList<int[]>) listData.get(x - 1);
+				}
+				
+				for (int y = 0; y < data.size(); y++) {
+					int[] tab = data.get(y);
+
+					if (x == 0) {
+						dataRows[y][x] = Integer.toString(y);
+
+					}else
+					{
+						dataRows[y][x ] = tab[0] + " | " + tab[1];
+					}
+
+				}
+			}
+			executionTable.setModel(new DefaultTableModel(dataRows, columnNames));
+		}
+
 	}
 	/**
 	 * Recovers the set of tool selected
@@ -1885,22 +1893,22 @@ public class IHM_TraceEvent extends JFrame {
 		listTools = new Vector<String>();
 
 		if (checkBeepBeep.isSelected()) {
-			listTools.add("BeepbBeep");
+			listTools.add("BeepBeep");
 		}
 		if (checkMaude.isSelected()) {
 			listTools.add("Maude");
 		}
 		if (checkMySQL.isSelected()) {
-			listTools.add("MySQL");
+			listTools.add("SQL");
 		}
 		if (checkProM.isSelected()) {
 			listTools.add("ProM");
 		}
 		if (checkJavaMop.isSelected()) {
-			listTools.add("JavaMop");
+			listTools.add("Mop");
 		}
 		if (checkMonopoly.isSelected()) {
-			listTools.add("Monopoly");
+			listTools.add("Monpoly");
 		}
 		if (checkNuSMV.isSelected()) {
 			listTools.add("NuSMV");
@@ -1917,7 +1925,6 @@ public class IHM_TraceEvent extends JFrame {
  * @param pathDirectory
  * @return
  */
-	@SuppressWarnings("unused")
 	private static Execution initializeExecution (String pathDirectory)
 	{	
 		Execution ex = null ;
@@ -1926,14 +1933,29 @@ public class IHM_TraceEvent extends JFrame {
 		int taille = tab.length ;
 		String strTool = tab[taille -1].split("_")[1];
 		
-		if (strTool.compareToIgnoreCase("BeepBeep") == 0) {
-			ex =new Beepbeep();
-		}else if (strTool.compareToIgnoreCase("Saxon") == 0)
-		{
-			ex = new Saxon();
+		if (strTool.compareToIgnoreCase("XML") == 0) {
+			ex = new Beepbeep();
+		} else if (strTool.compareToIgnoreCase("Maude") == 0) {
+			ex = new Beepbeep();
+		} else if (strTool.compareToIgnoreCase("SQL") == 0) {
+			ex = new Beepbeep();
 		}
-		
-		System.out.println("L'outil du repertoire est "+ strTool);
+		if (strTool.compareToIgnoreCase("XES") == 0) {
+			ex = new Beepbeep();
+		} else if (strTool.compareToIgnoreCase("MOP") == 0) {
+			ex = new Beepbeep();
+		}
+		if (strTool.compareToIgnoreCase("Monpoly") == 0) {
+			ex = new Beepbeep();
+		} else if (strTool.compareToIgnoreCase("SMV") == 0) {
+			ex = new Beepbeep();
+		}
+		if (strTool.compareToIgnoreCase("Saxon") == 0) {
+			ex = new Beepbeep();
+		} else if (strTool.compareToIgnoreCase("PML") == 0) {
+			ex = new Beepbeep();
+		}
+			
 		
 		return ex ;
 	}
