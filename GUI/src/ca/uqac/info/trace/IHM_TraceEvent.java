@@ -1855,7 +1855,7 @@ public class IHM_TraceEvent extends JFrame {
 			for (int j = 0; j < listFile.length; j++)
 			{
 				File fic = new File(listFile[j]);
-				String strFile = path_file + "/" + fic.getName();
+				String strFile = chemin + "/" + fic.getName();
 
 				if (!getExtension(strFile).equalsIgnoreCase("xml")) {
 					listNameLTL.add(strFile);
