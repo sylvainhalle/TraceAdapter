@@ -19,53 +19,62 @@ public abstract class Execution {
 	 * @param command
 	 * @return  a table that contains time execution and used memory
 	 */
-	public abstract int[] timeAndMemoryExecution(String command) ;
-//		StringBuilder sb = new StringBuilder();
-//		StringBuffer out = new StringBuffer();
-//		int[] result = new int[3];
-//
-//		long startTime = System.currentTimeMillis();
-//		try {
-//			final Process process = Runtime.getRuntime().exec(command);
-//			long endTime = System.currentTimeMillis();
-//			BufferedReader buf = new BufferedReader(new InputStreamReader(
-//					process.getInputStream()));
-//			String line;
-//			while ((line = buf.readLine()) != null) {
-//				sb.append(line);
-//				sb.append("\n");
-//
-//			}
-//			buf.close();
-//			// String retour = sb.toString();
-//			long time = endTime - startTime;
-//			out.append("Total elapsed time in execution of runcommand() is :")
-//					.append(time).append("\n");
-//
-//			// Get the memory consumption
-//			Runtime runtime = Runtime.getRuntime();
-//
-//			// run the garbage collactor
-//			runtime.gc();
-//			long memory = runtime.totalMemory() - runtime.freeMemory();
-//			out.append("Used memory is bytes : ").append(memory).append("\n");
-//			// System.out.print(out);
-//			// System.out.println(parseReturnValue( retour));
-//
-//			result[0] = (int) time;
-//			result[1] = (int) memory;
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return result;
+	public int[] timeAndMemoryExecution(String command) {
+		
+		int[] tabResultat = new int[3];
+		long endTime, time, memory ;
+		String line = null, strReponse ="";
+		int reponseLTL = -1 ;
+		
+		long startTime = System.currentTimeMillis();
+		try {
+			 
+			  Process process = Runtime.getRuntime().exec(command);
+			  endTime = System.currentTimeMillis();
+			BufferedReader buf = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			
+			while ((line = buf.readLine()) != null) {
+            	if(line.contains("Outcome"))
+            	{
+            		String[] tab = line.split(":");
+            		strReponse = tab[1].trim();
+            		System.out.println(strReponse);
+            	}
+            }
+			buf.close();
+			// String retour = sb.toString();
+			time = endTime - startTime;
+			
+			// Get the memory consumption
+			Runtime runtime = Runtime.getRuntime();
 
-//	}
+			// run the garbage collactor
+			runtime.gc();
+			memory = runtime.totalMemory() - runtime.freeMemory();
+			
+			if(strReponse.equalsIgnoreCase("true"))
+			{
+				reponseLTL = 1;
+			}else if(strReponse.equalsIgnoreCase("false")){
+				reponseLTL = 0;
+			}
+			tabResultat[0] = (int) time;
+			tabResultat[1] = (int) memory;
+			tabResultat[2] = reponseLTL;
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tabResultat;
+
+	}
 	/** 
 	 * @param strNameTools
 	 * @param value
 	 * @return result of property
 	 */
-	public abstract int parseReturnValue( String value) ;
+
+	public abstract int parseReturnValue( String strValue) ;
 	
 }

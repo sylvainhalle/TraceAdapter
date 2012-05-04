@@ -32,26 +32,10 @@ public class Monpoly extends Execution {
 		return arrayResultat;
 	}
 
-	/** 
-	 * @param strNameTools
-	 * @param value
-	 * @return result of property
-	 */
-	public int parseReturnValue( String value) {
-		
-		int out = -1 ;
-		
-		if (value.contains("Result: Property is TRUE"))
-			out = 1;
-		else if (value.contains("Result: Property is FALSE"))
-			out = 0;
-		
-		return out;
-
-	}
 	@Override
-	public int[] timeAndMemoryExecution(String command) {
+	public int parseReturnValue(String strValue) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
+
 }
