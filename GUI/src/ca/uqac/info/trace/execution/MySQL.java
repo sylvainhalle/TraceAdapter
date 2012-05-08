@@ -3,6 +3,7 @@ package ca.uqac.info.trace.execution;
 import java.util.ArrayList;
 import java.util.Vector;
 
+
 public class MySQL extends Execution{
 	
 	//Attributes
@@ -32,8 +33,17 @@ public class MySQL extends Execution{
 
 	@Override
 	public int parseReturnValue(String strValue) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int reponseLTL = -1;
+		
+		if(strValue.equalsIgnoreCase("value.trim().length() > 0"))
+		{
+			reponseLTL = 1;
+		}
+		else 
+			reponseLTL = 0;
+		
+		return reponseLTL;
 	}
 
 }

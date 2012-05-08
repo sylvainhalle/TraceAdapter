@@ -33,8 +33,17 @@ public class Nusmv extends Execution {
 
 	@Override
 	public int parseReturnValue(String strValue) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int reponseLTL = -1;
+		
+		if(strValue.equalsIgnoreCase("is true "))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("is false ")){
+			reponseLTL = 0;
+		}
+		
+		return reponseLTL;
 	}
 
 

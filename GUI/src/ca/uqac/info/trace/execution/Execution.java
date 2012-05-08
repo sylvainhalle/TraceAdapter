@@ -28,7 +28,6 @@ public abstract class Execution {
 		
 		long startTime = System.currentTimeMillis();
 		try {
-			 
 			  Process process = Runtime.getRuntime().exec(command);
 			  endTime = System.currentTimeMillis();
 			BufferedReader buf = new BufferedReader(new InputStreamReader(process.getErrorStream()));

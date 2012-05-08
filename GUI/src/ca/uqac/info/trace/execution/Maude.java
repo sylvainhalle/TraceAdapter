@@ -3,10 +3,11 @@ package ca.uqac.info.trace.execution;
 import java.util.ArrayList;
 import java.util.Vector;
 
+
 public class Maude extends Execution {
 
-	private String homeDir = "C:/Benchmark/";
-	private String command ="maude.exe in ";
+	private String homeDir = "/home/aouatef/";
+	private String command ="/Maude/maude/maude.linux  ";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -30,9 +31,20 @@ public class Maude extends Execution {
 	}
 
 	@Override
-	public int parseReturnValue(String strValue) {
-		// TODO Auto-generated method stub
+	public int parseReturnValue(String strValue) 
+	{/*
+
+		int reponseLTL = -1;
+		
+		if(strValue.equalsIgnoreCase("result Bool: (true).Bool"))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("result Bool: (false).Bool")){
+			reponseLTL = 0;
+		}*/
+		
 		return 0;
+		
 	}
 
 

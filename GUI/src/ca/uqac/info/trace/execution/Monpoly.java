@@ -3,6 +3,7 @@ package ca.uqac.info.trace.execution;
 import java.util.ArrayList;
 import java.util.Vector;
 
+
 public class Monpoly extends Execution {
 
 	private String homeDir = "C:/Benchmark/";
@@ -34,8 +35,17 @@ public class Monpoly extends Execution {
 
 	@Override
 	public int parseReturnValue(String strValue) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int reponseLTL = -1;
+		
+		if(strValue.equalsIgnoreCase(" is monitorable. "))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase(" is not monitorable. ")){
+			reponseLTL = 0;
+		}
+		
+		return reponseLTL;
 	}
 
 }

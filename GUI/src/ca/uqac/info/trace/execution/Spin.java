@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Spin extends Execution {
 
-	private String homeDir = "C:/Benchmark/";
+	private String homeDir = "/home/aouatef";
 	private String command ="/Spin/go ";
 	
 	@SuppressWarnings("unchecked")
@@ -35,8 +35,17 @@ public class Spin extends Execution {
 
 	@Override
 	public int parseReturnValue(String strValue) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int reponseLTL = -1;
+		
+		if(strValue.equalsIgnoreCase("errors: 1"))
+		{
+			reponseLTL = 1;
+		}else if(strValue.equalsIgnoreCase("errors: 0")){
+			reponseLTL = 0;
+		}
+		
+		return reponseLTL;
 	}
 
 }
