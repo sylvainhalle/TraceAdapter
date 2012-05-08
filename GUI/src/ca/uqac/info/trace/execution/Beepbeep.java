@@ -1,16 +1,14 @@
 package ca.uqac.info.trace.execution;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Vector;
 
 public class Beepbeep extends Execution{
 
-	private String homeDir = "/home/aouatef/beepbeep/";
+	private String homeDir =  "C:/Benchmark/";
 	private String command ="java -jar ";
 	private String pointJar = "BeepBeepValidator.jar " ;
-	
+	private String strResult = "Outcome#";
 
 	/**
 	 * Run the traces with their LTL properties
@@ -33,8 +31,8 @@ public class Beepbeep extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar +" "+ vectFiles.get(i) +"  " + vectProp.get(0) ;
-				arrayResultat.add(this.timeAndMemoryExecution(strCommand));
+				String strCommand = command + homeDir + pointJar +" "+ vectFiles.get(i) +"  " + vectProp.get(1) ;
+				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
 		}
@@ -45,20 +43,21 @@ public class Beepbeep extends Execution{
 	 * @param value
 	 * @return result of property
 	 */
-	public int parseReturnValue( String strValue) {
-		
+	@Override
+	public int parseReturnValue(String strValue) {
 
-		int reponseLTL = -1;
-		
-		if(strValue.equalsIgnoreCase("true"))
+		int val = -99 ;
+		if (strValue.equalsIgnoreCase("True"))
 		{
-			reponseLTL = 1;
-		}else if(strValue.equalsIgnoreCase("false")){
-			reponseLTL = 0;
+			val = 1 ;
+		}else if (strValue.equalsIgnoreCase("False"))
+		{
+			val = 0 ;
+		}else if (strValue.equalsIgnoreCase("Inconclusive"))
+		{
+			val = -1 ;
 		}
-		
-		return reponseLTL;
-
+		return val;
 	}
 
 	

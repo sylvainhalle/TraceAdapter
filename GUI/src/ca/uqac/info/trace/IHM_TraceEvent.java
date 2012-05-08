@@ -59,13 +59,13 @@ import ca.uqac.info.trace.conversion.XesTranslator;
 import ca.uqac.info.trace.conversion.XmlTranslator;
 import ca.uqac.info.trace.execution.Beepbeep;
 import ca.uqac.info.trace.execution.Execution;
-import ca.uqac.info.trace.execution.JavaMop;
-import ca.uqac.info.trace.execution.Maude;
-import ca.uqac.info.trace.execution.Monpoly;
-import ca.uqac.info.trace.execution.MySQL;
-import ca.uqac.info.trace.execution.Nusmv;
+//import ca.uqac.info.trace.execution.JavaMop;
+//import ca.uqac.info.trace.execution.Maude;
+//import ca.uqac.info.trace.execution.Monpoly;
+//import ca.uqac.info.trace.execution.MySQL;
+//import ca.uqac.info.trace.execution.Nusmv;
 import ca.uqac.info.trace.execution.Saxon;
-import ca.uqac.info.trace.execution.Spin;
+//import ca.uqac.info.trace.execution.Spin;
 import ca.uqac.info.trace.generation.AmazonEcsGenerator;
 import ca.uqac.info.trace.generation.BookstoreGenerator;
 import ca.uqac.info.trace.generation.CycleGenerator;
@@ -1804,119 +1804,129 @@ public class IHM_TraceEvent extends JFrame {
  */
 	@SuppressWarnings("unchecked")
 	private void btnGOActionPerformed(java.awt.event.ActionEvent evt) {
-		
-		
-		//The set of tools selected
-		this.selectedTools();
-		String[] columnNames = new String[listTools.size()+1]; 
-		
-		//display the set of selected
-		if(!listTools.isEmpty())
-		{
-			columnNames[0] = "Trace";
-			for(int i = 0 ; i < listTools.size() ; i ++)
-			{
-				columnNames[i+1] = listTools.get(i) ;
-			}
-			executionTable.setModel(new javax.swing.table.DefaultTableModel(
-		            new Object [][] {
-		                {null, null, null, null, null, null, null, null, null, null},
-		                {null, null, null, null, null, null, null, null, null, null},
-		                {null, null, null, null, null, null, null, null, null, null},
-		                {null, null, null, null, null, null, null, null, null, null}
-		            },columnNames));
-		}
-		//Set of tools selected
-		File [] listDirectory = (new File(path_file)).listFiles();
-		
-		// Determine which Execution to initialize
-		Vector<Thread> listThreads = new Vector<Thread>();
-		for (int k = 0 ; k < listDirectory.length  ; k++ )
-		{
-			 
-			String chemin = this.getDirectory(listDirectory[k].getAbsolutePath().replace("\\", "/"), false);
-			Execution exec = this.initializeExecution(chemin);
-			if(exec==null)
-			{
-				continue ;
-			}
-			
-			//file list
-			File fileTemp = new File(chemin);
-			
-			// Build the file list of directory
-			String[] listFile = fileTemp.list();
-			
-			Vector<String> listNameFile = new Vector<String>();
-			Vector<String> listNameLTL = new Vector<String>();
-			Vector<Object> vect = new Vector<Object>();
-			
-			// Build the file list and property list
-			for (int j = 0; j < listFile.length; j++)
-			{
-				File fic = new File(listFile[j]);
-				String strFile = chemin + "/" + fic.getName();
 
-				if (!getExtension(strFile).equalsIgnoreCase("xml")) {
-					listNameLTL.add(strFile);
-				} else {
-					listNameFile.add(strFile);
+		// Condition
+		boolean autorize = ((!tfRepertoireRun.getText().trim()
+				.equalsIgnoreCase("")) && (checkBeepBeep.isSelected()
+				|| checkJavaMop.isSelected() || checkMaude.isSelected()
+				|| checkMonopoly.isSelected() || checkMySQL.isSelected()
+				|| checkNuSMV.isSelected() || checkProM.isSelected()
+				|| checkSpin.isSelected() || checkSaxon.isSelected()));
+
+		if (autorize) {
+			// The set of tools selected
+			this.selectedTools();
+			String[] columnNames = new String[listTools.size() + 1];
+
+			// display the set of selected
+			if (!listTools.isEmpty()) {
+				columnNames[0] = "Trace";
+				for (int i = 0; i < listTools.size(); i++) {
+					columnNames[i + 1] = listTools.get(i);
+				}
+				executionTable
+						.setModel(new javax.swing.table.DefaultTableModel(
+								new Object[][] {
+										{ null, null, null, null, null, null,
+												null, null, null, null },
+										{ null, null, null, null, null, null,
+												null, null, null, null },
+										{ null, null, null, null, null, null,
+												null, null, null, null },
+										{ null, null, null, null, null, null,
+												null, null, null, null } },
+								columnNames));
+			}
+			// Set of tools selected
+			File[] listDirectory = (new File(path_file)).listFiles();
+
+			// Determine which Execution to initialize
+			Vector<Thread> listThreads = new Vector<Thread>();
+			for (int k = 0; k < listDirectory.length; k++) {
+
+				String chemin = this.getDirectory(listDirectory[k]
+						.getAbsolutePath().replace("\\", "/"), false);
+				Execution exec = this.initializeExecution(chemin);
+				if (exec == null) {
+					continue;
 				}
 
-			}
-			
-			vect.add(listNameLTL);vect.add(listNameFile);
-			
-			ExecutionThread thread = new ExecutionThread(k, exec, vect) ;
-			listThreads.add(thread) ;
-			thread.start() ;
-		}
-		
-		int sped = listThreads.size() ;
-		ArrayList<int []> data = new ArrayList<int[]>();
-		//Set of result of  tools selected
-		Vector<Object> listData = new Vector<Object>();
-		while ( sped > 0)
-		{
-			for(int j = 0 ; j< listThreads.size() ; j++)
-			{
-				if(!listThreads.get(j).isAlive())
-				{
-					ArrayList<int []> result  =  ((ExecutionThread) listThreads.get(j)).getListResultat();
-					listData.add(result);
-					sped--;
-				}
-			}
-		}
-		
-		if (!listData.isEmpty()) {
-			int nbCol = listThreads.size()+1 ;
-			data = (ArrayList<int[]>) listData.get(0);
-			String[][] dataRows = new String[data.size()][nbCol ];
-			
-			for (int x = 0; x < nbCol; x++)
-			{
-				if( x != 0)
-				{
-					data = (ArrayList<int[]>) listData.get(x - 1);
-				}
-				
-				for (int y = 0; y < data.size(); y++) {
-					int[] tab = data.get(y);
+				// file list
+				File fileTemp = new File(chemin);
 
-					if (x == 0) {
-						dataRows[y][x] = Integer.toString(y);
+				// Build the file list of directory
+				String[] listFile = fileTemp.list();
 
-					}else
-					{
-						dataRows[y][x ] = tab[0] + " | " + tab[1]+ " | " + tab[2];
+				Vector<String> listNameFile = new Vector<String>();
+				Vector<String> listNameLTL = new Vector<String>();
+				Vector<Object> vect = new Vector<Object>();
+
+				// Build the file list and property list
+				for (int j = 0; j < listFile.length; j++) {
+					File fic = new File(listFile[j]);
+					String strFile = chemin + "/" + fic.getName();
+
+					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+						listNameLTL.add(strFile);
+					} else {
+						listNameFile.add(strFile);
 					}
 
 				}
-			}
-			executionTable.setModel(new DefaultTableModel(dataRows, columnNames));
-		}
 
+				vect.add(listNameLTL);
+				vect.add(listNameFile);
+
+				ExecutionThread thread = new ExecutionThread(k, exec, vect);
+				listThreads.add(thread);
+				thread.start();
+			}
+
+			ArrayList<int[]> data = new ArrayList<int[]>();
+			// Set of result of tools selected
+			Vector<Object> listData = new Vector<Object>();
+			for (int j = 0; j < listThreads.size(); j++) {
+				try {
+					listThreads.get(j).join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			for (int j = 0; j < listThreads.size(); j++) {
+				ArrayList<int[]> result = ((ExecutionThread) listThreads.get(j))
+						.getListResultat();
+				listData.add(result);
+			}
+
+			if (!listData.isEmpty()) {
+				int nbCol = listThreads.size() + 1;
+				data = (ArrayList<int[]>) listData.get(0);
+				String[][] dataRows = new String[data.size()][nbCol];
+
+				for (int x = 0; x < nbCol; x++) {
+					if (x != 0) {
+						data = (ArrayList<int[]>) listData.get(x - 1);
+					}
+
+					for (int y = 0; y < data.size(); y++) {
+						int[] tab = data.get(y);
+
+						if (x == 0) {
+							dataRows[y][x] = Integer.toString(y);
+
+						} else {
+							dataRows[y][x] = tab[0] + " | " + tab[1] + " | "
+									+ tab[2];
+						}
+
+					}
+				}
+				executionTable.setModel(new DefaultTableModel(dataRows,
+						columnNames));
+			}
+		}
 	}
 	/**
 	 * Recovers the set of tool selected
@@ -1990,8 +2000,8 @@ public class IHM_TraceEvent extends JFrame {
 			ex = new Beepbeep();
 		}
 		if ((strTool.compareToIgnoreCase("Saxon") == 0)
-				&& (checkBeepBeep.isSelected())) {
-			ex = new Beepbeep();
+				&& (checkSaxon.isSelected())) {
+			ex = new Saxon();
 		} else if ((strTool.compareToIgnoreCase("PML") == 0)
 				&& (checkBeepBeep.isSelected())) {
 			ex = new Beepbeep();

@@ -24,20 +24,21 @@ public abstract class Execution {
 		int[] tabResultat = new int[3];
 		long endTime, time, memory ;
 		String line = null, strReponse ="";
-		int reponseLTL = -1 ;
+		String [] tab = command.split("#");
 		
 		long startTime = System.currentTimeMillis();
 		try {
-			  Process process = Runtime.getRuntime().exec(command);
+			  Process process = Runtime.getRuntime().exec(tab[1]);
 			  endTime = System.currentTimeMillis();
 			BufferedReader buf = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			
 			while ((line = buf.readLine()) != null) {
-            	if(line.contains("Outcome"))
+            	if(line.contains(tab[0].trim()))
             	{
-            		String[] tab = line.split(":");
-            		strReponse = tab[1].trim();
+            		String[] tab2 = line.split(":");
+            		strReponse = tab2[1].trim();
             		System.out.println(strReponse);
+            		break;
             	}
             }
 			buf.close();
@@ -51,15 +52,11 @@ public abstract class Execution {
 			runtime.gc();
 			memory = runtime.totalMemory() - runtime.freeMemory();
 			
-			if(strReponse.equalsIgnoreCase("true"))
-			{
-				reponseLTL = 1;
-			}else if(strReponse.equalsIgnoreCase("false")){
-				reponseLTL = 0;
-			}
+			
 			tabResultat[0] = (int) time;
 			tabResultat[1] = (int) memory;
-			tabResultat[2] = reponseLTL;
+			tabResultat[2] = parseReturnValue(strReponse);
+			System.out.println( tabResultat[0] +" | " + tabResultat[1] +" | " +tabResultat[2] );
 			
 
 		} catch (Exception e) {

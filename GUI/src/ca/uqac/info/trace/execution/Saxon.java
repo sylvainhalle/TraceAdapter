@@ -8,7 +8,8 @@ public class Saxon extends Execution{
 
 	private String homeDir = "C:/Benchmark/";
 	private String command ="java -jar ";
-	private String pointJar = "beepbeep/XQueryValidator.jar -m saxon -i " ;
+	private String pointJar = "XQueryValidator.jar -m symbolic -i " ;
+	private String strResult = "Result#";
 	
 	
 	@SuppressWarnings("unchecked")
@@ -17,9 +18,6 @@ public class Saxon extends Execution{
 		ArrayList<int []> arrayResultat = new ArrayList<int []>();
 		Vector<String> vectProp;
 		Vector<String> vectFiles ;
-		
-		System.out.println(" \n SAXON \n");
-		
 		if(!inputLists.isEmpty())
 		{
 			vectProp = (Vector<String>) inputLists.get(0);
@@ -27,8 +25,8 @@ public class Saxon extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" -f " + vectProp.get(0) ;
-				arrayResultat.add(this.timeAndMemoryExecution(strCommand));
+				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" -f " + vectProp.get(1) ;
+				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
 		}
@@ -39,8 +37,21 @@ public class Saxon extends Execution{
 
 	@Override
 	public int parseReturnValue(String strValue) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		String [] tab = strValue.split(" ");
+		String strResponse = tab[tab.length - 1] ;
+		int val = -99 ;
+		if (strResponse.equalsIgnoreCase("True"))
+		{
+			val = 1 ;
+		}else if (strResponse.equalsIgnoreCase("False"))
+		{
+			val = 0 ;
+		}else if (strResponse.equalsIgnoreCase("Inconclusive"))
+		{
+			val = -1 ;
+		}
+		return val;
 	}
 
 	/** 
