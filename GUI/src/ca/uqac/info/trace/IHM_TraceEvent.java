@@ -827,7 +827,12 @@ public class IHM_TraceEvent extends JFrame {
 	        spTable.setViewportView(executionTable);
 	        executionTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-	        btnSaveRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/sav.GIF"))); 
+	        btnSaveRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/sav.GIF")));
+	        btnSaveRun.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					btnSaveRunctionPerformed(e) ;
+				}
+			});
 	        
 	        javax.swing.GroupLayout paneTableLayout = new javax.swing.GroupLayout(paneTable);
 	        paneTable.setLayout(paneTableLayout);
@@ -1911,14 +1916,16 @@ public class IHM_TraceEvent extends JFrame {
 					}
 
 					for (int y = 0; y < data.size(); y++) {
-						int[] tab = data.get(y);
+						
 
 						if (x == 0) {
 							dataRows[y][x] = Integer.toString(y);
 
 						} else {
-							dataRows[y][x] = tab[0] + " | " + tab[1] + " | "
-									+ tab[2];
+							int[] tab = new int[3];
+							tab = data.get(y);
+							dataRows[y][nbCol-x] = tab[0] + " | " + tab[1] + " | "+ tab[2];
+							System.out.println(tab[0] + " | " + tab[1] + " | "+ tab[2]) ;
 						}
 
 					}
@@ -2009,6 +2016,68 @@ public class IHM_TraceEvent extends JFrame {
 			
 		
 		return ex ;
+	}
+	  
+	/**
+	 * 
+	 * Allows to recover elements of table in afile cvs
+	 * 
+	 * @param evt
+	 */
+
+	public void btnSaveRunctionPerformed(java.awt.event.ActionEvent evt) {
+		int nbCol = executionTable.getColumnCount();
+		int nbRow = executionTable.getRowCount();
+		String strResult = "";
+
+		for (int i = 1; i < nbCol; i++)
+		{
+			strResult = strResult.concat(
+					executionTable.getModel().getColumnName(i)).concat("\n");
+
+			for (int j = 0; j < nbRow; j++)
+			{
+				strResult = strResult.concat(
+						executionTable.getValueAt(j, i).toString())
+						.concat("\n");
+			}
+			strResult = strResult.concat("\n");
+		 }
+		
+		String strExt = "Save File (.csv )";
+		FileFilter filter = new FileNameExtensionFilter(strExt, "CSV");
+		FileOutputStream fo;
+		JFileChooser fileSave = new JFileChooser();
+		fileSave.setAcceptAllFileFilterUsed(false);
+		fileSave.addChoosableFileFilter(filter);
+
+		int res = fileSave.showSaveDialog(this);
+		if (res == JFileChooser.APPROVE_OPTION) 
+		{
+			String nameFile = fileSave.getSelectedFile().getPath() + ".csv";
+			File file = new File(nameFile);
+			if ((file.exists()) || (file.canWrite())) {
+				JOptionPane.showMessageDialog(this,
+				"Output file exist or can't write", "Error",
+				JOptionPane.ERROR_MESSAGE);
+			} else 
+			{
+				try
+				{
+					fo = new FileOutputStream(file);
+					fo.write(strResult.getBytes());
+					fo.close();
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+
+			}
+
+		}
+
 	}
     /**
      * @param args the command line arguments

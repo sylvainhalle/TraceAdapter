@@ -25,7 +25,7 @@ public class Saxon extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" -f " + vectProp.get(1) ;
+				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" -f " + vectProp.get(2) ;
 				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
@@ -47,9 +47,6 @@ public class Saxon extends Execution{
 		}else if (strResponse.equalsIgnoreCase("False"))
 		{
 			val = 0 ;
-		}else if (strResponse.equalsIgnoreCase("Inconclusive"))
-		{
-			val = -1 ;
 		}
 		return val;
 	}

@@ -31,7 +31,7 @@ public class Beepbeep extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar +" "+ vectFiles.get(i) +"  " + vectProp.get(1) ;
+				String strCommand = command + homeDir + pointJar +" "+ vectFiles.get(i) +"  " + vectProp.get(2) ;
 				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
