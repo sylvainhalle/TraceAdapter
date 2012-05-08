@@ -172,7 +172,7 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		lblStartConv.setText("Start converting !!");
 
 		btnConvLTL.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/image/load.GIF"))); // NOI18N¸
+				"/image/load.GIF"))); 
 		btnConvLTL.setToolTipText("Translate");
 		btnConvLTL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {

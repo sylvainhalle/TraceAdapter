@@ -28,19 +28,34 @@ public abstract class Execution {
 		
 		long startTime = System.currentTimeMillis();
 		try {
-			  Process process = Runtime.getRuntime().exec(tab[1]);
+			  Process process = Runtime.getRuntime().exec(tab[2]);
 			  endTime = System.currentTimeMillis();
 			BufferedReader buf = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+		    BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			
-			while ((line = buf.readLine()) != null) {
-            	if(line.contains(tab[0].trim()))
+		    while ((line = stdInput.readLine()) != null) {
+		    	if(line.contains(tab[0].trim()))
             	{
-            		String[] tab2 = line.split(":");
+            		String[] tab2 = line.split(tab[1].trim());
             		strReponse = tab2[1].trim();
             		System.out.println(strReponse);
             		break;
             	}
             }
+			
+		    while ((line = stdError.readLine()) != null) {
+		    	if(line.contains(tab[0].trim()))
+            	{
+            		String[] tab2 = line.split(tab[1].trim());
+            		strReponse = tab2[1].trim();
+            		System.out.println(strReponse);
+            		break;
+            	}
+            }
+			
+		
 			buf.close();
 			// String retour = sb.toString();
 			time = endTime - startTime;

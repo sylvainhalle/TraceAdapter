@@ -5,10 +5,10 @@ import java.util.Vector;
 
 public class Beepbeep extends Execution{
 
-	private String homeDir =  "C:/Benchmark/";
+	private String homeDir = "/home/aouatef/beepbeep/" ;//"C:/Benchmark/";
 	private String command ="java -jar ";
 	private String pointJar = "BeepBeepValidator.jar " ;
-	private String strResult = "Outcome#";
+	private String strResult = "Outcome #:#";
 
 	/**
 	 * Run the traces with their LTL properties
@@ -31,7 +31,7 @@ public class Beepbeep extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar +" "+ vectFiles.get(i) +"  " + vectProp.get(2) ;
+				String strCommand = command + homeDir + pointJar +" "+ vectFiles.get(i) +"  " + vectProp.get(0) ;
 				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			

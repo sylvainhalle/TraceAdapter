@@ -5,9 +5,9 @@ import java.util.Vector;
 
 public class Nusmv extends Execution {
 
-	private String homeDir = "C:/Benchmark/";
-	@SuppressWarnings("unused")
-	private String command ="NuSMV ";
+	private String homeDir = "/home/aouatef/NuSMVv/bin/" ;//"C:/Benchmark/";
+	private String command ="NuSMV  ";
+	private String strResult = "specification #is#";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -22,8 +22,8 @@ public class Nusmv extends Execution {
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = homeDir + vectFiles.get(i) ;
-				arrayResultat.add(this.timeAndMemoryExecution(strCommand));
+				String strCommand = homeDir + command +vectFiles.get(i) ;
+				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
 		}
@@ -34,12 +34,12 @@ public class Nusmv extends Execution {
 	@Override
 	public int parseReturnValue(String strValue) {
 
-		int reponseLTL = -1;
+		int reponseLTL = -99;
 		
-		if(strValue.equalsIgnoreCase("is true "))
+		if(strValue.equalsIgnoreCase("true"))
 		{
 			reponseLTL = 1;
-		}else if(strValue.equalsIgnoreCase("is false ")){
+		}else if(strValue.equalsIgnoreCase("false")){
 			reponseLTL = 0;
 		}
 		

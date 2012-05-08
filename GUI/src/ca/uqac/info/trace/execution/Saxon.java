@@ -6,10 +6,10 @@ import java.util.Vector;
 
 public class Saxon extends Execution{
 
-	private String homeDir = "C:/Benchmark/";
+	private String homeDir = "/home/aouatef/beepbeep/" ;//"C:/Benchmark/";
 	private String command ="java -jar ";
 	private String pointJar = "XQueryValidator.jar -m symbolic -i " ;
-	private String strResult = "Result#";
+	private String strResult = "Result #:#"; // key word # separator
 	
 	
 	@SuppressWarnings("unchecked")
@@ -25,7 +25,7 @@ public class Saxon extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" -f " + vectProp.get(2) ;
+				String strCommand = command + homeDir + pointJar + vectFiles.get(i) +" -f " + vectProp.get(0) ;
 				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			

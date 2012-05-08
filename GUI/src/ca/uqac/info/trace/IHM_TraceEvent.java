@@ -59,11 +59,11 @@ import ca.uqac.info.trace.conversion.XesTranslator;
 import ca.uqac.info.trace.conversion.XmlTranslator;
 import ca.uqac.info.trace.execution.Beepbeep;
 import ca.uqac.info.trace.execution.Execution;
+import ca.uqac.info.trace.execution.Maude;
+import ca.uqac.info.trace.execution.Monpoly;
+import ca.uqac.info.trace.execution.Nusmv;
 //import ca.uqac.info.trace.execution.JavaMop;
-//import ca.uqac.info.trace.execution.Maude;
-//import ca.uqac.info.trace.execution.Monpoly;
 //import ca.uqac.info.trace.execution.MySQL;
-//import ca.uqac.info.trace.execution.Nusmv;
 import ca.uqac.info.trace.execution.Saxon;
 //import ca.uqac.info.trace.execution.Spin;
 import ca.uqac.info.trace.generation.AmazonEcsGenerator;
@@ -1856,31 +1856,31 @@ public class IHM_TraceEvent extends JFrame {
 					continue;
 				}
 
-				// file list
-				File fileTemp = new File(chemin);
-
-				// Build the file list of directory
-				String[] listFile = fileTemp.list();
-
-				Vector<String> listNameFile = new Vector<String>();
-				Vector<String> listNameLTL = new Vector<String>();
+//				// file list
+//				File fileTemp = new File(chemin);
+//
+//				// Build the file list of directory
+//				String[] listFile = fileTemp.list();
+//
+//				Vector<String> listNameFile = new Vector<String>();
+//				Vector<String> listNameLTL = new Vector<String>();
 				Vector<Object> vect = new Vector<Object>();
+				vect.addAll(this.getlistParamtools(chemin));
+//				// Build the file list and property list
+//				for (int j = 0; j < listFile.length; j++) {
+//					File fic = new File(listFile[j]);
+//					String strFile = chemin + "/" + fic.getName();
+//
+//					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+//						listNameLTL.add(strFile);
+//					} else {
+//						listNameFile.add(strFile);
+//					}
+//
+//				}
 
-				// Build the file list and property list
-				for (int j = 0; j < listFile.length; j++) {
-					File fic = new File(listFile[j]);
-					String strFile = chemin + "/" + fic.getName();
-
-					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
-						listNameLTL.add(strFile);
-					} else {
-						listNameFile.add(strFile);
-					}
-
-				}
-
-				vect.add(listNameLTL);
-				vect.add(listNameFile);
+//				vect.add(listNameLTL);
+//				vect.add(listNameFile);
 
 				ExecutionThread thread = new ExecutionThread(k, exec, vect);
 				listThreads.add(thread);
@@ -1987,7 +1987,7 @@ public class IHM_TraceEvent extends JFrame {
 			ex = new Beepbeep();
 		} else if ((strTool.compareToIgnoreCase("Maude") == 0)
 				&& (checkMaude.isSelected())) {
-			ex = new Beepbeep();
+			ex = new Maude();
 		} else if ((strTool.compareToIgnoreCase("SQL") == 0)
 				&& (checkMySQL.isSelected())) {
 			ex = new Beepbeep();
@@ -2001,10 +2001,10 @@ public class IHM_TraceEvent extends JFrame {
 		}
 		if ((strTool.compareToIgnoreCase("Monpoly") == 0)
 				&& (checkMonopoly.isSelected())) {
-			ex = new Beepbeep();
+			ex = new Monpoly();
 		} else if ((strTool.compareToIgnoreCase("SMV") == 0)
 				&& (checkNuSMV.isSelected())) {
-			ex = new Beepbeep();
+			ex = new Nusmv();
 		}
 		if ((strTool.compareToIgnoreCase("Saxon") == 0)
 				&& (checkSaxon.isSelected())) {
@@ -2078,6 +2078,53 @@ public class IHM_TraceEvent extends JFrame {
 
 		}
 
+	}
+	private ArrayList<Vector<String>> getlistParamtools (String chemin)
+	{
+		ArrayList<Vector<String>>  array = new ArrayList<Vector<String>>() ;
+		 String [] tab  = chemin.split("/") ;
+		 String [] tabExt = tab[tab.length - 1].split("_");
+		 String ext = tabExt[1];
+		 Vector<String> listFile = new Vector<String>() ;
+		 Vector<String> listLTL = new Vector<String>() ;
+		 Vector<String> listsig = new Vector<String>() ;
+		 
+		 if(ext.equalsIgnoreCase("Monpoly"))
+		 {
+			 
+			 String[] listFichiers = (new File(chemin)).list();
+			 
+			 for(int i = 0 ; i < listFichiers.length ; i++)
+			 {
+				 File fic = new File(listFichiers[i]);
+				 String strFile = chemin + "/" + fic.getName();
+
+					if (getExtension(strFile).equalsIgnoreCase("log")) {
+						listFile.add(strFile);
+					} else if (getExtension(strFile).equalsIgnoreCase("mfotl")){
+						listLTL.add(strFile);
+					}else if (getExtension(strFile).equalsIgnoreCase("sig")){
+						listsig.add(strFile);
+					}
+				 
+			 }
+			 array.add(listFile);
+			 array.add(listLTL) ;
+			 array.add(listsig) ;
+		 }else if((ext.equalsIgnoreCase("Maude"))||(ext.equalsIgnoreCase("SMV")))
+		 {
+			 String[] listFichiers = (new File(chemin)).list();
+			 for(int i = 0 ; i < listFichiers.length ; i++)	 
+			 {
+				 File fic = new File(listFichiers[i]);
+				 String strFile = chemin + "/" + fic.getName();
+				 listFile.add(strFile);
+			 }
+			 array.add(listFile);
+			 
+		 }
+		 
+		return array ;
 	}
     /**
      * @param args the command line arguments
