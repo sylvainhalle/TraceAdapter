@@ -11,7 +11,7 @@ public class Beepbeep extends Execution{
 	private String command ="java -jar ";
 	private String pointJar = "BeepBeepValidator.jar " ;
 	
-	
+
 	/**
 	 * Run the traces with their LTL properties
 	 * @return The execution time and memory used  
@@ -40,12 +40,6 @@ public class Beepbeep extends Execution{
 		}
 		return arrayResultat;
 	}
-
-		/**
-		 * Calculate the time execution and used memory for command
-		 * @param command
-		 * @return  a table that contains time execution and used memory
-		 */	
 	/** 
 	 * @param strNameTools
 	 * @param value
@@ -62,6 +56,7 @@ public class Beepbeep extends Execution{
 		}else if(strValue.equalsIgnoreCase("false")){
 			reponseLTL = 0;
 		}
+		
 		return reponseLTL;
 
 	}
