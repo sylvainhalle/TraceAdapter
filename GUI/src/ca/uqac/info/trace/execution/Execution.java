@@ -24,17 +24,17 @@ public abstract class Execution {
 		int[] tabResultat = new int[3];
 		long endTime, time, memory ;
 		String line = null, strReponse ="";
-		int reponseLTL = -1 ;
+		String [] strTab = command.split("#");
 		
 		long startTime = System.currentTimeMillis();
 		try {
 			 
-			  Process process = Runtime.getRuntime().exec(command);
+			  Process process = Runtime.getRuntime().exec(strTab[1]);
 			  endTime = System.currentTimeMillis();
 			BufferedReader buf = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			
 			while ((line = buf.readLine()) != null) {
-            	if(line.contains("Outcome"))
+            	if(line.contains(strTab[0]))
             	{
             		String[] tab = line.split(":");
             		strReponse = tab[1].trim();
@@ -42,7 +42,6 @@ public abstract class Execution {
             	}
             }
 			buf.close();
-			// String retour = sb.toString();
 			time = endTime - startTime;
 			
 			// Get the memory consumption
@@ -52,15 +51,11 @@ public abstract class Execution {
 			runtime.gc();
 			memory = runtime.totalMemory() - runtime.freeMemory();
 			
-			if(strReponse.equalsIgnoreCase("true"))
-			{
-				reponseLTL = 1;
-			}else if(strReponse.equalsIgnoreCase("false")){
-				reponseLTL = 0;
-			}
+			
 			tabResultat[0] = (int) time;
 			tabResultat[1] = (int) memory;
-			tabResultat[2] = reponseLTL;
+			tabResultat[2] = parseReturnValue(strReponse);
+			System.out.println( time +"|" + memory +"|" +tabResultat[2]+"\n" );
 			
 
 		} catch (Exception e) {
