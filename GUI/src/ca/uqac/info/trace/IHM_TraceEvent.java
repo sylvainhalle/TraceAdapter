@@ -1180,7 +1180,9 @@ public class IHM_TraceEvent extends JFrame {
 				}
 
 				// Translate the trace into the output format
-				EventTrace trace = reader.parseEventTrace(in_f);
+				LlrpTraceReader read  = new LlrpTraceReader() ;
+				//EventTrace trace = (LlrpTraceReader)reader.parseEventTrace(in_f);
+				EventTrace trace = read.parseEventLLrpTrace(in_f);
 				String out_trace = trans.translateTrace(trace);
 				outTrace.add(out_trace);
 				//Add signature if the output is monpoly
@@ -1604,7 +1606,7 @@ public class IHM_TraceEvent extends JFrame {
 		TraceReader tf = null;
 		if ((input_format.compareToIgnoreCase("xml") == 0)
 				|| (input_format.compareToIgnoreCase("xes") == 0)) {
-			tf = new XmlTraceReader();
+			tf = new LlrpTraceReader() ;//tf = new XmlTraceReader();
 		} else if (input_format.compareToIgnoreCase("sql") == 0) {
 			tf = new SqlTraceReader();
 		} else if (input_format.compareToIgnoreCase("csv") == 0) {
