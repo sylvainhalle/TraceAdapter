@@ -2,20 +2,19 @@ package ca.uqac.info.trace;
 
 import java.io.File;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class LlrpTraceReader extends XmlTraceReader {
 	
 	
-	public EventTrace parseEventLLrpTrace(File f) {
+	public EventTrace parseEventTrace(File f) {
 		
 		// new trace
 		EventTrace traceLlrp = new EventTrace();
 		// old trace
 		EventTrace trace;
-		trace = this.parseEventTrace(f);
+		trace = super.parseEventTrace(f);
 		
 		for (Event e : trace) {
 			// recover list of child

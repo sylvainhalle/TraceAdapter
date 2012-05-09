@@ -280,7 +280,7 @@ public class IHM_TraceEvent extends JFrame {
 
 	        lblTitre2.setText("3.  Select output format");
 
-	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML","MAUDE" }));
+	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML","MAUDE"  }));
 	        comboBox.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                comboBoxActionPerformed(evt);
@@ -1180,9 +1180,7 @@ public class IHM_TraceEvent extends JFrame {
 				}
 
 				// Translate the trace into the output format
-				LlrpTraceReader read  = new LlrpTraceReader() ;
-				//EventTrace trace = (LlrpTraceReader)reader.parseEventTrace(in_f);
-				EventTrace trace = read.parseEventLLrpTrace(in_f);
+				EventTrace trace = reader.parseEventTrace(in_f);
 				String out_trace = trans.translateTrace(trace);
 				outTrace.add(out_trace);
 				//Add signature if the output is monpoly
@@ -1401,9 +1399,12 @@ public class IHM_TraceEvent extends JFrame {
 		}
 		
 		//Put extension .xml by default
-		if((output_format.isEmpty()) || (type.equalsIgnoreCase("Generator")))
-		{
-			output_format = "xml";
+		if ((output_format.isEmpty()) || (type.equalsIgnoreCase("Generator"))) {
+			if (selectedMenu.equalsIgnoreCase("llrpgenerator")) {
+				output_format = "llrp";
+			} else {
+				output_format = "xml";
+			}
 		}
 		String strExt = "Save File (."+output_format+" )";
 		FileFilter filter = new FileNameExtensionFilter(strExt, output_format);
@@ -1606,12 +1607,13 @@ public class IHM_TraceEvent extends JFrame {
 		TraceReader tf = null;
 		if ((input_format.compareToIgnoreCase("xml") == 0)
 				|| (input_format.compareToIgnoreCase("xes") == 0)) {
-			tf = new LlrpTraceReader() ;//tf = new XmlTraceReader();
+			 tf = new XmlTraceReader();
 		} else if (input_format.compareToIgnoreCase("sql") == 0) {
 			tf = new SqlTraceReader();
 		} else if (input_format.compareToIgnoreCase("csv") == 0) {
-
 			tf = new CsvTraceReader();
+		} else if (input_format.compareToIgnoreCase("llrp") == 0) {
+			tf = new LlrpTraceReader();
 		}
 		return tf;
 	}
