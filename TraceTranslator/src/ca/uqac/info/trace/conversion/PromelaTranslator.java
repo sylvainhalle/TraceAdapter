@@ -34,18 +34,35 @@ public class PromelaTranslator implements Translator {
 	public String translateTrace(EventTrace m_trace)
 	{
 		StringBuffer out = new StringBuffer();
+		Relation<String,String> domains = m_trace.getParameterDomain();
+	    Set<String> params = domains.keySet();
 		int trace_length = m_trace.size();
+		boolean found = false ; int k = params.size()- 1 ;
+		out.append("String  ");
+	    for (String p : params)
+	    {
+	      String p_name = p;
+	      if(k == 0)
+	    	  found = true ;
+	      out.append("  ").append(p_name) ;
+	      if(!found)
+	      {
+	    	  out.append(",");
+	      }
+	      k-- ;
+	    }
+	    out.append(";\n");
+	    
+		out.append(" init");
+		out.append("{");
 		for (int i = 0; i < trace_length; i++) {
 			Event e = m_trace.elementAt(i);
-			out.append(" typedef  ");
 			Node n = e.getDomNode();
 			NodeList children = n.getChildNodes();
 			Node child;
 			String val = "";
 			if (children.getLength() > 1) {
 				NodeList level1 = children.item(1).getChildNodes();
-				out.append(" ").append( children.item(1).getNodeName()).append(" ").append("{ ");
-				
 				if (level1.getLength() > 1) {
 
 					NodeList level2 = level1.item(1).getChildNodes();
@@ -127,11 +144,8 @@ public class PromelaTranslator implements Translator {
 					
 				}
 			}
-			out.append("\n");
-		      out.append(" } ");
-		      out.append("\n");
-		      out.append("\n");
 		}
+		out.append(" } ");
 		return out.toString();
 	}
  
@@ -165,7 +179,6 @@ public class PromelaTranslator implements Translator {
            continue;
       }
       out.append(toPromela(child, ""));
-          out.append("\n");
       }
    
       return out;
@@ -369,8 +382,11 @@ public class PromelaTranslator implements Translator {
 	  }
 
 	@Override
-	public String getSignature(EventTrace t) {
-		// TODO Auto-generated method stub
+	public String getSignature(EventTrace m_trace) {
+		
 		return null;
 	}
+	
 }
+
+
