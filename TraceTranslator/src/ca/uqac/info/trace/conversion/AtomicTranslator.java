@@ -20,6 +20,7 @@ package ca.uqac.info.trace.conversion;
 
 import java.util.*;
 
+import ca.uqac.info.ltl.Atom;
 import ca.uqac.info.ltl.GenericVisitor;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.OperatorEquals;
@@ -198,6 +199,15 @@ public class AtomicTranslator implements Translator
 			}
 	    m_pieces.push(out);
     }
+		
+		@Override
+		public void visit(Atom a)
+		{
+			// We override the default behaviour to suppress the addition
+			// of atoms into the stack
+			return;
+		}
+		
 	}
 	
 
