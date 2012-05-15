@@ -8,5 +8,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TraceTranslator"/>
 	<classpathentry kind="lib" path="/TraceLogic/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="src/lib/LTKJava_with_dep_0_1_0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="src/lib/jcommon-1.0.17.jar"/>
+	<classpathentry kind="lib" path="src/lib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samos/git/TraceAdapterr/GUI/src/lib/MySQL Connector 5.1.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

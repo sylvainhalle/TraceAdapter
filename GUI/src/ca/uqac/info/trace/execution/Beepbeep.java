@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Beepbeep extends Execution{
 
-	private String homeDir = "/home/aouatef/beepbeep/" ;//"C:/Benchmark/";
+	private String homeDir = "C:/Benchmark/";
 	private String command ="java -jar ";
 	private String pointJar = "BeepBeepValidator.jar " ;
 	private String strResult = "Outcome #:#";
@@ -26,8 +26,8 @@ public class Beepbeep extends Execution{
 		
 		if(!inputLists.isEmpty())
 		{
-			vectProp = (Vector<String>) inputLists.get(0);
-			vectFiles = (Vector<String>) inputLists.get(1);
+			vectProp = (Vector<String>) inputLists.get(1);
+			vectFiles = (Vector<String>) inputLists.get(0);
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{

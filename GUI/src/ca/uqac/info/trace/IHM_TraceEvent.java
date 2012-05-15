@@ -4,6 +4,8 @@
  */
 package ca.uqac.info.trace;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -44,6 +46,13 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
@@ -121,7 +130,8 @@ public class IHM_TraceEvent extends JFrame {
 	private Vector<JLabel> listLabel = new Vector<JLabel>() ;
 	private JSeparator   separatorGenMenu;
 	//Runtime
-	private JPanel      paneRuntime,paneTools ,paneTable, paneGraph;
+	private JPanel      paneRuntime,paneTools ,paneTable ;//, paneGraph;
+	private ChartPanel paneGraph;
 	private JLabel 		lblRepertoireRun,lblTitreRunTime, lblTools ;
 	private JTextField  tfRepertoireRun;
 	private JButton 	btnRepertoireRun, btnGO, btnStop, btnSaveRun,
@@ -235,7 +245,7 @@ public class IHM_TraceEvent extends JFrame {
 		spHelpGen = new JScrollPane();
 		
 		//Runtime
-		paneRuntime = new JPanel(); paneGraph = new JPanel();
+		paneRuntime = new JPanel(); paneGraph = new ChartPanel(null);
 		paneTable = new JPanel();	paneTools = new JPanel();
 		
 		lblTitreRunTime = new JLabel("", JLabel.CENTER);
@@ -858,21 +868,18 @@ public class IHM_TraceEvent extends JFrame {
 
 	        btnBuilding.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/build.GIF"))); 
 
+	        paneGraph.setPreferredSize(new Dimension(600, 300));
+			paneGraph.setBackground(Color.WHITE);
+			paneGraph.setAutoscrolls(true);
 	        javax.swing.GroupLayout paneGraphLayout = new javax.swing.GroupLayout(paneGraph);
 	        paneGraph.setLayout(paneGraphLayout);
 	        paneGraphLayout.setHorizontalGroup(
 	            paneGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(paneGraphLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addComponent(btnBuilding, javax.swing.GroupLayout.DEFAULT_SIZE, 686, Short.MAX_VALUE)
-	                .addContainerGap())
+	            .addGap(0, 506, Short.MAX_VALUE)
 	        );
 	        paneGraphLayout.setVerticalGroup(
 	            paneGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(paneGraphLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addComponent(btnBuilding, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                .addContainerGap())
+	            .addGap(0, 55, Short.MAX_VALUE)
 	        );
 	        
 
@@ -1936,6 +1943,7 @@ public class IHM_TraceEvent extends JFrame {
 				}
 				executionTable.setModel(new DefaultTableModel(dataRows,
 						columnNames));
+				traceGraph(listData) ;
 			}
 		}
 	}
@@ -2083,6 +2091,12 @@ public class IHM_TraceEvent extends JFrame {
 		}
 
 	}
+	/**
+	 * Built set of parameter of tool
+	 * @param chemin
+	 * @return
+	 */
+	
 	private ArrayList<Vector<String>> getlistParamtools (String chemin)
 	{
 		ArrayList<Vector<String>>  array = new ArrayList<Vector<String>>() ;
@@ -2126,9 +2140,106 @@ public class IHM_TraceEvent extends JFrame {
 			 }
 			 array.add(listFile);
 			 
-		 }
+		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))) 
+		{
+			 String[] listFichiers = (new File(chemin)).list();
+			for (int j = 0; j < listFichiers.length; j++) {
+				File fic = new File(listFichiers[j]);
+				String strFile = chemin + "/" + fic.getName();
+
+				if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+					listLTL.add(strFile);
+				} else {
+					listFile.add(strFile);
+				}
+			}
+			array.add(listFile);
+			array.add(listLTL) ;
+			
+		}
 		 
 		return array ;
+	}
+
+	/**
+	 * 
+	 * @param dataGraph
+	 * @return
+	 */
+	private static JFreeChart createChart(XYDataset dataGraph) 
+	{
+		JFreeChart jfreechart = ChartFactory.createXYLineChart(
+				"Table de performance", "Nombre de traces", "Temps d'exécution",
+				dataGraph, PlotOrientation.VERTICAL, true, true, false);
+
+		return jfreechart;
+	}
+
+	/**
+	 * 
+	 * @param data
+	 * @param listNames
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private static XYSeriesCollection createDataset(Vector<Object>data, Vector<String> listNames) {
+		
+		ArrayList<int[]> dt = new ArrayList<int[]>();
+		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
+		
+		String strTool ;
+		
+		for (int i = 0; i < data.size(); i++) {
+			dt = (ArrayList<int[]>) data.get(i); //set  of trace
+			strTool = listNames.get(i); // tool name
+
+			XYSeries xyseries = new XYSeries(strTool, true, false);
+
+			// We built of data
+			for (int j = 0; j < dt.size(); j++) 
+			{
+				int[] tab = new int[3];
+				tab = dt.get(j);
+				xyseries.add(j, new Double(tab[0]));
+			}
+			
+			xyseriescollection.addSeries(xyseries) ;
+		}
+		
+		for (int i = 0; i < data.size(); i++) {
+			dt = (ArrayList<int[]>) data.get(i);
+			strTool = listNames.get(i).concat("0"+i);
+
+			XYSeries xyseries = new XYSeries(strTool, true, false);
+
+			for (int j = 0; j < dt.size(); j++) 
+			{
+				int[] tab = new int[3];
+				tab = dt.get(j);
+				xyseries.add(j, new Double(tab[0]+i+2));
+			}
+			
+			xyseriescollection.addSeries(xyseries) ;
+		}
+		
+		return xyseriescollection ;
+	}
+	
+	/**
+	 * We chart  the graph that represents the table
+	 * @param listData
+	 */
+	
+	protected void traceGraph(Vector<Object> listData)
+	{
+		
+		Vector<XYDataset> dataGraph = new Vector<XYDataset>();
+		if ( !listData.isEmpty())
+		{
+			dataGraph.add(createDataset(listData, listTools));
+			JFreeChart jfreechart = createChart(createDataset(listData, listTools));
+			paneGraph.setChart(jfreechart);
+		}
 	}
     /**
      * @param args the command line arguments
@@ -2161,6 +2272,7 @@ public class IHM_TraceEvent extends JFrame {
             public void run() {
             	IHM_TraceEvent traceEvent = new IHM_TraceEvent();
             	traceEvent.setLocationRelativeTo(null);
+            	traceEvent.setTitle("Evaluator the runtime verification") ;
                 traceEvent.setVisible(true);
             }
         });
