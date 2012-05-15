@@ -37,7 +37,7 @@ public class AtomicTranslatorTest
 		Operator o = null;
 		try
 		{
-			o = Operator.parseFromString("G ((a) = (1))");
+			o = Operator.parseFromString("G (((a) = (1)) | ((b) = (1)))");
 		}
 		catch (Operator.ParseException e)
 		{
