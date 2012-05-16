@@ -25,37 +25,41 @@ public abstract class Execution {
 		long endTime, time, memory ;
 		String line = null, strReponse ="";
 		String [] tab = command.split("#");
+		String cmd , key, sep;
 		
 		long startTime = System.currentTimeMillis();
 		try {
-			  Process process = Runtime.getRuntime().exec(tab[2]);
+			 if(tab.length == 2)
+			 {
+				 cmd = tab[1] ;
+				 key = tab[0] ;
+				 sep = "" ;
+			 }else {
+				 key = tab[0] ;
+				 sep =  tab[1] ;
+				 cmd = tab[2] ;
+				
+			 }
+			  Process process = Runtime.getRuntime().exec(cmd);
 			  endTime = System.currentTimeMillis();
-			BufferedReader buf = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-		    BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			BufferedReader bufError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			
-		    while ((line = stdInput.readLine()) != null) {
-		    	if(line.contains(tab[0].trim()))
-            	{
-            		String[] tab2 = line.split(tab[1].trim());
-            		strReponse = tab2[1].trim();
-            		System.out.println(strReponse);
-            		break;
-            	}
-            }
-		    while ((line = stdError.readLine()) != null) {
-		    	if(line.contains(tab[0].trim()))
-            	{
-            		String[] tab2 = line.split(tab[1].trim());
-            		strReponse = tab2[1].trim();
-            		System.out.println(strReponse);
-            		break;
-            	}
-            }
-			
+			while (((line = stdInput.readLine()) != null)
+					|| ((line = bufError.readLine()) != null)) {
+				if (line.contains(key.trim())) {
+					String[] tab2 = line.split(sep.trim());
+					if (tab2.length == 1) {
+						strReponse = tab2[0].trim();
+					} else {
+						strReponse = tab2[1].trim();
+					}
+					System.out.println(strReponse);
+					break;
+				}
+			}
 		
-			buf.close();
+		    stdInput.close();
 			// String retour = sb.toString();
 			time = endTime - startTime;
 			
@@ -65,7 +69,7 @@ public abstract class Execution {
 			// run the garbage collactor
 			runtime.gc();
 			memory = runtime.totalMemory() - runtime.freeMemory();
-			
+			System.out.println(strReponse);
 			
 			tabResultat[0] = (int) time;
 			tabResultat[1] = (int) memory;

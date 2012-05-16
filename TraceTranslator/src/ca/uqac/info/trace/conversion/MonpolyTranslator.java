@@ -243,7 +243,7 @@ public class MonpolyTranslator extends Translator {
 			    {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Eventually[0,").append(b).append("] (").append(op).append(")");
+			      StringBuffer out = new StringBuffer("Eventually[0,").append(b).append("] ( ").append(op).append(" )");
 			      m_pieces.push(out);
 			    }
 
@@ -395,7 +395,7 @@ public class MonpolyTranslator extends Translator {
 			  {
 			    String left = o.getLeft().toString();
 			    String right = o.getRight().toString();
-			    return new StringBuffer("eq").append(left).append("_").append(right).toString();
+			    return new StringBuffer("eq (").append(left).append(",").append(right).append(")").toString();
 			  }
 			@Override
 			public String getSignature(EventTrace m_trace) {

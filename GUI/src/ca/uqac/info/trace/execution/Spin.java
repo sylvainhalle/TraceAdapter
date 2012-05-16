@@ -5,8 +5,8 @@ import java.util.Vector;
 
 public class Spin extends Execution {
 
-	private String homeDir = "/home/aouatef/Tools/Spin";
-	private String command ="/go ";
+	private String homeDir = "/home/aouatef/Tools/Spin/";
+	private String command ="go ";
 	private String strResult = "errors #:#"; // key word # separator
 	
 	@SuppressWarnings("unchecked")

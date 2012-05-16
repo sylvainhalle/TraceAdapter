@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -70,7 +71,9 @@ import ca.uqac.info.trace.execution.Beepbeep;
 import ca.uqac.info.trace.execution.Execution;
 import ca.uqac.info.trace.execution.Maude;
 import ca.uqac.info.trace.execution.Monpoly;
+import ca.uqac.info.trace.execution.MySQL;
 import ca.uqac.info.trace.execution.Nusmv;
+import ca.uqac.info.trace.execution.Spin;
 //import ca.uqac.info.trace.execution.JavaMop;
 //import ca.uqac.info.trace.execution.MySQL;
 import ca.uqac.info.trace.execution.Saxon;
@@ -99,7 +102,7 @@ public class IHM_TraceEvent extends JFrame {
 								    lblTitreLTL, lblTitreTranslate;
 	private JButton     bClick, btnClear, btnClearLTL,
 								    btnConvertir, btnSave, btnSaveLTL ;
-	@SuppressWarnings("rawtypes")
+	
 	private JComboBox   comboBox;
 	private JMenuBar     menuBar;
 	private JMenuItem    itemAbout , itemQuit;
@@ -185,7 +188,6 @@ public class IHM_TraceEvent extends JFrame {
 		
 		
 	}
-	 @SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initComponents() {
 		// Trace translator
 		lblParametres = new javax.swing.JLabel();
@@ -1396,7 +1398,8 @@ public class IHM_TraceEvent extends JFrame {
 	 */
 	private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
 		
-		String str = "", type ="";
+		String  type ="",strExt;
+		FileFilter filter ,fiLTL;
 		//Determine the tab of save button
 		if ((evt.getSource() == btnSave)) {
 			type = "Translator";
@@ -1413,67 +1416,104 @@ public class IHM_TraceEvent extends JFrame {
 				output_format = "xml";
 			}
 		}
-		String strExt = "Save File (."+output_format+" )";
-		FileFilter filter = new FileNameExtensionFilter(strExt, output_format);
-		
-		//add the filter of the save file 
-		JFileChooser fileSave = new JFileChooser();
-		fileSave.setAcceptAllFileFilterUsed(false);
-		fileSave.addChoosableFileFilter(filter);
+		// Save the file MonpOly with extension .log
+		if(output_format.equalsIgnoreCase("monpoly"))
+		{
+			strExt = "Save File (.log )";
+			filter = new FileNameExtensionFilter(strExt, "log");
+		}else
+		 {
+			strExt = "Save File (."+output_format+" )";
+			filter = new FileNameExtensionFilter(strExt, output_format);
+		 }
+		if (evt.getSource() == btnSaveLTL) 
+		{
+			saveLTLproperty();
+		} else {
+
+			// add the filter of the save file
+			JFileChooser fileSave = new JFileChooser();
+			fileSave.setAcceptAllFileFilterUsed(false);
+			fileSave.addChoosableFileFilter(filter);
+
+			int res = fileSave.showSaveDialog(this);
+
+			if (res == JFileChooser.APPROVE_OPTION) {
+				String nameFile;
+				if (output_format.equalsIgnoreCase("monpoly")) {
+					nameFile = fileSave.getSelectedFile().getPath() + ".log";
+				} else {
+					nameFile = fileSave.getSelectedFile().getPath() + "."
+							+ output_format;
+				}
+				File file = new File(nameFile);
+
+				if ((file.exists()) || (file.canWrite())) {
+					JOptionPane.showMessageDialog(this,
+							"Output file exist or can't write", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					try {
+
+						// We are in the tab of translation
+						if (type.equalsIgnoreCase("Translator")) {
+
+							this.saveTrace(file, type);
+							txtArea.setText("");
+							if (!output_format.equalsIgnoreCase("monpoly")) {
+								txtAreaLTL.setText("");
+							}
+						} // We are in the tab of Generator
+						else if (type.equalsIgnoreCase("Generator")) {
+
+							fileSave.removeChoosableFileFilter(filter);
+							fileSave.setAcceptAllFileFilterUsed(true);
+							File fileGen = new File(fileSave.getSelectedFile()
+									.getPath()
+									+ "." + output_format);
+							this.saveTrace(fileGen, type);
+							resultGen.setText("");
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+			} else {
+				System.out.println("Save command cancelled by user.");
+			}
+		}
+	}
+
+	private void saveLTLproperty() {
+		FileFilter fiLTL;
 		FileOutputStream fo;
-		
-		
-		int res = fileSave.showSaveDialog(this);
+		String str = "";
+
+		JFileChooser fileSaveLTL = new JFileChooser();
+		fileSaveLTL.setAcceptAllFileFilterUsed(false);
+		fiLTL = new FileNameExtensionFilter("Save File (.mfotl )", "mfotl");
+		fileSaveLTL.addChoosableFileFilter(fiLTL);
+
+		int res = fileSaveLTL.showSaveDialog(this);
 
 		if (res == JFileChooser.APPROVE_OPTION) {
-			String nameFile = fileSave.getSelectedFile().getPath()+ "."+output_format; 
-			File file =  new File(nameFile);
-
-			if ((file.exists()) || (file.canWrite())) {
-				JOptionPane.showMessageDialog(this,
-						"Output file exist or can't write", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			} else {
-				try {
-					
-					//We are in the tab of translation
-					if (type.equalsIgnoreCase("Translator"))
-					{
-						
-						this.saveTrace(file, type);
-						txtArea.setText("");
-						if(!output_format.equalsIgnoreCase("monpoly"))
-						{
-							txtAreaLTL.setText("");
-						}
-					} else if (evt.getSource() == btnSaveLTL) {
-						fo = new FileOutputStream(file);
-						str = txtAreaLTL.getText();
-						fo.write(str.getBytes());
-						fo.close();
-						txtAreaLTL.setText("");
-					}//We are in the tab of Generator
-					else if (type.equalsIgnoreCase("Generator"))
-					{
-						
-						fileSave.removeChoosableFileFilter(filter);
-						fileSave.setAcceptAllFileFilterUsed(true);
-						File fileGen = new File( fileSave.getSelectedFile().getPath()+ "."+output_format);
-						this.saveTrace(fileGen, type);
-						resultGen.setText("");
-					}
-
-
-					
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			String nameFl = fileSaveLTL.getSelectedFile().getPath() + ".mfotl";
+			File fic = new File(nameFl);
+			try {
+				fo = new FileOutputStream(fic);
+				str = txtAreaLTL.getText();
+				fo.write(str.getBytes());
+				fo.close();
+				txtAreaLTL.setText("");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-		} else {
-			System.out.println("Save command cancelled by user.");
 		}
+
 	}
 /**
  * Traces recorded in a directory
@@ -1866,33 +1906,8 @@ public class IHM_TraceEvent extends JFrame {
 				if (exec == null) {
 					continue;
 				}
-
-//				// file list
-//				File fileTemp = new File(chemin);
-//
-//				// Build the file list of directory
-//				String[] listFile = fileTemp.list();
-//
-//				Vector<String> listNameFile = new Vector<String>();
-//				Vector<String> listNameLTL = new Vector<String>();
 				Vector<Object> vect = new Vector<Object>();
 				vect.addAll(this.getlistParamtools(chemin));
-//				// Build the file list and property list
-//				for (int j = 0; j < listFile.length; j++) {
-//					File fic = new File(listFile[j]);
-//					String strFile = chemin + "/" + fic.getName();
-//
-//					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
-//						listNameLTL.add(strFile);
-//					} else {
-//						listNameFile.add(strFile);
-//					}
-//
-//				}
-
-//				vect.add(listNameLTL);
-//				vect.add(listNameFile);
-
 				ExecutionThread thread = new ExecutionThread(k, exec, vect);
 				listThreads.add(thread);
 				thread.start();
@@ -2002,9 +2017,8 @@ public class IHM_TraceEvent extends JFrame {
 			ex = new Maude();
 		} else if ((strTool.compareToIgnoreCase("SQL") == 0)
 				&& (checkMySQL.isSelected())) {
-			ex = new Beepbeep();
-		}
-		if ((strTool.compareToIgnoreCase("XES") == 0)
+			ex = new MySQL();
+		}else if ((strTool.compareToIgnoreCase("XES") == 0)
 				&& (checkProM.isSelected())) {
 			ex = new Beepbeep();
 		} else if ((strTool.compareToIgnoreCase("MOP") == 0)
@@ -2021,9 +2035,9 @@ public class IHM_TraceEvent extends JFrame {
 		if ((strTool.compareToIgnoreCase("Saxon") == 0)
 				&& (checkSaxon.isSelected())) {
 			ex = new Saxon();
-		} else if ((strTool.compareToIgnoreCase("PML") == 0)
-				&& (checkBeepBeep.isSelected())) {
-			ex = new Beepbeep();
+		} else if ((strTool.compareToIgnoreCase("Spin") == 0)
+				&& (checkSpin.isSelected())) {
+			ex = new Spin();
 		}
 			
 		
@@ -2129,7 +2143,8 @@ public class IHM_TraceEvent extends JFrame {
 			 array.add(listFile);
 			 array.add(listLTL) ;
 			 array.add(listsig) ;
-		 }else if((ext.equalsIgnoreCase("Maude"))||(ext.equalsIgnoreCase("SMV")))
+		 }else if((ext.equalsIgnoreCase("Maude"))||(ext.equalsIgnoreCase("SMV"))
+				 ||(ext.equalsIgnoreCase("SQL")))
 		 {
 			 String[] listFichiers = (new File(chemin)).list();
 			 for(int i = 0 ; i < listFichiers.length ; i++)	 
@@ -2140,14 +2155,15 @@ public class IHM_TraceEvent extends JFrame {
 			 }
 			 array.add(listFile);
 			 
-		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))) 
+		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))
+				||(ext.equalsIgnoreCase("Spin"))) 
 		{
 			 String[] listFichiers = (new File(chemin)).list();
 			for (int j = 0; j < listFichiers.length; j++) {
 				File fic = new File(listFichiers[j]);
 				String strFile = chemin + "/" + fic.getName();
 
-				if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+				if (getExtension(strFile).equalsIgnoreCase("txt")) {
 					listLTL.add(strFile);
 				} else {
 					listFile.add(strFile);
@@ -2169,7 +2185,7 @@ public class IHM_TraceEvent extends JFrame {
 	private static JFreeChart createChart(XYDataset dataGraph) 
 	{
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-				"Table de performance", "Nombre de traces", "Temps d'exécution",
+				"Table de performance", "Number of traces", "Execution Time",
 				dataGraph, PlotOrientation.VERTICAL, true, true, false);
 
 		return jfreechart;
@@ -2205,23 +2221,6 @@ public class IHM_TraceEvent extends JFrame {
 			
 			xyseriescollection.addSeries(xyseries) ;
 		}
-		
-		for (int i = 0; i < data.size(); i++) {
-			dt = (ArrayList<int[]>) data.get(i);
-			strTool = listNames.get(i).concat("0"+i);
-
-			XYSeries xyseries = new XYSeries(strTool, true, false);
-
-			for (int j = 0; j < dt.size(); j++) 
-			{
-				int[] tab = new int[3];
-				tab = dt.get(j);
-				xyseries.add(j, new Double(tab[0]+i+2));
-			}
-			
-			xyseriescollection.addSeries(xyseries) ;
-		}
-		
 		return xyseriescollection ;
 	}
 	

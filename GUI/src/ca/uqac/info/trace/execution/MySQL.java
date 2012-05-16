@@ -7,7 +7,8 @@ import java.util.Vector;
 public class MySQL extends Execution{
 	
 	//Attributes
-	private String command = "mysql --user=root --password= < ";
+	private String command = "/home/aouatef/go-mysql ";
+	private String strResult = "0#";
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -22,8 +23,10 @@ public class MySQL extends Execution{
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = command +  vectFiles.get(i)  ;
-				arrayResultat.add(this.timeAndMemoryExecution(strCommand));
+				
+				String strCommand = command +  vectFiles.get(i) ;
+			
+				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
 		}
@@ -36,7 +39,7 @@ public class MySQL extends Execution{
 
 		int reponseLTL = -1;
 		
-		if(strValue.equalsIgnoreCase("value.trim().length() > 0"))
+		if(strValue.equalsIgnoreCase("0"))
 		{
 			reponseLTL = 1;
 		}

@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Beepbeep extends Execution{
 
-	private String homeDir = "C:/Benchmark/";
+	private String homeDir = "/home/aouatef/Tools/beepbeep/";//C:/Benchmark/";
 	private String command ="java -jar ";
 	private String pointJar = "BeepBeepValidator.jar " ;
 	private String strResult = "Outcome #:#";
