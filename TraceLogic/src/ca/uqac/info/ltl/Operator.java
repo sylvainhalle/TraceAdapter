@@ -151,7 +151,7 @@ public abstract class Operator
 			{
 				String c = s.substring(i, i+1);
 				if (c.compareTo("(") == 0 || c.compareTo(")") == 0 || 
-						c.compareTo("&") == 0  || c.compareTo("|") == 0 || c.compareTo("=") == 0)
+						c.compareTo("&") == 0  || c.compareTo("|") == 0)
 					return s.substring(0, i);
 				if (i < s.length() - 1 && s.substring(i, i+2).compareTo("->") == 0)
 					return s.substring(0, i);

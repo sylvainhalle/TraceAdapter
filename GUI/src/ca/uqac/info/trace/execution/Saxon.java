@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class Saxon extends Execution{
 
-	private String homeDir = "C:/Benchmark/";
+	private String homeDir = "/home/aouatef/beepbeep/" ;//"C:/Benchmark/";
 	private String command ="java -jar ";
 	private String pointJar = "XQueryValidator.jar -m symbolic -i " ;
 	private String strResult = "Result #:#"; // key word # separator
@@ -20,8 +20,8 @@ public class Saxon extends Execution{
 		Vector<String> vectFiles ;
 		if(!inputLists.isEmpty())
 		{
-			vectProp = (Vector<String>) inputLists.get(1);
-			vectFiles = (Vector<String>) inputLists.get(0);
+			vectProp = (Vector<String>) inputLists.get(0);
+			vectFiles = (Vector<String>) inputLists.get(1);
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
@@ -40,7 +40,6 @@ public class Saxon extends Execution{
 
 		String [] tab = strValue.split(" ");
 		String strResponse = tab[tab.length - 1] ;
-		System.out.println(strValue);
 		int val = -99 ;
 		if (strResponse.equalsIgnoreCase("True"))
 		{

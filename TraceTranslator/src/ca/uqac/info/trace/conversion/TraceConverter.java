@@ -21,11 +21,7 @@ import java.io.*;
 import org.apache.commons.cli.*;
 
 import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.trace.CsvTraceReader;
-import ca.uqac.info.trace.EventTrace;
-import ca.uqac.info.trace.SqlTraceReader;
-import ca.uqac.info.trace.TraceReader;
-import ca.uqac.info.trace.XmlTraceReader;
+import ca.uqac.info.trace.*;
 
 public class TraceConverter
 {

@@ -7,7 +7,7 @@ import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
 
-public class XesTranslator implements Translator {
+public class XesTranslator extends Translator {
 
 	@Override
 	public String translateTrace(EventTrace m_trace) {
@@ -130,6 +130,20 @@ public class XesTranslator implements Translator {
 
 	@Override
 	public String getSignature(EventTrace t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String translateFormula() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String translateTrace() {
 		// TODO Auto-generated method stub
 		return null;
 	}

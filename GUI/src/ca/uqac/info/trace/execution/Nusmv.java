@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Nusmv extends Execution {
 
-	private String homeDir = "/home/aouatef/NuSMVv/bin/" ;//"C:/Benchmark/";
+	private String homeDir = "/home/aouatef/Tools/NuSMVv/bin/" ;//"C:/Benchmark/";
 	private String command ="NuSMV  ";
 	private String strResult = "specification #is#";
 	
