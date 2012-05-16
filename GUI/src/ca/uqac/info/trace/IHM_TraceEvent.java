@@ -185,6 +185,9 @@ public class IHM_TraceEvent extends JFrame {
 		btnGen.setEnabled(bVisible);
 	    resultGen.setEditable(bVisible);
 	    lblParametres.setVisible(bVisible);
+	    //runtime 
+	    checkProM.setVisible(false);
+	    checkJavaMop.setEnabled(false);
 		
 		
 	}
@@ -776,10 +779,10 @@ public class IHM_TraceEvent extends JFrame {
 	                            .addComponent(checkNuSMV))
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addComponent(checkProM)
+	                            .addComponent(checkSpin)
 	                            .addComponent(checkSaxon))
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(checkSpin)
+	                        .addComponent(checkProM)
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
 	                        .addComponent(btnGO)))
 	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -796,7 +799,7 @@ public class IHM_TraceEvent extends JFrame {
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
 	                        .addGroup(paneToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                            .addGroup(paneToolsLayout.createSequentialGroup()
-	                                .addComponent(checkProM)
+	                                .addComponent(checkSpin)
 	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
 	                                .addComponent(checkSaxon))
 	                            .addGroup(paneToolsLayout.createSequentialGroup()
@@ -817,7 +820,7 @@ public class IHM_TraceEvent extends JFrame {
 	                        .addGap(15, 15, 15))
 	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneToolsLayout.createSequentialGroup()
 	                        .addGap(0, 0, Short.MAX_VALUE)
-	                        .addComponent(checkSpin)
+	                        .addComponent(checkProM)
 	                        .addGap(29, 29, 29))))
 	        );
 	        paneTable.setBackground(new java.awt.Color(255, 255, 204));
@@ -1069,7 +1072,8 @@ public class IHM_TraceEvent extends JFrame {
 
 		if (evt.getSource() == btnConvertir) 
 		{
-			if(output_format.equalsIgnoreCase("monpoly"))
+			if((output_format.equalsIgnoreCase("monpoly"))
+					||(output_format.equalsIgnoreCase("pml")))
 			{
 				btnSaveLTL.setEnabled(true);
 			}else
@@ -1461,7 +1465,8 @@ public class IHM_TraceEvent extends JFrame {
 
 							this.saveTrace(file, type);
 							txtArea.setText("");
-							if (!output_format.equalsIgnoreCase("monpoly")) {
+							if ((!output_format.equalsIgnoreCase("monpoly"))
+									&&(!output_format.equalsIgnoreCase("pml"))){
 								txtAreaLTL.setText("");
 							}
 						} // We are in the tab of Generator
@@ -1493,30 +1498,39 @@ public class IHM_TraceEvent extends JFrame {
 	private void saveLTLproperty() {
 		FileFilter fiLTL;
 		FileOutputStream fo;
-		String str = "";
+		String str = "", ext= null ;
 
 		JFileChooser fileSaveLTL = new JFileChooser();
 		fileSaveLTL.setAcceptAllFileFilterUsed(false);
-		fiLTL = new FileNameExtensionFilter("Save File (.mfotl )", "mfotl");
-		fileSaveLTL.addChoosableFileFilter(fiLTL);
-
-		int res = fileSaveLTL.showSaveDialog(this);
-
-		if (res == JFileChooser.APPROVE_OPTION) {
-			String nameFl = fileSaveLTL.getSelectedFile().getPath() + ".mfotl";
-			File fic = new File(nameFl);
-			try {
-				fo = new FileOutputStream(fic);
-				str = txtAreaLTL.getText();
-				fo.write(str.getBytes());
-				fo.close();
-				txtAreaLTL.setText("");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (output_format.equalsIgnoreCase("monpoly")) {
+			ext = "mfotl";
+		} else {
+			ext = "txt";
 
 		}
+		
+			fiLTL = new FileNameExtensionFilter("Save File (."+ ext +" )",ext);
+			fileSaveLTL.addChoosableFileFilter(fiLTL);
+
+			int res = fileSaveLTL.showSaveDialog(this);
+
+			if (res == JFileChooser.APPROVE_OPTION) {
+				String nameFl = fileSaveLTL.getSelectedFile().getPath() + "."+ext;
+				File fic = new File(nameFl);
+				try {
+					fo = new FileOutputStream(fic);
+					str = txtAreaLTL.getText();
+					fo.write(str.getBytes());
+					fo.close();
+					txtAreaLTL.setText("");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		
+		
 
 	}
 /**
@@ -1529,7 +1543,8 @@ public class IHM_TraceEvent extends JFrame {
 				.replace("\\", "/"), true);
 		
 		Boolean bMonopoly = (type.equalsIgnoreCase("Translator") &&
-							(!output_format.equalsIgnoreCase("monpoly")));
+							((!output_format.equalsIgnoreCase("monpoly"))
+								&&(!output_format.equalsIgnoreCase("pml"))));
 		String strLTL = "\n".concat(txtAreaLTL.getText());
 		
 		Vector<String> tempTrace = new Vector<String>();
@@ -1612,8 +1627,15 @@ public class IHM_TraceEvent extends JFrame {
 	{
 		String [] list = path.split("/");
 		int rand = randomGenerator.nextInt(100);
-		String rep = "" , 
-			  repTrace = "/Trace_"+output_format.toUpperCase().concat("_")+rand+"/";
+		String rep = "" , repTrace ;
+		//Folder name
+		if (output_format.equalsIgnoreCase("pml")) {
+			repTrace = "/Trace_" + "Spin".toUpperCase().concat("_") + rand
+					+ "/";
+		} else {
+			repTrace = "/Trace_" + output_format.toUpperCase().concat("_")
+					+ rand + "/";
+		}
 		
 		int nbElement , taille = 0 ;
 		if(list.length > 0)
@@ -2174,7 +2196,9 @@ public class IHM_TraceEvent extends JFrame {
 
 				if (getExtension(strFile).equalsIgnoreCase("txt")) {
 					listLTL.add(strFile);
-				} else {
+				} else if ((getExtension(strFile).equalsIgnoreCase("xml"))
+						||(getExtension(strFile).equalsIgnoreCase("pml")))
+				{
 					listFile.add(strFile);
 				}
 			}
@@ -2194,7 +2218,7 @@ public class IHM_TraceEvent extends JFrame {
 	private static JFreeChart createChart(XYDataset dataGraph) 
 	{
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-				"Table de performance", "Number of traces", "Execution Time",
+				"Performance table", "Number of traces", "Execution Time",
 				dataGraph, PlotOrientation.VERTICAL, true, true, false);
 
 		return jfreechart;

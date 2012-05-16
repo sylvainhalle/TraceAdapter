@@ -44,7 +44,7 @@ public class MonpolyTranslator extends Translator {
 		int trace_length = m_trace.size();
 		for (int i = 0; i < trace_length; i++) {
 			Event e = m_trace.elementAt(i);
-			out.append(" @ ").append(i);
+			out.append("@").append(i);
 			Node n = e.getDomNode();
 			NodeList children = n.getChildNodes();
 			Node child;
@@ -423,7 +423,7 @@ public class MonpolyTranslator extends Translator {
 		for (String p : params)
 		{
 			String p_name = p ;
-		  	out.append("\n\t").append(p_name).append(" ( ").append("x : String").append(" ) ");
+		  	out.append("\n\t").append(p_name).append(" (").append("string").append(") ");
 		  	
 		}
 		System.out.println(out.toString());
