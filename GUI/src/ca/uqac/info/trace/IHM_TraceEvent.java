@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -103,6 +102,7 @@ public class IHM_TraceEvent extends JFrame {
 	private JButton     bClick, btnClear, btnClearLTL,
 								    btnConvertir, btnSave, btnSaveLTL ;
 	
+	@SuppressWarnings("rawtypes")
 	private JComboBox   comboBox;
 	private JMenuBar     menuBar;
 	private JMenuItem    itemAbout , itemQuit;
@@ -133,7 +133,7 @@ public class IHM_TraceEvent extends JFrame {
 	private Vector<JLabel> listLabel = new Vector<JLabel>() ;
 	private JSeparator   separatorGenMenu;
 	//Runtime
-	private JPanel      paneRuntime,paneTools ,paneTable ;//, paneGraph;
+	private JPanel      paneRuntime,paneTools ,paneTable ;
 	private ChartPanel paneGraph;
 	private JLabel 		lblRepertoireRun,lblTitreRunTime, lblTools ;
 	private JTextField  tfRepertoireRun;
@@ -188,6 +188,7 @@ public class IHM_TraceEvent extends JFrame {
 		
 		
 	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initComponents() {
 		// Trace translator
 		lblParametres = new javax.swing.JLabel();
@@ -1012,7 +1013,8 @@ public class IHM_TraceEvent extends JFrame {
 			fileTemp = filechoose.getSelectedFile();
 
 			// Define and process command line arguments
-			path_file = this.getDirectory(fileTemp.getAbsolutePath().replace("\\", "/"), false);
+			path_file = this.getDirectory(
+					fileTemp.getAbsolutePath().replace("\\", "/"), false);
 			myFile = new File(path_file);
 
 			try {
@@ -1024,7 +1026,6 @@ public class IHM_TraceEvent extends JFrame {
 				System.out.println("problem accessing file : "
 						+ myFile.getAbsolutePath());
 			}
-
 		}
     }
     /**
@@ -1244,7 +1245,7 @@ public class IHM_TraceEvent extends JFrame {
 					txtAreaLTL.setText(str_out);
 				} else 
 				{
-					txtAreaLTL.setText("M�thode non implement�e !!!");
+					txtAreaLTL.setText("This method does not implemented yet, come back later !!!");
 				}
 
 			} catch (ParseException e) {
@@ -1319,7 +1320,7 @@ public class IHM_TraceEvent extends JFrame {
 			btnSaveGen.setEnabled(true);
 		}else
 		{
-			resultGen.setText("Aucune trace est g�n�r�e !!!");
+			resultGen.setText("Trace none generated yet  !!!");
 		}
 	}
 	
@@ -1399,7 +1400,7 @@ public class IHM_TraceEvent extends JFrame {
 	private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
 		
 		String  type ="",strExt;
-		FileFilter filter ,fiLTL;
+		FileFilter filter ;
 		//Determine the tab of save button
 		if ((evt.getSource() == btnSave)) {
 			type = "Translator";
@@ -1486,6 +1487,9 @@ public class IHM_TraceEvent extends JFrame {
 		}
 	}
 
+	/**
+	 * Allow to save properties file in the good extension
+	 */
 	private void saveLTLproperty() {
 		FileFilter fiLTL;
 		FileOutputStream fo;
@@ -1834,6 +1838,10 @@ public class IHM_TraceEvent extends JFrame {
 	}
 	//Runtime 
 	
+	/**
+	 * Display in the box  the path of file
+	 * @param e
+	 */
 	private void btnRepertoireRunActionPerformed(ActionEvent e) {
 		
 		filechoose = new JFileChooser();
@@ -1942,7 +1950,6 @@ public class IHM_TraceEvent extends JFrame {
 					}
 
 					for (int y = 0; y < data.size(); y++) {
-						
 
 						if (x == 0) {
 							dataRows[y][x] = Integer.toString(y);
@@ -1950,8 +1957,10 @@ public class IHM_TraceEvent extends JFrame {
 						} else {
 							int[] tab = new int[3];
 							tab = data.get(y);
-							dataRows[y][nbCol-x] = tab[0] + " | " + tab[1] + " | "+ tab[2];
-							System.out.println(tab[0] + " | " + tab[1] + " | "+ tab[2]) ;
+							dataRows[y][nbCol - x] = tab[0] + " | " + tab[1]
+									+ " | " + tab[2];
+							System.out.println(tab[0] + " | " + tab[1] + " | "
+									+ tab[2]);
 						}
 
 					}
@@ -2046,7 +2055,7 @@ public class IHM_TraceEvent extends JFrame {
 	  
 	/**
 	 * 
-	 * Allows to recover elements of table in afile cvs
+	 * Allows to recover elements of table in a file cvs
 	 * 
 	 * @param evt
 	 */
