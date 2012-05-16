@@ -130,7 +130,7 @@ public class IHM_TraceEvent extends JFrame {
 	private Vector<JLabel> listLabel = new Vector<JLabel>() ;
 	private JSeparator   separatorGenMenu;
 	//Runtime
-	private JPanel      paneRuntime,paneTools ,paneTable ;//, paneGraph;
+	private JPanel      paneRuntime,paneTools ,paneTable ;
 	private ChartPanel paneGraph;
 	private JLabel 		lblRepertoireRun,lblTitreRunTime, lblTools ;
 	private JTextField  tfRepertoireRun;
@@ -1190,7 +1190,7 @@ public class IHM_TraceEvent extends JFrame {
 				EventTrace trace = reader.parseEventTrace(in_f);
 				String out_trace = trans.translateTrace(trace);
 				outTrace.add(out_trace);
-				//Add signature if the output is monpoly
+				//Add signature if the output is MonPoly
 				if(output_format.equalsIgnoreCase("monpoly"))
 				{
 					
@@ -1242,7 +1242,7 @@ public class IHM_TraceEvent extends JFrame {
 					txtAreaLTL.setText(str_out);
 				} else 
 				{
-					txtAreaLTL.setText("M�thode non implement�e !!!");
+					txtAreaLTL.setText("This method does not implemented yet, \n return later!!!");
 				}
 
 			} catch (ParseException e) {
@@ -1866,33 +1866,8 @@ public class IHM_TraceEvent extends JFrame {
 				if (exec == null) {
 					continue;
 				}
-
-//				// file list
-//				File fileTemp = new File(chemin);
-//
-//				// Build the file list of directory
-//				String[] listFile = fileTemp.list();
-//
-//				Vector<String> listNameFile = new Vector<String>();
-//				Vector<String> listNameLTL = new Vector<String>();
 				Vector<Object> vect = new Vector<Object>();
 				vect.addAll(this.getlistParamtools(chemin));
-//				// Build the file list and property list
-//				for (int j = 0; j < listFile.length; j++) {
-//					File fic = new File(listFile[j]);
-//					String strFile = chemin + "/" + fic.getName();
-//
-//					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
-//						listNameLTL.add(strFile);
-//					} else {
-//						listNameFile.add(strFile);
-//					}
-//
-//				}
-
-//				vect.add(listNameLTL);
-//				vect.add(listNameFile);
-
 				ExecutionThread thread = new ExecutionThread(k, exec, vect);
 				listThreads.add(thread);
 				thread.start();
