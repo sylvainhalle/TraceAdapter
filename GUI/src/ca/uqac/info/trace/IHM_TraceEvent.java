@@ -4,7 +4,8 @@
  */
 package ca.uqac.info.trace;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -48,15 +49,10 @@ import org.apache.commons.cli.PosixParser;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
-import com.sun.media.sound.Toolkit;
 
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
@@ -134,7 +130,7 @@ public class IHM_TraceEvent extends JFrame {
 	private Vector<JLabel> listLabel = new Vector<JLabel>() ;
 	private JSeparator   separatorGenMenu;
 	//Runtime
-	private JPanel      paneRuntime,paneTools ,paneTable;//, paneGraph;
+	private JPanel      paneRuntime,paneTools ,paneTable ;//, paneGraph;
 	private ChartPanel paneGraph;
 	private JLabel 		lblRepertoireRun,lblTitreRunTime, lblTools ;
 	private JTextField  tfRepertoireRun;
@@ -361,135 +357,97 @@ public class IHM_TraceEvent extends JFrame {
 
 	        javax.swing.GroupLayout panTranslatorLayout = new javax.swing.GroupLayout(panTranslator);
 	        panTranslator.setLayout(panTranslatorLayout);
-		 panTranslatorLayout.setHorizontalGroup(
-		 panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addComponent(separator)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addGap(10, 10, 10)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-		 false)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-		 false)
-		 .addComponent(lblTitre2)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addComponent(lblTitre3)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91,
-		 javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(spTranslate))
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addGap(136, 136, 136)
-		 .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 640, javax.swing.GroupLayout.PREFERRED_SIZE)))
-		 .addComponent(lblTitre1, javax.swing.GroupLayout.PREFERRED_SIZE, 322,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addGap(184, 184, 184)
-		 .addComponent(LabTitre))
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addComponent(bClick)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addComponent(textFiel_path_LTL,
-		 javax.swing.GroupLayout.PREFERRED_SIZE, 354,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addComponent(lblInputLTL)
-		 .addComponent(lblTitreTranslate,
-		 javax.swing.GroupLayout.PREFERRED_SIZE, 130,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 38,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 51,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 41,
-		 javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addContainerGap())
-		 );
-		 panTranslatorLayout.setVerticalGroup(
-		 panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addContainerGap()
-		 .addComponent(LabTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(lblTitre1)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-		 .addComponent(bClick)
-		 .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 javax.swing.GroupLayout.DEFAULT_SIZE,
-		 javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addGap(32, 32, 32)
-		 .addComponent(lblInputLTL)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(textFiel_path_LTL,
-		 javax.swing.GroupLayout.PREFERRED_SIZE, 34,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addGap(27, 27, 27)
-		 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addComponent(lblTitreTranslate)
-		 .addGap(18, 18, 18)
-		 .addComponent(lblTitre2)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 javax.swing.GroupLayout.DEFAULT_SIZE,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addGap(21, 21, 21)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addComponent(lblTitre3)
-		 .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
-		 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-		 panTranslatorLayout.createSequentialGroup()
-		 .addGap(0, 15, Short.MAX_VALUE)
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-		 .addComponent(spTranslate,
-		 javax.swing.GroupLayout.Alignment.TRAILING,
-		 javax.swing.GroupLayout.PREFERRED_SIZE, 165,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-		 panTranslatorLayout.createSequentialGroup()
-		 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)))))
-		 .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-		 false)
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-		 .addGroup(panTranslatorLayout.createSequentialGroup()
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-		 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		 .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 33,
-		 javax.swing.GroupLayout.PREFERRED_SIZE)
-		 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-		 .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE,
-		 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-		 .addContainerGap(36, Short.MAX_VALUE))
-		 );
-	     		tabbedPane.addTab("Trace Translator", panTranslator);
+	        panTranslatorLayout.setHorizontalGroup(
+	            panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addComponent(separator)
+	            .addGroup(panTranslatorLayout.createSequentialGroup()
+	                .addGap(10, 10, 10)
+	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                                .addComponent(lblTitre2)
+	                                .addGroup(panTranslatorLayout.createSequentialGroup()
+	                                    .addComponent(lblTitre3)
+	                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                    .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(spTranslate))
+	                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addGap(136, 136, 136)
+	                            .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                    .addComponent(lblTitre1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addGroup(panTranslatorLayout.createSequentialGroup()
+	                        .addGap(184, 184, 184)
+	                        .addComponent(LabTitre))
+	                    .addGroup(panTranslatorLayout.createSequentialGroup()
+	                        .addComponent(bClick)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                    .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(lblInputLTL)
+	                    .addComponent(lblTitreTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addContainerGap())
+	        );
+	        panTranslatorLayout.setVerticalGroup(
+	            panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            .addGroup(panTranslatorLayout.createSequentialGroup()
+	                .addContainerGap()
+	                .addComponent(LabTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addComponent(lblTitre1)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+	                    .addComponent(bClick)
+	                    .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                .addGap(32, 32, 32)
+	                .addComponent(lblInputLTL)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(27, 27, 27)
+	                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addGroup(panTranslatorLayout.createSequentialGroup()
+	                        .addComponent(lblTitreTranslate)
+	                        .addGap(18, 18, 18)
+	                        .addComponent(lblTitre2)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                        .addGap(21, 21, 21)
+	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(lblTitre3)
+	                            .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
+	                        .addGap(0, 15, Short.MAX_VALUE)
+	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(spTranslate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
+	                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                    .addGroup(panTranslatorLayout.createSequentialGroup()
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                    .addGroup(panTranslatorLayout.createSequentialGroup()
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                        .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                .addContainerGap(36, Short.MAX_VALUE))
+	        ); 
+		tabbedPane.addTab("Trace Translator", panTranslator);
 
 		panGenerator.setBackground(new java.awt.Color(255, 255, 204));
 
@@ -923,6 +881,7 @@ public class IHM_TraceEvent extends JFrame {
 	            paneGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGap(0, 55, Short.MAX_VALUE)
 	        );
+	        
 
 	        javax.swing.GroupLayout paneRuntimeLayout = new javax.swing.GroupLayout(paneRuntime);
 	        paneRuntime.setLayout(paneRuntimeLayout);
@@ -1029,9 +988,7 @@ public class IHM_TraceEvent extends JFrame {
 
 	       pack();
 	    }
-	 
-   
-	 /**
+    /**
 	 * Guess output format
 	 * 
 	 * @param evt
@@ -1864,8 +1821,6 @@ public class IHM_TraceEvent extends JFrame {
 	@SuppressWarnings("unchecked")
 	private void btnGOActionPerformed(java.awt.event.ActionEvent evt) {
 
-		
-		
 		// Condition
 		boolean autorize = ((!tfRepertoireRun.getText().trim()
 				.equalsIgnoreCase("")) && (checkBeepBeep.isSelected()
@@ -1911,8 +1866,32 @@ public class IHM_TraceEvent extends JFrame {
 				if (exec == null) {
 					continue;
 				}
+
+//				// file list
+//				File fileTemp = new File(chemin);
+//
+//				// Build the file list of directory
+//				String[] listFile = fileTemp.list();
+//
+//				Vector<String> listNameFile = new Vector<String>();
+//				Vector<String> listNameLTL = new Vector<String>();
 				Vector<Object> vect = new Vector<Object>();
 				vect.addAll(this.getlistParamtools(chemin));
+//				// Build the file list and property list
+//				for (int j = 0; j < listFile.length; j++) {
+//					File fic = new File(listFile[j]);
+//					String strFile = chemin + "/" + fic.getName();
+//
+//					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+//						listNameLTL.add(strFile);
+//					} else {
+//						listNameFile.add(strFile);
+//					}
+//
+//				}
+
+//				vect.add(listNameLTL);
+//				vect.add(listNameFile);
 
 				ExecutionThread thread = new ExecutionThread(k, exec, vect);
 				listThreads.add(thread);
@@ -2112,6 +2091,12 @@ public class IHM_TraceEvent extends JFrame {
 		}
 
 	}
+	/**
+	 * Built set of parameter of tool
+	 * @param chemin
+	 * @return
+	 */
+	
 	private ArrayList<Vector<String>> getlistParamtools (String chemin)
 	{
 		ArrayList<Vector<String>>  array = new ArrayList<Vector<String>>() ;
@@ -2155,81 +2140,104 @@ public class IHM_TraceEvent extends JFrame {
 			 }
 			 array.add(listFile);
 			 
-		 }else if((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon")))
-		 {
-			// Build the file list and property list
+		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))) 
+		{
 			 String[] listFichiers = (new File(chemin)).list();
-				for (int j = 0; j < listFichiers.length; j++) {
-					File fic = new File(listFichiers[j]);
-					String strFile = chemin + "/" + fic.getName();
+			for (int j = 0; j < listFichiers.length; j++) {
+				File fic = new File(listFichiers[j]);
+				String strFile = chemin + "/" + fic.getName();
 
-					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
-						listLTL.add(strFile);
-					} else {
-						listFile.add(strFile);
-					}
-
+				if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+					listLTL.add(strFile);
+				} else {
+					listFile.add(strFile);
 				}
-				 array.add(listFile);
-				 array.add(listLTL) ;
-		 }
+			}
+			array.add(listFile);
+			array.add(listLTL) ;
+			
+		}
 		 
 		return array ;
 	}
 
-	private static JFreeChart createChart(Vector<XYDataset> dataGraph) {
-
-	
+	/**
+	 * 
+	 * @param dataGraph
+	 * @return
+	 */
+	private static JFreeChart createChart(XYDataset dataGraph) 
+	{
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-				"Table de performance", "Nombre de traces", "Mémoire utilisé", null,
-				PlotOrientation.VERTICAL, false, true, false);
-		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-
-		
-		XYSplineRenderer xylineandshaperenderer2 = new XYSplineRenderer();
-		xylineandshaperenderer2.setSeriesPaint(0, Color.BLUE);
-		
-		xyplot.setDataset(2, dataGraph.get(0));
-		xyplot.setRenderer(2, xylineandshaperenderer2);
+				"Table de performance", "Nombre de traces", "Temps d'exécution",
+				dataGraph, PlotOrientation.VERTICAL, true, true, false);
 
 		return jfreechart;
 	}
 
-	private static XYDataset createDataset( ArrayList<int[]> data) {
-		XYSeries xyseries = new XYSeries("data ");
+	/**
+	 * 
+	 * @param data
+	 * @param listNames
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private static XYSeriesCollection createDataset(Vector<Object>data, Vector<String> listNames) {
 		
-		if(!data.isEmpty())
-		{
-			for (int i = 0 ; i < data.size() ; i ++)
+		ArrayList<int[]> dt = new ArrayList<int[]>();
+		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
+		
+		String strTool ;
+		
+		for (int i = 0; i < data.size(); i++) {
+			dt = (ArrayList<int[]>) data.get(i); //set  of trace
+			strTool = listNames.get(i); // tool name
+
+			XYSeries xyseries = new XYSeries(strTool, true, false);
+
+			// We built of data
+			for (int j = 0; j < dt.size(); j++) 
 			{
 				int[] tab = new int[3];
-				tab = data.get(i);
-				xyseries.add(i, new Double(tab[1]));
+				tab = dt.get(j);
+				xyseries.add(j, new Double(tab[0]));
 			}
+			
+			xyseriescollection.addSeries(xyseries) ;
 		}
 		
-		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
-		xyseriescollection.addSeries(xyseries);
-		return xyseriescollection;
+		for (int i = 0; i < data.size(); i++) {
+			dt = (ArrayList<int[]>) data.get(i);
+			strTool = listNames.get(i).concat("0"+i);
+
+			XYSeries xyseries = new XYSeries(strTool, true, false);
+
+			for (int j = 0; j < dt.size(); j++) 
+			{
+				int[] tab = new int[3];
+				tab = dt.get(j);
+				xyseries.add(j, new Double(tab[0]+i+2));
+			}
+			
+			xyseriescollection.addSeries(xyseries) ;
+		}
+		
+		return xyseriescollection ;
 	}
 	
 	/**
-	 * 
+	 * We chart  the graph that represents the table
 	 * @param listData
 	 */
 	
 	protected void traceGraph(Vector<Object> listData)
 	{
-		ArrayList<int[]> data = new ArrayList<int[]>();
+		
 		Vector<XYDataset> dataGraph = new Vector<XYDataset>();
 		if ( !listData.isEmpty())
 		{
-			for(int i = 0 ; i < listData.size() ; i ++)
-			{
-				data = (ArrayList<int[]>) listData.get(i) ;
-				dataGraph.add(createDataset(data));
-			}
-			JFreeChart jfreechart = createChart(dataGraph);
+			dataGraph.add(createDataset(listData, listTools));
+			JFreeChart jfreechart = createChart(createDataset(listData, listTools));
 			paneGraph.setChart(jfreechart);
 		}
 	}
@@ -2262,10 +2270,9 @@ public class IHM_TraceEvent extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-            	
             	IHM_TraceEvent traceEvent = new IHM_TraceEvent();
-            	traceEvent.setTitle("Eent trace");
             	traceEvent.setLocationRelativeTo(null);
+            	traceEvent.setTitle("Evaluator the runtime verification") ;
                 traceEvent.setVisible(true);
             }
         });
