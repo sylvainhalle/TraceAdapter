@@ -2007,7 +2007,7 @@ public class IHM_TraceEvent extends JFrame {
 	  
 	/**
 	 * 
-	 * Allows to recover elements of table in afile cvs
+	 * Allows to recover elements of table in a file cvs
 	 * 
 	 * @param evt
 	 */
@@ -2150,6 +2150,10 @@ public class IHM_TraceEvent extends JFrame {
 		return jfreechart;
 	}
 
+	private void btnSwitchActionPerformed( ActionEvent evt)
+	{
+		
+	}
 	/**
 	 * 
 	 * @param data
