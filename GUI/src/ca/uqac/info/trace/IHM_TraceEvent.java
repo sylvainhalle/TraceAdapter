@@ -62,6 +62,7 @@ import ca.uqac.info.trace.execution.Execution;
 import ca.uqac.info.trace.execution.Maude;
 import ca.uqac.info.trace.execution.Monpoly;
 import ca.uqac.info.trace.execution.Nusmv;
+import ca.uqac.info.trace.execution.Spin;
 //import ca.uqac.info.trace.execution.JavaMop;
 //import ca.uqac.info.trace.execution.MySQL;
 import ca.uqac.info.trace.execution.Saxon;
@@ -90,7 +91,7 @@ public class IHM_TraceEvent extends JFrame {
 								    lblTitreLTL, lblTitreTranslate;
 	private JButton     bClick, btnClear, btnClearLTL,
 								    btnConvertir, btnSave, btnSaveLTL ;
-	@SuppressWarnings("rawtypes")
+	
 	private JComboBox   comboBox;
 	private JMenuBar     menuBar;
 	private JMenuItem    itemAbout , itemQuit;
@@ -175,7 +176,6 @@ public class IHM_TraceEvent extends JFrame {
 		
 		
 	}
-	 @SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initComponents() {
 		// Trace translator
 		lblParametres = new javax.swing.JLabel();
@@ -1191,7 +1191,9 @@ public class IHM_TraceEvent extends JFrame {
 					String out_sig = ("Signature").concat(strTemp);
 					OutSigMonp.add(strTemp);
 					out_trace = out_trace.concat(out_sig);
+					out_trace = out_trace.concat(out_sig);
 				}
+
 				
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");
 			}
@@ -1898,7 +1900,6 @@ public class IHM_TraceEvent extends JFrame {
 				try {
 					listThreads.get(j).join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -2017,6 +2018,10 @@ public class IHM_TraceEvent extends JFrame {
 				&& (checkBeepBeep.isSelected())) {
 			ex = new Beepbeep();
 		}
+		else if ((strTool.compareToIgnoreCase("Spin") == 0)
+				&& (checkSpin.isSelected())) {
+			ex = new Spin();
+		}
 			
 		
 		return ex ;
@@ -2126,6 +2131,41 @@ public class IHM_TraceEvent extends JFrame {
 			 }
 			 array.add(listFile);
 			 
+		 }else if((ext.equalsIgnoreCase("SPIN")))
+		 {
+			 String[] listFichiers = (new File(chemin)).list();
+			 for(int i = 0 ; i < listFichiers.length ; i++)	 
+			 {
+				 File fic = new File(listFichiers[i]);
+				 String strFile = chemin + "/" + fic.getName();
+				 
+				 if (getExtension(strFile).equalsIgnoreCase("pml")) {
+						listFile.add(strFile);
+					} else {
+						listLTL.add(strFile);
+					}
+				 
+			 }
+			 array.add(listFile);
+			 array.add(listLTL);
+			 
+		 }else if(ext.equalsIgnoreCase("XML"))
+		 {
+			 String[] listFichiers = (new File(chemin)).list();
+			 for (int j = 0; j < listFichiers.length; j++) {
+					File fic = new File(listFichiers[j]);
+					String strFile = chemin + "/" + fic.getName();
+
+					if (!getExtension(strFile).equalsIgnoreCase("xml")) {
+						listLTL.add(strFile);
+					} else {
+						listFile.add(strFile);
+					}
+
+				}
+			 array.add(listFile);
+			 array.add(listLTL);
+
 		 }
 		 
 		return array ;

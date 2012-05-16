@@ -26,7 +26,7 @@ import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
 
-public class MonpolyTranslator implements Translator {
+public class MonpolyTranslator extends Translator {
 	
 	protected final String m_logname = "log";
 	 
@@ -44,14 +44,14 @@ public class MonpolyTranslator implements Translator {
 		int trace_length = m_trace.size();
 		for (int i = 0; i < trace_length; i++) {
 			Event e = m_trace.elementAt(i);
-			out.append(" @ ").append("Event ");
+			out.append(" @ ").append(i);
 			Node n = e.getDomNode();
 			NodeList children = n.getChildNodes();
 			Node child;
 			String val = "";
 			if (children.getLength() > 1) {
 				NodeList level1 = children.item(1).getChildNodes();
-				out.append(" ").append( children.item(1).getNodeName());
+				//out.append(" ").append( children.item(1).getNodeName());
 				if (level1.getLength() > 1) {
 
 					NodeList level2 = level1.item(1).getChildNodes();
@@ -429,6 +429,18 @@ public class MonpolyTranslator implements Translator {
 		System.out.println(out.toString());
 	return out;
 		    
+	}
+
+	@Override
+	public String translateFormula() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String translateTrace() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 	

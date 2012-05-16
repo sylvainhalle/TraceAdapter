@@ -27,7 +27,7 @@ import ca.uqac.info.trace.EventTrace;
  * Translates an event trace into JSON notation.
  * @author sylvain
  */
-public class JsonTranslator implements Translator
+public class JsonTranslator extends Translator
 {
 
   /**
@@ -258,6 +258,18 @@ public class JsonTranslator implements Translator
 
 @Override
 public String getSignature(EventTrace t) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public String translateFormula() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public String translateTrace() {
 	// TODO Auto-generated method stub
 	return null;
 }

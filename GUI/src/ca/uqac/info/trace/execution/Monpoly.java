@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class Monpoly extends Execution {
 
-	private String homeDir = "/home/aouatef/MonPoly/";//"C:/Benchmark/";
+	private String homeDir = "/home/aouatef/Tools/MonPoly/";//"C:/Benchmark/";
 	private String command ="monpoly ";
 	private String strResult = "monitorable # is #";
 	

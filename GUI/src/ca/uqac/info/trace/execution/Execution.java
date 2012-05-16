@@ -44,7 +44,6 @@ public abstract class Execution {
             		break;
             	}
             }
-			
 		    while ((line = stdError.readLine()) != null) {
 		    	if(line.contains(tab[0].trim()))
             	{

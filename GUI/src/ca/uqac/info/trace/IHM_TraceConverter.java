@@ -923,7 +923,8 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 		TraceReader tf = null;
 		if ((input_format.compareToIgnoreCase("xml") == 0)
 				|| (input_format.compareToIgnoreCase("xes") == 0)) {
-			tf = new XmlTraceReader();
+			tf = new LlrpTraceReader();//tf = new XmlTraceReader();
+		
 		} else if (input_format.compareToIgnoreCase("sql") == 0) {
 			tf = new SqlTraceReader();
 		} else if (input_format.compareToIgnoreCase("csv") == 0) {

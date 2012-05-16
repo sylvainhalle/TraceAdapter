@@ -24,7 +24,7 @@ import ca.uqac.info.util.Relation;
 
 import org.w3c.dom.NodeList;
 
-public class MaudeTranslator implements Translator
+public class MaudeTranslator extends Translator
 {
 
 	Vector<String> o_params;
@@ -43,46 +43,15 @@ public class MaudeTranslator implements Translator
 		StringBuffer out = new StringBuffer();
 		StringBuffer out_Trace = new StringBuffer();
 		EventTrace maTrace = t ;
-		
-		int NbEvent = t.size();
-		
-		
-	
 		for (Event e : t) {
 			NodeList listnode = e.getDomNode().getChildNodes();
-
-			if (listnode.getLength() > 0) {
-				out.append(listnode.item(1).getNodeName()).append("_");
-
-				NodeList list2 = listnode.item(1).getChildNodes();
-
-				if (list2.getLength() > 1) {
-					NodeList list3 = list2.item(1).getChildNodes();
-
-					if (list3.getLength() > 1) {
-						out.append(list3.item(1).getNodeName()).append("_")
-								.append(list3.item(1).getTextContent());
-					} else {
-						out.append(list2.item(1).getNodeName()).append("_")
-								.append(list2.item(1).getTextContent());
-					}
-
-				} else {
-
-					out.append(listnode.item(1).getTextContent());
-				}
-
-			}
-			NbEvent--;
-			if (NbEvent != 0) {
-				out.append(" ,\n ");
-			}
+			out.append(listnode.item(1).getTextContent());
+			out.append(",");
 		}
 		out.append("  ").append("|=");
 		
 		// Start writing the Java program
 		String params = this.getSignature(maTrace);
-
 		out_Trace.append("in ltl.maude");
 		out_Trace.append("\n \n \n");
 		out_Trace.append("fmod MY-TRACE is").append("\t");
@@ -95,15 +64,11 @@ public class MaudeTranslator implements Translator
 		out_Trace.append("");
 		out_Trace.append("reduce").append(" ");
 		out_Trace.append(out);
-
 		return out_Trace.toString();
-
 	}
 
 	public String translateFormula(Operator o) {
 		StringBuffer out = new StringBuffer();
-	    
-	  
 	    MaudeFormulaTranslator f_trans = new MaudeFormulaTranslator();
 	    o.accept(f_trans);
 	    out.append(f_trans.getFormula());
@@ -192,8 +157,7 @@ public class MaudeTranslator implements Translator
 		    {
 		      m_pieces.pop(); // Pop right-hand side
 		      m_pieces.pop(); // Pop left-hand side
-		      StringBuffer out = new StringBuffer(toJavaMopIdentifier(o));
-		      //StringBuffer out = new StringBuffer("eq").append(left).append("_").append(right);
+		      StringBuffer out = new StringBuffer(toMaudeIdentifier(o));
 		      m_pieces.push(out);
 		    }
 
@@ -218,12 +182,12 @@ public class MaudeTranslator implements Translator
 			
 		  }
 		  
-		  protected class JavaMopEqualityGetter implements OperatorVisitor
+		  protected class MaudeEqualityGetter implements OperatorVisitor
 		  {
 
 		    Set<OperatorEquals> m_equalities; 
 		    
-		    public JavaMopEqualityGetter()
+		    public MaudeEqualityGetter()
 		    {
 		      super();
 		      m_equalities = new HashSet<OperatorEquals>();
@@ -279,7 +243,7 @@ public class MaudeTranslator implements Translator
 			
 		  }
 		  
-		  protected static String toJavaMopIdentifier(OperatorEquals o)
+		  protected static String toMaudeIdentifier(OperatorEquals o)
 		  {
 		    String left = o.getLeft().toString();
 		    String right = o.getRight().toString();
@@ -297,6 +261,18 @@ public class MaudeTranslator implements Translator
 		      strTemp =  strTemp.replace("[", " ");
 		      strTemp =  strTemp.replace("]", " ");
 			return strTemp;
+		}
+
+		@Override
+		public String translateFormula() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String translateTrace() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

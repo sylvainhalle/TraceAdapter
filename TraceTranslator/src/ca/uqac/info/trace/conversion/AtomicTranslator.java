@@ -97,11 +97,8 @@ import ca.uqac.info.util.Relation;
  * @author sylvain
  *
  */
-public class AtomicTranslator implements Translator
+public class AtomicTranslator extends Translator
 {
-	
-	protected EventTrace m_trace;
-	protected Operator m_formula;
 	protected Vector<String> m_parameters;
 	protected Map<Event,String> m_tokens;
 	
@@ -123,11 +120,17 @@ public class AtomicTranslator implements Translator
 	@Override
   public String translateFormula(Operator o)
   {
+		setFormula(o);
+		return translateFormula();
+  }
+	
+	public String translateFormula()
+	{
 		assert m_tokens != null; // If null, means that translateTrace() hasn't been called first
 		AtomicFormulaTranslator aft = new AtomicFormulaTranslator();
-		o.accept(aft);
-		return aft.getFormula();
-  }
+		m_formula.accept(aft);
+		return aft.getFormula();		
+	}
 	
 	/**
 	 * Translates an arbitrary LTL formula into a propositional LTL
@@ -291,16 +294,6 @@ public class AtomicTranslator implements Translator
   	return token.toString();
 	}
 	
-	public void setTrace(EventTrace t)
-	{
-		m_trace = t;
-	}
-	
-	public void setFormula(Operator o)
-	{
-		m_formula = o;
-	}
-	
 	public void setParameters(Vector<String> parameters)
 	{
 		m_parameters = parameters;
@@ -341,6 +334,12 @@ public class AtomicTranslator implements Translator
 
 	@Override
 	public String getSignature(EventTrace t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String translateTrace() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -26,7 +26,7 @@ import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
 
-public class PromelaTranslator implements Translator {
+public class PromelaTranslator extends Translator {
 	
 	protected final String m_logname = "log";
 	Vector<String> o_params;
@@ -384,6 +384,18 @@ public class PromelaTranslator implements Translator {
 	@Override
 	public String getSignature(EventTrace m_trace) {
 		
+		return null;
+	}
+
+	@Override
+	public String translateFormula() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String translateTrace() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	

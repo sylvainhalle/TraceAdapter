@@ -10,7 +10,7 @@ import java.util.*;
  * 
  * @author sylvain
  */
-public class JavaMopTranslator implements Translator
+public class JavaMopTranslator extends Translator
 {
   /**
    * The class name used by default in the output program
@@ -327,6 +327,18 @@ public class JavaMopTranslator implements Translator
 
 @Override
 public String getSignature(EventTrace t) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public String translateFormula() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public String translateTrace() {
 	// TODO Auto-generated method stub
 	return null;
 }

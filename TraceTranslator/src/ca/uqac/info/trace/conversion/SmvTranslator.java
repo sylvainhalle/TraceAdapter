@@ -26,7 +26,7 @@ import java.util.*;
  * Translates an event trace into a NuSMV finite-state machine.
  * @author sylvain
  */
-public class SmvTranslator implements Translator
+public class SmvTranslator extends Translator
 {
   /**
    * Symbol standing for undefined
@@ -256,6 +256,18 @@ public class SmvTranslator implements Translator
 
 @Override
 public String getSignature(EventTrace t) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public String translateFormula() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public String translateTrace() {
 	// TODO Auto-generated method stub
 	return null;
 }  
