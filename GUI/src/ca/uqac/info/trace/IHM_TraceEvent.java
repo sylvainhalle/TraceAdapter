@@ -1188,9 +1188,25 @@ public class IHM_TraceEvent extends JFrame {
 					System.err.println("ERROR: Unrecognized output format");
 					System.exit(1);
 				}
+				
 
 				// Translate the trace into the output format
 				EventTrace trace = reader.parseEventTrace(in_f);
+				// Check if translator is Maude and send property
+				if (trans instanceof MaudeTranslator) {
+					trans = new MaudeTranslator(trace);
+					Operator o;
+					try {
+						o = Operator.parseFromString(textFiel_path_LTL.getText());
+						trans.setFormula(o);
+						String str_out = trans.translateFormula();
+						txtAreaLTL.setText(str_out);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
 				String out_trace = trans.translateTrace(trace);
 				outTrace.add(out_trace);
 				//Add signature if the output is monpoly
@@ -1234,24 +1250,28 @@ public class IHM_TraceEvent extends JFrame {
 		String str_out;
 		// Determine which translator to initialize
 		Translator tr = initializeTranslator(output_format);
-		if (tr != null) 
+		if(!(tr instanceof MaudeTranslator))
 		{
-			try 
-			{
-				Operator o = Operator.parseFromString(strLTL);
-				str_out = tr.translateFormula(o);
-				if (str_out != null) 
-				{
-					txtAreaLTL.setText(str_out);
-				} else 
-				{
-					txtAreaLTL.setText("This method does not implemented yet, come back later !!!");
-				}
+			if (tr != null) {
+				try {
+					Operator o = Operator.parseFromString(strLTL);
+	                
+					
+					str_out = tr.translateFormula(o);
 
-			} catch (ParseException e) {
-				e.printStackTrace();
+					if (str_out != null) {
+						txtAreaLTL.setText(str_out);
+					} else {
+						txtAreaLTL
+								.setText("This method does not implemented yet, come back later !!!");
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
+		
 	}
 	/**
 	 * Allow to generate random traces
