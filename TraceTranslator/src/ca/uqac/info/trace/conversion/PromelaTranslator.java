@@ -378,7 +378,7 @@ public class PromelaTranslator extends Translator {
 	  {
 	    String left = o.getLeft().toString();
 	    String right = o.getRight().toString();
-	    return new StringBuffer("eq").append(left).append("_").append(right).toString();
+	    return new StringBuffer("").append(left).append("==").append(right).toString();
 	  }
 
 	@Override
