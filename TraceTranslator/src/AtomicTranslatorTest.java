@@ -33,11 +33,11 @@ public class AtomicTranslatorTest
 	public static void main(String[] args)
 	{
 		XmlTraceReader xtr = new XmlTraceReader();
-		File f = new File("traces/trace1.xml");
+		File f = new File("traces/trace2.xml");
 		Operator o = null;
 		try
 		{
-			o = Operator.parseFromString("G ((a) = (1))");
+			o = Operator.parseFromString("G( p4 = 0)");
 		}
 		catch (Operator.ParseException e)
 		{
@@ -46,7 +46,7 @@ public class AtomicTranslatorTest
 		EventTrace t = xtr.parseEventTrace(f);
 		AtomicTranslator at = new AtomicTranslator();
 		Vector<String> params = new Vector<String>();
-		params.add("a"); params.add("b");
+		params.add("p4"); //params.add("b");
 		at.setParameters(params);
 		String out = at.translateTrace(t);
 		System.out.println(out);

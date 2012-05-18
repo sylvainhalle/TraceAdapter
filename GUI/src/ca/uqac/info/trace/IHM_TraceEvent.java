@@ -946,7 +946,7 @@ public class IHM_TraceEvent extends JFrame {
 
 	        lblTitre.setFont(new java.awt.Font("Arial", 1, 18)); 
 	        lblTitre.setForeground(new java.awt.Color(0, 51, 102));
-	        lblTitre.setText("  Trace event");
+	        lblTitre.setText("Evaluator the runtime verification");
 
 	        menuFile.setText("File");
 
@@ -981,7 +981,7 @@ public class IHM_TraceEvent extends JFrame {
 	            .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.TRAILING)
 	            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
 	                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                .addComponent(lblTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addComponent(lblTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                .addGap(323, 323, 323))
 	        );
 	        layout.setVerticalGroup(
@@ -1199,12 +1199,16 @@ public class IHM_TraceEvent extends JFrame {
 				// Check if translator is Maude and send property
 				if (trans instanceof MaudeTranslator) {
 					trans = new MaudeTranslator(trace);
-					Operator o;
+					Operator o, omd;
 					try {
 						o = Operator.parseFromString(textFiel_path_LTL.getText());
 						trans.setFormula(o);
 						String str_out = trans.translateFormula();
-						txtAreaLTL.setText(str_out);
+						omd = Operator.parseFromString( str_out);
+						
+						String prop = trans.translateFormula(omd);
+						txtAreaLTL.setText(prop);
+						
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2326,7 +2330,7 @@ public class IHM_TraceEvent extends JFrame {
             public void run() {
             	IHM_TraceEvent traceEvent = new IHM_TraceEvent();
             	traceEvent.setLocationRelativeTo(null);
-            	traceEvent.setTitle("Evaluator the runtime verification") ;
+            	traceEvent.setTitle("Samatef") ;
                 traceEvent.setVisible(true);
             }
         });
