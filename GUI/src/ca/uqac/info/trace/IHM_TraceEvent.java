@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -53,6 +54,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
@@ -1127,7 +1130,6 @@ public class IHM_TraceEvent extends JFrame {
 		
 		// Determine which translator to initialize
 		t_gen = initializeGenerator(selectedMenu);
-
 		Options opt = t_gen.getCommandLineOptions();
 		Iterator<Option> liste = opt.getOptions().iterator();
 		
@@ -1140,6 +1142,7 @@ public class IHM_TraceEvent extends JFrame {
 					&& (!param.getOpt().equalsIgnoreCase("t"))&& (!param.getOpt().equalsIgnoreCase("s"))) 
 			{
 				listParam.add(param.getOpt() + "/" + param.getDescription());
+				
 			}
 		}
 		
