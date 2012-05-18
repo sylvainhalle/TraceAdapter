@@ -2261,6 +2261,7 @@ public class IHM_TraceEvent extends JFrame {
 		for (int i = 0; i < data.size(); i++) {
 			dt = (ArrayList<int[]>) data.get(i); //set  of trace
 			strTool = listNames.get(i); // tool name
+			int s = 0 ;
 
 			XYSeries xyseries = new XYSeries(strTool, true, false);
 
@@ -2269,7 +2270,8 @@ public class IHM_TraceEvent extends JFrame {
 			{
 				int[] tab = new int[3];
 				tab = dt.get(j);
-				xyseries.add(j, new Double(tab[0]));
+				s = s + tab[0] ;
+				xyseries.add(j, new Double(s));
 			}
 			
 			xyseriescollection.addSeries(xyseries) ;
