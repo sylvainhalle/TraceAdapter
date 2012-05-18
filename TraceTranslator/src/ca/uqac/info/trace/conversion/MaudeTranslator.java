@@ -84,9 +84,8 @@ public class MaudeTranslator extends Translator {
 		out_Trace.append("fmod MY-TRACE is").append("\t");
 		out_Trace.append("\n ");
 		out_Trace.append("extending LTL .").append("\t");
-		out_Trace.append("\n \n \n");
 		out_Trace.append("ops  ").append(operandes).append(" : -> Atom .")
-				.append("\t");
+		.append("\t");
 		out_Trace.append("\n \n \n");
 		out_Trace.append("endfm \n ");
 		out_Trace.append("");
