@@ -97,8 +97,6 @@ public class MaudeTranslator extends Translator {
 	private Operator getFormula() {
 		return m_formula;
 	}
-
-	@SuppressWarnings("unused")
 	public Operator getParamFormula(String s) throws ParseException {
 
 		s = s.trim();
@@ -252,11 +250,14 @@ public class MaudeTranslator extends Translator {
 		assert size_left + size_right < s.length();
 		return s.substring(size_left, s.length() - size_right).trim();
 	}
-
-	// samatar fin
-
 	public String translateFormula(Operator o) {
-		return null;
+		
+		StringBuffer out = new StringBuffer();
+		MaudeFormulaTranslator mft = new MaudeFormulaTranslator();
+		o.accept(mft);
+		out.append(mft.getFormula());
+		
+		return out.toString();
 	}
 
 	protected class MaudeFormulaTranslator implements OperatorVisitor {
@@ -310,7 +311,7 @@ public class MaudeTranslator extends Translator {
 		public void visit(OperatorF o) {
 			StringBuffer op = m_pieces.pop();
 
-			StringBuffer out = new StringBuffer("<> (").append(op).append(")");
+			StringBuffer out = new StringBuffer("<> ( ").append(op).append(" )");
 			m_pieces.push(out);
 
 		}
@@ -416,8 +417,7 @@ public class MaudeTranslator extends Translator {
 	protected static String toMaudeIdentifier(OperatorEquals o) {
 		String left = o.getLeft().toString();
 		String right = o.getRight().toString();
-		return new StringBuffer("eq").append(left).append("_").append(right)
-				.toString();
+		return new StringBuffer(left).append(" = ").append(right).toString();
 	}
 
 	@Override
@@ -452,6 +452,21 @@ public class MaudeTranslator extends Translator {
 	@Override
 	public String translateTrace() {
 		return null;
+	}
+	public static void main (String [] args)
+	{
+		
+		MaudeTranslator md = new MaudeTranslator() ;
+		String s = "F ((e2 | e0) | (e3 |e4)| (e3 |e4)) ";
+		Operator op;
+		try {
+			op = Operator.parseFromString(s);
+			System.out.println(md.translateFormula(op));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

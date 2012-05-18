@@ -31,7 +31,7 @@ public class MonpolyTranslator extends Translator {
 	protected final String m_logname = "log";
 	 
 	  java.util.Random r=new java.util.Random( ) ;
-	  int b ;
+	  int b , a;
 	  Random m_random = new Random();
     
 	@Override
@@ -223,8 +223,8 @@ public class MonpolyTranslator extends Translator {
 			      StringBuffer right = m_pieces.pop();
 			      StringBuffer left = m_pieces.pop();
 			      StringBuffer op = m_pieces.pop();
-			      b = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("(").append(left).append(") Implies[0,").append(b).append("]").append("(").append(right).append(op).append(")");
+			     
+			      StringBuffer out = new StringBuffer("(").append(left).append(") Implies").append("(").append(right).append(op).append(")");
 			      m_pieces.push(out);
 			     
 			      
@@ -243,7 +243,8 @@ public class MonpolyTranslator extends Translator {
 			    {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Eventually[0,").append(b).append("] ( ").append(op).append(" )");
+			      a = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("Eventually[").append(a).append(",").append(b).append("] ( ").append(op).append(" )");
 			      m_pieces.push(out);
 			    }
 
@@ -252,7 +253,8 @@ public class MonpolyTranslator extends Translator {
 			    {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Next[0,").append(b).append("] (").append(op).append(")");
+			      a = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("Next[").append(a).append(",").append(b).append("] (").append(op).append(")");
 			      m_pieces.push(out);
 			    }
 
@@ -261,7 +263,8 @@ public class MonpolyTranslator extends Translator {
 			    {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Always[0,").append(b).append("] (").append(op).append(")");
+			      a = m_random.nextInt(10);
+			      StringBuffer out = new StringBuffer("Always[").append(a).append(",").append(b).append("] (").append(op).append(")");
 			      
 			      m_pieces.push(out);
 			    
@@ -296,7 +299,8 @@ public class MonpolyTranslator extends Translator {
 				{
 					StringBuffer op = m_pieces.pop();
 					b = m_random.nextInt(10);
-					StringBuffer out = new StringBuffer("Until[0,").append(b)
+					 a = m_random.nextInt(10);
+					StringBuffer out = new StringBuffer("Until[").append(a).append(",").append(b)
 										.append("] (").append(op).append(")");
 
 					m_pieces.push(out);
@@ -306,12 +310,12 @@ public class MonpolyTranslator extends Translator {
 				
 			  }
 			  
-			  protected class PromelaEqualityGetter implements OperatorVisitor
+			  protected class MonpolyEqualityGetter implements OperatorVisitor
 			  {
 
 			    Set<OperatorEquals> m_equalities; 
 			    
-			    public PromelaEqualityGetter()
+			    public MonpolyEqualityGetter()
 			    {
 			      super();
 			      m_equalities = new HashSet<OperatorEquals>();
@@ -395,7 +399,8 @@ public class MonpolyTranslator extends Translator {
 			  {
 			    String left = o.getLeft().toString();
 			    String right = o.getRight().toString();
-			    return new StringBuffer("eq (").append(left).append(",").append(right).append(")").toString();
+			    
+			    return new StringBuffer(left).append("( ").append(right).append(")").toString();
 			  }
 			@Override
 			public String getSignature(EventTrace m_trace) {
