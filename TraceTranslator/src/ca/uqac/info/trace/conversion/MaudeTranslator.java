@@ -54,14 +54,14 @@ public class MaudeTranslator extends Translator {
 		Vector<String> listParm = new Vector<String>();
 		Operator op = this.getFormula();
 		try {
-			getParamFormula(op.toString());
+//			getParamFormula(op.toString());
 
 			at.setParameters(o_params);
 			out = at.translateTrace(t);
 			prop = generateFormula(at.translateFormula(op));
 			
 
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
