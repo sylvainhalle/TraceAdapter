@@ -19,6 +19,7 @@ public class ExecutionThread extends Thread{
 		this.clsExec = exec ;
 		this.listParams = fileTrace ;
 		this.numero = num ;
+		listResultat = new ArrayList<int[]>();
 	}
 
 	public ArrayList<int []> getListResultat() {

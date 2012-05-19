@@ -8,7 +8,7 @@ public class Monpoly extends Execution {
 
 	private String homeDir = "/home/aouatef/Tools/MonPoly/";//"C:/Benchmark/";
 	private String command ="monpoly ";
-	private String strResult = "monitorable # is #";
+	private String strResult = "@#";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -25,7 +25,7 @@ public class Monpoly extends Execution {
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand = homeDir + command + " -sig  "+vectsignatures.get(i)  +" -formula  " + vectProp.get(i) + " -log  " + vectFiles.get(i)+"  -check";
+				String strCommand = homeDir + command + " -sig  "+vectsignatures.get(i)  +" -formula  " + vectProp.get(0) + " -log  " + vectFiles.get(i)+"  -negate";
 				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
@@ -39,10 +39,10 @@ public class Monpoly extends Execution {
 
 		int reponseLTL = -99;
 		
-		if(strValue.equalsIgnoreCase("monitorable."))
+		if(!strValue.isEmpty())
 		{
 			reponseLTL = 1;
-		}else if(strValue.equalsIgnoreCase("not monitorable.")){
+		}else {
 			reponseLTL = 0;
 		}
 		

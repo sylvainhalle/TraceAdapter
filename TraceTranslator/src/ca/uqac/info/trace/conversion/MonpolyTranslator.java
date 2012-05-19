@@ -204,7 +204,7 @@ public class MonpolyTranslator extends Translator {
 			    {
 			      StringBuffer right = m_pieces.pop();
 			      StringBuffer left = m_pieces.pop();
-			      StringBuffer out = new StringBuffer("(").append(left).append(") And (").append(right).append(")");
+			      StringBuffer out = new StringBuffer("(").append(left).append(") AND (").append(right).append(")");
 			      m_pieces.push(out);
 			    }
 
@@ -213,7 +213,7 @@ public class MonpolyTranslator extends Translator {
 			    {
 			      StringBuffer right = m_pieces.pop();
 			      StringBuffer left = m_pieces.pop();
-			      StringBuffer out = new StringBuffer("(").append(left).append(") Or (").append(right).append(")");
+			      StringBuffer out = new StringBuffer("(").append(left).append(") OR (").append(right).append(")");
 			      m_pieces.push(out);
 			    }
 			    
@@ -224,7 +224,7 @@ public class MonpolyTranslator extends Translator {
 			      StringBuffer left = m_pieces.pop();
 			      StringBuffer op = m_pieces.pop();
 			     
-			      StringBuffer out = new StringBuffer("(").append(left).append(") Implies").append("(").append(right).append(op).append(")");
+			      StringBuffer out = new StringBuffer("(").append(left).append(") IMPLIES").append("(").append(right).append(op).append(")");
 			      m_pieces.push(out);
 			     
 			      
@@ -234,7 +234,7 @@ public class MonpolyTranslator extends Translator {
 			    public void visit(OperatorNot o)
 			    {
 			      StringBuffer op = m_pieces.pop();
-			      StringBuffer out = new StringBuffer("Not (").append(op).append(")");
+			      StringBuffer out = new StringBuffer("NOT (").append(op).append(")");
 			      m_pieces.push(out);
 			    }
 
@@ -244,7 +244,7 @@ public class MonpolyTranslator extends Translator {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
 			      a = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Eventually[").append(a).append(",").append(b).append("] ( ").append(op).append(" )");
+			      StringBuffer out = new StringBuffer("EVENTUALLY [").append(Math.min(a, b)).append(",").append(Math.max(a, b)).append("] ( ").append(op).append(" )");
 			      m_pieces.push(out);
 			    }
 
@@ -254,7 +254,7 @@ public class MonpolyTranslator extends Translator {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
 			      a = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Next[").append(a).append(",").append(b).append("] (").append(op).append(")");
+			      StringBuffer out = new StringBuffer("NEXT [").append(Math.min(a, b)).append(",").append(Math.max(a, b)).append("] (").append(op).append(")");
 			      m_pieces.push(out);
 			    }
 
@@ -264,7 +264,7 @@ public class MonpolyTranslator extends Translator {
 			      StringBuffer op = m_pieces.pop();
 			      b = m_random.nextInt(10);
 			      a = m_random.nextInt(10);
-			      StringBuffer out = new StringBuffer("Always[").append(a).append(",").append(b).append("] (").append(op).append(")");
+			      StringBuffer out = new StringBuffer("ALWAYS [").append(Math.min(a, b)).append(",").append(Math.max(a, b)).append("] (").append(op).append(")");
 			      
 			      m_pieces.push(out);
 			    

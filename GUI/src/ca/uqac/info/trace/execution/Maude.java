@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class Maude extends Execution {
 
-	private String homeDir = "/home/aouatef/Tools";
+	private String homeDir = "/home/aouatef/Tools/";
 	private String command ="Maude/maude/maude.linux  ";
 	private String strResult = "result #:#";
 	@SuppressWarnings("unchecked")

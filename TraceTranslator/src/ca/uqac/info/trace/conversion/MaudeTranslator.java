@@ -48,7 +48,7 @@ public class MaudeTranslator extends Translator {
 
 	@Override
 	public String translateTrace(EventTrace t) {
-		String out = "", operandes = "", chaine = "";
+		String out = "", operandes = "", chaine = "",prop="";
 		StringBuffer out_Trace = new StringBuffer();
 		this.trace = t;
 		Vector<String> listParm = new Vector<String>();
@@ -58,6 +58,8 @@ public class MaudeTranslator extends Translator {
 
 			at.setParameters(o_params);
 			out = at.translateTrace(t);
+			prop = generateFormula(at.translateFormula(op));
+			
 
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -77,7 +79,7 @@ public class MaudeTranslator extends Translator {
 			}
 		}
 
-		chaine = chaine.concat("    |= ");
+		chaine = chaine.concat("    |= ").concat(prop);
 		// Start writing the Java program
 		out_Trace.append("in ltl.maude");
 		out_Trace.append("\n \n \n");
@@ -446,9 +448,43 @@ public class MaudeTranslator extends Translator {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return prop;
+		
+		return generateFormula(prop);
 	}
 
+	public String generateFormula(String chaine)
+	{
+		String res = "";
+		String [] tab = chaine.split(" ");
+		for(String c : tab)
+		{
+			if(c.equalsIgnoreCase("G"))
+			{
+				res = res.concat("[] ");
+			}else if (c.equalsIgnoreCase("F"))
+			{
+				res = res.concat("<> ");
+			}else if (c.equalsIgnoreCase("X"))
+			{
+				res = res.concat("o ");
+			}else if (c.equalsIgnoreCase("|"))
+			{
+				res = res.concat("\\/ ");
+			}else if (c.equalsIgnoreCase("& "))
+			{
+				res = res.concat("/\\ ");
+			}else if (c.equalsIgnoreCase("! "))
+			{
+				res = res.concat("~ ");
+			}else{
+				res = res.concat(c).concat(" ");
+			}
+			
+		}
+		res = res.concat(".");
+		return res ;
+	}
+	
 	@Override
 	public String translateTrace() {
 		return null;

@@ -148,10 +148,11 @@ public class IHM_TraceEvent extends JFrame {
 	private Vector<String> listTools ;
 	//General
 	protected File myFile;
-	protected Vector<String> outTrace,outTraceGen,OutSigMonp;
+	protected Vector<String> outTrace,outTraceGen,OutSigMonp, listTraces;
 	protected JFileChooser filechoose;
 	protected int status;
 	protected boolean fieldsVisible;
+	
 	//Generate the number associated with the trace folder 
     Random randomGenerator = new Random();
 	protected String path_file, output_format = "", input_filename = "",selectedMenu="";
@@ -1199,15 +1200,12 @@ public class IHM_TraceEvent extends JFrame {
 				// Check if translator is Maude and send property
 				if (trans instanceof MaudeTranslator) {
 					trans = new MaudeTranslator(trace);
-					Operator o, omd;
+					Operator o;
 					try {
 						o = Operator.parseFromString(textFiel_path_LTL.getText());
 						trans.setFormula(o);
-						String str_out = trans.translateFormula();
-						omd = Operator.parseFromString( str_out);
-						
-						String prop = trans.translateFormula(omd);
-						txtAreaLTL.setText(prop);
+//						String str_out = trans.translateFormula();
+						txtAreaLTL.setText("");
 						
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
@@ -1926,6 +1924,7 @@ public class IHM_TraceEvent extends JFrame {
 		if (autorize) {
 			// The set of tools selected
 			this.selectedTools();
+			listTraces = new Vector<String>();
 			String[] columnNames = new String[listTools.size() + 1];
 
 			// display the set of selected
@@ -1978,28 +1977,41 @@ public class IHM_TraceEvent extends JFrame {
 					e.printStackTrace();
 				}
 			}
-
+			int nbRow = 0 ;
 			for (int j = 0; j < listThreads.size(); j++) {
 				ArrayList<int[]> result = ((ExecutionThread) listThreads.get(j))
 						.getListResultat();
+				if(!result.isEmpty())
+					nbRow = Math.max(nbRow, result.size());
 				listData.add(result);
 			}
+			System.out.println("\n\n"+nbRow+"\n\n");
+			//Initialize vector content set of event number
+			Vector<Integer> ve  = this.eventNumbers(listTraces) ;
 
 			if (!listData.isEmpty()) {
 				int nbCol = listThreads.size() + 1;
-				data = (ArrayList<int[]>) listData.get(0);
-				String[][] dataRows = new String[data.size()][nbCol];
+				String[][] dataRows = new String[nbRow][nbCol];
 
 				for (int x = 0; x < nbCol; x++) {
 					if (x != 0) {
 						data = (ArrayList<int[]>) listData.get(x - 1);
+					}else
+					{
+						data = (ArrayList<int[]>) listData.get(x);
 					}
+					
 
 					for (int y = 0; y < data.size(); y++) {
 
 						if (x == 0) {
-							dataRows[y][x] = Integer.toString(y);
-
+							if(!ve.isEmpty())
+							{
+								dataRows[y][x] = Integer.toString(y) + " | "+ ve.get(y);
+							}else{
+								dataRows[y][x] = Integer.toString(y) ;
+							}
+								
 						} else {
 							int[] tab = new int[3];
 							tab = data.get(y);
@@ -2079,15 +2091,13 @@ public class IHM_TraceEvent extends JFrame {
 		} else if ((strTool.compareToIgnoreCase("MOP") == 0)
 				&& (checkJavaMop.isSelected())) {
 			ex = new Beepbeep();
-		}
-		if ((strTool.compareToIgnoreCase("Monpoly") == 0)
+		}else if ((strTool.compareToIgnoreCase("Monpoly") == 0)
 				&& (checkMonopoly.isSelected())) {
 			ex = new Monpoly();
 		} else if ((strTool.compareToIgnoreCase("SMV") == 0)
 				&& (checkNuSMV.isSelected())) {
 			ex = new Nusmv();
-		}
-		if ((strTool.compareToIgnoreCase("Saxon") == 0)
+		}else if  ((strTool.compareToIgnoreCase("Saxon") == 0)
 				&& (checkSaxon.isSelected())) {
 			ex = new Saxon();
 		} else if ((strTool.compareToIgnoreCase("Spin") == 0)
@@ -2106,25 +2116,32 @@ public class IHM_TraceEvent extends JFrame {
 	 * @param evt
 	 */
 
-	public void btnSaveRunctionPerformed(java.awt.event.ActionEvent evt) {
+	private void btnSaveRunctionPerformed(java.awt.event.ActionEvent evt) {
 		int nbCol = executionTable.getColumnCount();
 		int nbRow = executionTable.getRowCount();
 		String strResult = "";
 
-		for (int i = 1; i < nbCol; i++)
-		{
-			strResult = strResult.concat(
-					executionTable.getModel().getColumnName(i)).concat("\n");
+		for (int k = 0; k < nbCol; k++) {
+			if (k == 0) {
+				strResult = strResult.concat(executionTable.getColumnName(k))
+						.concat(" , , ");
+			} else {
+				strResult = strResult.concat(executionTable.getColumnName(k))
+						.concat(" , , ,");
+			}
 
-			for (int j = 0; j < nbRow; j++)
-			{
-				strResult = strResult.concat(
-						executionTable.getValueAt(j, i).toString())
-						.concat("\n");
+		}
+		strResult = strResult.concat("\n");
+		for (int i = 0; i < nbRow; i++) {
+
+			for (int j = 0; j < nbCol; j++) {
+				String e = executionTable.getValueAt(i, j).toString().replace(
+						"|", " , ");
+
+				strResult = strResult.concat(e).concat("  , ");
 			}
 			strResult = strResult.concat("\n");
-		 }
-		
+		}
 		String strExt = "Save File (.csv )";
 		FileFilter filter = new FileNameExtensionFilter(strExt, "CSV");
 		FileOutputStream fo;
@@ -2133,18 +2150,15 @@ public class IHM_TraceEvent extends JFrame {
 		fileSave.addChoosableFileFilter(filter);
 
 		int res = fileSave.showSaveDialog(this);
-		if (res == JFileChooser.APPROVE_OPTION) 
-		{
+		if (res == JFileChooser.APPROVE_OPTION) {
 			String nameFile = fileSave.getSelectedFile().getPath() + ".csv";
 			File file = new File(nameFile);
 			if ((file.exists()) || (file.canWrite())) {
 				JOptionPane.showMessageDialog(this,
-				"Output file exist or can't write", "Error",
-				JOptionPane.ERROR_MESSAGE);
-			} else 
-			{
-				try
-				{
+						"Output file exist or can't write", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
+				try {
 					fo = new FileOutputStream(file);
 					fo.write(strResult.getBytes());
 					fo.close();
@@ -2224,12 +2238,18 @@ public class IHM_TraceEvent extends JFrame {
 						||(getExtension(strFile).equalsIgnoreCase("pml")))
 				{
 					listFile.add(strFile);
+					if (getExtension(strFile).equalsIgnoreCase("xml"))
+					{
+						this.listTraces.add(strFile);
+					}
+							
 				}
 			}
 			array.add(listFile);
 			array.add(listLTL) ;
 			
 		}
+		
 		 
 		return array ;
 	}
@@ -2298,6 +2318,25 @@ public class IHM_TraceEvent extends JFrame {
 			JFreeChart jfreechart = createChart(createDataset(listData, listTools));
 			paneGraph.setChart(jfreechart);
 		}
+	}
+	
+	private Vector<Integer> eventNumbers( Vector<String> list )
+	{
+		int res = 0 ;
+		Vector<Integer> tailles = new Vector<Integer>();
+		// Determine which trace reader to initialize
+		TraceReader reader = initializeReader("xml");
+		for(int i = 0 ; i < list.size() ; i++)
+		{
+			File in_f = new File(list.get(i));
+			// Translate the trace into the output format
+			EventTrace trace = reader.parseEventTrace(in_f);
+			
+			res= trace.size() ;
+			tailles.add(res);
+		}
+		return tailles;
+		
 	}
     /**
      * @param args the command line arguments

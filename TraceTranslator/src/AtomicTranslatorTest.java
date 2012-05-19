@@ -37,7 +37,7 @@ public class AtomicTranslatorTest
 		Operator o = null;
 		try
 		{
-			o = Operator.parseFromString("G( p4 = 0)");
+			o = Operator.parseFromString("G(p0 = 0)");
 		}
 		catch (Operator.ParseException e)
 		{
