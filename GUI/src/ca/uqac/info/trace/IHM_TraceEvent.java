@@ -1208,6 +1208,7 @@ public class IHM_TraceEvent extends JFrame {
 					Operator o;
 					try {
 						o = Operator.parseFromString(textFiel_path_LTL.getText());
+						((MaudeTranslator) trans).getParamFormula(textFiel_path_LTL.getText());
 						trans.setFormula(o);
 						txtAreaLTL.setText("");
 						
