@@ -48,6 +48,4 @@ public class Maude extends Execution {
 		return reponseLTL;
 		
 	}
-
-
 }

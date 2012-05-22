@@ -56,6 +56,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+import com.sun.org.apache.xerces.internal.impl.dv.dtd.NMTOKENDatatypeValidator;
 
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
@@ -1071,30 +1072,31 @@ public class IHM_TraceEvent extends JFrame {
 	 * @param evt
 	 */
 	private void btnConvertirActionPerformed(java.awt.event.ActionEvent evt) {
-	
-		
 
+		
 		if (evt.getSource() == btnConvertir) 
 		{
-			if((output_format.equalsIgnoreCase("monpoly"))
-					||(output_format.equalsIgnoreCase("pml")))
+			int nbfiles = myFile.list().length;
+			if (output_format.equalsIgnoreCase("monpoly"))
 			{
 				btnSaveLTL.setEnabled(true);
-			}else
-			{
-				btnSaveLTL.setEnabled(false);
 			}
-			
-			if((! textFiel_path_LTL.getText().isEmpty()))
-			{
+			if ((!textFiel_path_LTL.getText().isEmpty())) {
 				this.translateLTL();
 			}
-			this.translate();
-		
-		} else if (evt.getSource() == btnGen)
-		{
-			this.generateTrace();
-		
+			if( nbfiles < 100)
+			{
+				this.translate();
+			}else { this.translateAndSave() ;}
+
+		} else if (evt.getSource() == btnGen) {
+			int disp = Integer.parseInt(tfNbTraces.getText());
+			if (disp > 100) {
+				this.generateTrace();
+			} else {
+				this.traceGenerator();
+			}
+
 		}
 
 	}
@@ -1207,7 +1209,6 @@ public class IHM_TraceEvent extends JFrame {
 					try {
 						o = Operator.parseFromString(textFiel_path_LTL.getText());
 						trans.setFormula(o);
-//						String str_out = trans.translateFormula();
 						txtAreaLTL.setText("");
 						
 					} catch (ParseException e) {
@@ -1251,6 +1252,187 @@ public class IHM_TraceEvent extends JFrame {
 	}
 	
 	/**
+	 * Can translate the input file in the choice of output file
+	 * and save  directly to the files when they're over 1000 files 
+	 */
+	private void translateAndSave ()
+	{
+		//add filter extension file
+		FileFilter filter ;
+		String ext ="";
+		Boolean bMonopoly = (!output_format.equalsIgnoreCase("monpoly"));
+		String strLTL = "\n".concat(txtAreaLTL.getText());
+		// save the file MonPoly with extension .log
+		if(output_format.equalsIgnoreCase("monpoly"))
+		{
+			ext ="Save file (.log)";
+			filter = new FileNameExtensionFilter(ext, "log");
+		}else{
+			ext = "Save file (."+output_format+" )";
+			filter = new FileNameExtensionFilter(ext, output_format);
+		}
+		
+		//add filter  of the save file
+		JFileChooser fc = new JFileChooser();
+		fc.setAcceptAllFileFilterUsed(false);
+		fc.addChoosableFileFilter(filter);
+		int res = fc.showSaveDialog(this);
+		String repertoire, namefic, chaine="";
+		
+		if(res == JFileChooser.APPROVE_OPTION)
+		{
+			String nameFile;
+			//determine extension file
+			if(output_format.equalsIgnoreCase("monpoly"))
+			{
+				nameFile = fc.getSelectedFile().getAbsolutePath()+".log";
+			}else{
+				nameFile = fc.getSelectedFile().getAbsolutePath()+"."+output_format;
+			}
+			File file = new File(nameFile);
+			//display error message if file exists or we can not write
+			if ((file.exists() || (file.canWrite()))) {
+				JOptionPane.showMessageDialog(this,
+						"Output  file exist or can't write", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}else
+			{
+				namefic = file.getName();
+				repertoire = getDirectory(file.getAbsolutePath().replace("\\","/"), true);
+				File fic = new File(repertoire);
+				String []sourceFiles =  myFile.list();
+				
+				if(fic.mkdirs())
+				{
+					for(int i= 0 ;i <sourceFiles.length ;i++)
+					{
+						File srcFile = new File(sourceFiles[i]);
+						String srcPath = path_file+"/"+ srcFile.getName();
+						Vector<String> resultat = getTraceEvent(srcPath);
+						if (!resultat.isEmpty())
+						{
+							int number = this.getNumberFile(srcFile.getName());
+							String str = repertoire.concat(this.buildFile(
+									namefic, number));
+							System.out.println(str);
+							chaine = chaine.concat(str).concat("\n");
+							try {
+								FileOutputStream fos = new FileOutputStream(
+										new File(str));
+								fos.write(resultat.get(0).getBytes());
+								if(bMonopoly)
+								{
+							     fos.write(strLTL.getBytes());
+								}
+								fos.close();
+								if(output_format.equalsIgnoreCase("monpoly"))
+								{
+									String nameSig = this.buildFile(namefic, number); 
+									String [] listString =  nameSig.split("\\.");
+									String strSig = repertoire.concat(listString[0]+".sig");
+									chaine = chaine.concat(strSig).concat("\n");
+									try {
+
+										fos = new FileOutputStream(new File(strSig));
+										fos.write(resultat.get(1).getBytes());
+										fos.close();
+
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
+
+							} catch (Exception e) {
+
+							}
+						}						
+					}					
+					txtArea.setText(chaine);
+				}
+			}
+			
+			
+		}
+		
+	}
+	/**
+	 * Allow to recover the number of input file
+	 * @param nameFile
+	 * @return
+	 */
+	
+	private int getNumberFile(String nameFile)
+	{
+		int res = - 1;
+		String[] tabPt = nameFile.split("\\.");
+		if(tabPt.length > 0)
+		{
+			String []tabUnder = tabPt[0].split("_");
+			res = Integer.parseInt(tabUnder[1]);
+		}
+	
+		return res ;
+	}
+	private Vector<String> getTraceEvent( String path)
+	{
+		String out_trace = null;
+		Vector<String> res = new Vector<String>();
+
+		//String input_format = getExtension(path_file);
+		String input_format = getExtension(path);
+		// Determine which trace reader to initialize
+		TraceReader reader = initializeReader(input_format);
+		if (reader != null) 
+		{
+			// Instantiate the proper trace reader and checks that the trace
+			// exists reader.setEventTagName(event_tag_name);
+			
+			File in_f = new File(path);
+			if ((!in_f.exists()) || (!in_f.canRead()))
+			{
+				System.err
+						.println("ERROR: Input file not found or Input file is not readable");
+				System.exit(1);
+			}
+
+			// Determine which translator to initialize
+			Translator trans = initializeTranslator(output_format);
+			if (trans == null) {
+				System.err.println("ERROR: Unrecognized output format");
+				System.exit(1);
+			}
+			
+
+			// Translate the trace into the output format
+			EventTrace trace = reader.parseEventTrace(in_f);
+			// Check if translator is Maude and send property
+			if (trans instanceof MaudeTranslator) {
+				trans = new MaudeTranslator(trace);
+				Operator o;
+				try {
+					o = Operator.parseFromString(textFiel_path_LTL.getText());
+					trans.setFormula(o);
+					txtAreaLTL.setText("");
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			out_trace = trans.translateTrace(trace);
+			res.add(out_trace);
+			//Add signature if the output is monpoly
+			if(output_format.equalsIgnoreCase("monpoly"))
+			{	
+				String strTemp = trans.getSignature(trace);
+				res.add(strTemp);
+			}
+			
+		}
+		return res;
+	}
+	/**
 	 * Can translate the input LTL property to the choice of output
 	 */
 	private void translateLTL() 
@@ -1280,31 +1462,28 @@ public class IHM_TraceEvent extends JFrame {
 				}
 			}
 		}
+		if(output_format.equalsIgnoreCase("pml"))
+		{
+			btnSaveLTL.setEnabled(false);
+		}
 		
 	}
 	/**
-	 * Allow to generate random traces
+	 * Allow to generate random traces more 1000
 	 */
-	private void generateTrace()
-	{
-		Vector<String> listP =this.buildParameters(listParam);
+	private void generateTrace() {
+		Vector<String> listP = this.buildParameters(listParam);
 		outTraceGen = new Vector<String>();
-		int taille = listP.size() * 2, k = 0,cp = 1,tf =0 ;
-		String [] args = new String [taille] ;
-		
-		while( k < listP.size())
-		{
-			args [tf] = listP.get(k);
-			args [cp] = listTextFields.get(k).getText()  ;
-			cp = cp + 2 ;
+		int taille = listP.size() * 2, k = 0, cp = 1, tf = 0;
+		String[] args = new String[taille];
+
+		while (k < listP.size()) {
+			args[tf] = listP.get(k);
+			args[cp] = listTextFields.get(k).getText();
+			cp = cp + 2;
 			tf = tf + 2;
-			k ++ ;
+			k++;
 		}
-		
-		String vChaine = "";
-		
-		
-		
 		// Determine which translator to initialize
 		t_gen = initializeGenerator(selectedMenu);
 
@@ -1329,30 +1508,120 @@ public class IHM_TraceEvent extends JFrame {
 			System.exit(1);
 		}
 		int cpt = Integer.parseInt(tfNbTraces.getText());
-		
-		for (int i = 0; i < cpt; i++) 
-		{
-			t_gen.initialize(c_line);
-			EventTrace trace = t_gen.generate();
-			Translator trans = new XmlTranslator();
-			String out_trace = trans.translateTrace(trace);
-			outTraceGen.add(out_trace) ;
 
-			vChaine = vChaine.concat(out_trace).concat("\n");
+		// dimanche200512
+		FileFilter filRandom;
+		FileOutputStream fos; String chaine="";
+		boolean bfound = false;
+		JFileChooser fileSaveRandom = new JFileChooser();
+		fileSaveRandom.setAcceptAllFileFilterUsed(false);
+		output_format ="xml";
+		//add filter 
+		filRandom = new FileNameExtensionFilter("Save File (."+output_format +")", output_format);
+		fileSaveRandom.addChoosableFileFilter(filRandom);
+
+		int res = fileSaveRandom.showSaveDialog(this);
+		if (res == JFileChooser.APPROVE_OPTION) {
+			t_gen.initialize(c_line);
+			//recover name file
+			String path = fileSaveRandom.getSelectedFile().getAbsolutePath().concat(".xml");
+			String name = fileSaveRandom.getSelectedFile().getName();
+			// recover path
+			String repertoire = this.getDirectory((new File (path)).getAbsolutePath()
+					.replace("\\", "/"), true);
+			// Create a new folder
+			if ((new File(repertoire)).mkdirs()) 
+			{//generate set of file
+				for (int i = 0; i < cpt; i++) {
+					String nameFl = repertoire.concat(name.concat("_").concat(Integer
+							.toString(i))
+							+ ".xml");
+					chaine = chaine.concat(nameFl.concat("\n"));
+					resultGen.setText(nameFl);
+					System.out.println(nameFl);
+					try {
+						fos = new FileOutputStream(new File(nameFl));
+						EventTrace trace = t_gen.generate();
+						Translator trans = new XmlTranslator();
+						String out_trace = trans.translateTrace(trace);
+						fos.write(out_trace.getBytes());
+						fos.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					if (i == (cpt - 1))
+						bfound = true;
+				}
+			}
 		}
-		
-		
-		if( !vChaine.isEmpty())
-		{
-			resultGen.setText(vChaine);
-			System.out.println(vChaine);
-			btnSaveGen.setEnabled(true);
-		}else
-		{
+
+		if (bfound) {
+			//display the names of all file
+			resultGen.setText("Trace is generated \n\n" + chaine);
+		} else {
 			resultGen.setText("Trace none generated yet  !!!");
 		}
+		//end modification
 	}
-	
+
+	/**
+	 * Allow to generate random traces until 100
+	 */
+	private void traceGenerator() 
+	{
+		Vector<String> listP = this.buildParameters(listParam);
+		outTraceGen = new Vector<String>();
+		int taille = listP.size() * 2, k = 0, cp = 1, tf = 0;
+		String[] args = new String[taille];
+
+		while (k < listP.size()) {
+			args[tf] = listP.get(k);
+			args[cp] = listTextFields.get(k).getText();
+			cp = cp + 2;
+			tf = tf + 2;
+			k++;
+		}
+		String chaine ="";
+		
+		
+
+		Options options = t_gen.getCommandLineOptions();
+		options.addOption("h", "help", false, "Show help");
+		CommandLineParser parser = new PosixParser();
+		CommandLine c_line = null;
+		try {
+			// parse the command line arguments
+			c_line = parser.parse(options, args);
+		} catch (Exception exp) {
+			// oops, something went wrong
+			System.err.println("ERROR: " + exp.getMessage() + "\n");
+			HelpFormatter hf = new HelpFormatter();
+			hf.printHelp(t_gen.getAppName() + " [options]", options);
+			System.exit(1);
+		}
+		assert c_line != null;
+		if (c_line.hasOption("h")) {
+			HelpFormatter hf = new HelpFormatter();
+			hf.printHelp(t_gen.getAppName() + " [options]", options);
+			System.exit(1);
+		}
+		int cpt = Integer.parseInt(tfNbTraces.getText());
+		// Determine which translator to initialize
+		t_gen = initializeGenerator(selectedMenu);
+		for(int i=0 ; i< cpt ; i++)
+		{
+			EventTrace trace = t_gen.generate();
+			Translator trans = new XmlTranslator();	
+			String out_trace = trans.translateTrace(trace);
+			outTraceGen.add(out_trace);
+			chaine = chaine.concat(out_trace).concat("\n");
+		}
+		if(!chaine.isEmpty())
+		{
+			resultGen.setText(chaine);
+			btnSaveGen.setEnabled(true);
+		}else{ resultGen.setText("Trace none generated yet !!!");}
+	}
 	/**
 	 * Build list of parameter names
 	 * @param listParam
@@ -1568,8 +1837,7 @@ public class IHM_TraceEvent extends JFrame {
 				.replace("\\", "/"), true);
 		
 		Boolean bMonopoly = (type.equalsIgnoreCase("Translator") &&
-							((!output_format.equalsIgnoreCase("monpoly"))
-								&&(!output_format.equalsIgnoreCase("pml"))));
+							(!output_format.equalsIgnoreCase("monpoly")));
 		String strLTL = "\n".concat(txtAreaLTL.getText());
 		
 		Vector<String> tempTrace = new Vector<String>();
@@ -1988,7 +2256,6 @@ public class IHM_TraceEvent extends JFrame {
 					nbRow = Math.max(nbRow, result.size());
 				listData.add(result);
 			}
-			System.out.println("\n\n"+nbRow+"\n\n");
 			//Initialize vector content set of event number
 			Vector<Integer> ve  = this.eventNumbers(listTraces) ;
 
@@ -2291,6 +2558,7 @@ public class IHM_TraceEvent extends JFrame {
 			int s = 0 ;
 
 			XYSeries xyseries = new XYSeries(strTool, true, false);
+			System.out.println("\n\n");
 
 			// We built of data
 			for (int j = 0; j < dt.size(); j++) 
@@ -2298,6 +2566,7 @@ public class IHM_TraceEvent extends JFrame {
 				int[] tab = new int[3];
 				tab = dt.get(j);
 				s = s + tab[0] ;
+				System.out.println(tab[0]);
 				xyseries.add(j, new Double(s));
 			}
 			

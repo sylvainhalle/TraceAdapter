@@ -8,7 +8,7 @@ public class Saxon extends Execution{
 
 	private String homeDir = "/home/aouatef/Tools/beepbeep/";//C:/Benchmark/";
 	private String command ="java -jar ";
-	private String pointJar = "XQueryValidator.jar -m symbolic -i " ;
+	private String pointJar = "XQueryValidator.jar -m saxon -i " ;
 	private String strResult = "Result #:#"; // key word # separator
 	
 	

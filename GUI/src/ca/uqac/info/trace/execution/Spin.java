@@ -13,19 +13,18 @@ public class Spin extends Execution {
 	@Override
 	public ArrayList<int[]> executeToTool(Vector<Object> inputLists) {
 		ArrayList<int []> arrayResultat = new ArrayList<int []>();
-		Vector<String> vectProp;
 		Vector<String> vectFiles ;
 		
 		
 		
 		if(!inputLists.isEmpty())
 		{
-			vectProp = (Vector<String>) inputLists.get(1);
+			
 			vectFiles = (Vector<String>) inputLists.get(0);
 			
 			for(int i = 0 ; i < vectFiles.size() ; i++)
 			{
-				String strCommand =  homeDir + command + vectFiles.get(i) +" " + vectProp.get(0) ;
+				String strCommand =  homeDir + command + vectFiles.get(i) ;
 				arrayResultat.add(this.timeAndMemoryExecution(strResult.concat(strCommand)));
 			}
 			
@@ -42,9 +41,9 @@ public class Spin extends Execution {
 		
 		if(strValue.equalsIgnoreCase("1"))
 		{
-			reponseLTL = 1;
-		}else if(strValue.equalsIgnoreCase("0")){
 			reponseLTL = 0;
+		}else if(strValue.equalsIgnoreCase("0")){
+			reponseLTL = 1;
 		}
 		
 		return reponseLTL;

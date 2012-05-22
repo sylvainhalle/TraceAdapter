@@ -30,18 +30,17 @@ public class ExecutionThread extends Thread{
 		this.listResultat = listResultat;
 	}
 	
-	@SuppressWarnings("static-access")
 	@Override
 	public void run ()
 	{ 
 		this.setListResultat(clsExec.executeToTool(listParams));
 		
-		try {
-			this.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			this.sleep(2000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	public int getResult ()

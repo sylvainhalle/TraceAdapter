@@ -59,6 +59,12 @@ public class MaudeTranslator extends Translator {
 			at.setParameters(o_params);
 			out = at.translateTrace(t);
 			prop = generateFormula(at.translateFormula(op));
+			String s="";
+			for(String c: o_params)
+			{
+				s = s.concat(c);
+			}
+			System.out.println(s);
 			
 
 		} catch (ParseException e) {
@@ -93,6 +99,7 @@ public class MaudeTranslator extends Translator {
 		out_Trace.append("");
 		out_Trace.append("reduce").append(" ");
 		out_Trace.append(chaine);
+		out_Trace.append("\n quit");
 		return out_Trace.toString();
 	}
 
@@ -443,6 +450,7 @@ public class MaudeTranslator extends Translator {
 			getParamFormula(op.toString());
 
 			at.setParameters(o_params);
+			
 			at.translateTrace(this.trace);
 			prop = at.translateFormula(op);
 		} catch (ParseException e) {
@@ -477,6 +485,7 @@ public class MaudeTranslator extends Translator {
 			{
 				res = res.concat("~ ");
 			}else{
+				
 				res = res.concat(c).concat(" ");
 			}
 			
