@@ -190,14 +190,21 @@ public class AtomicTranslator extends Translator
 			// Creates the disjunct associated with that set of tokens
 			StringBuffer out = new StringBuffer();
 			boolean first = true;
-			for (String token : disjunct_tokens)
+			if (disjunct_tokens.isEmpty())
 			{
-				if (!first)
+				out.append("false");
+			}
+			else
+			{
+				for (String token : disjunct_tokens)
 				{
-					out.append(" | ");
-				}
-				first = false;
-				out.append(token);	
+					if (!first)
+					{
+						out.append(" | ");
+					}
+					first = false;
+					out.append(token);	
+				}				
 			}
 	    m_pieces.push(out);
     }
