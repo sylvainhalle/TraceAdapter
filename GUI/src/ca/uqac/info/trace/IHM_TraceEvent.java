@@ -55,6 +55,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import com.sun.java_cup.internal.runtime.virtual_parse_stack;
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import com.sun.org.apache.xerces.internal.impl.dv.dtd.NMTOKENDatatypeValidator;
 
@@ -153,6 +154,7 @@ public class IHM_TraceEvent extends JFrame {
 	//General
 	protected File myFile;
 	protected Vector<String> outTrace,outTraceGen,OutSigMonp, listTraces;
+	protected Vector<Integer> numberFiles;
 	protected JFileChooser filechoose;
 	protected int status;
 	protected boolean fieldsVisible;
@@ -1163,7 +1165,7 @@ public class IHM_TraceEvent extends JFrame {
 		String [] listFile = myFile.list();
 		String [] listNameFile = new String [listFile.length] ;
 		outTrace = new Vector<String>(); OutSigMonp = new Vector<String>();
-		String ficOutTrace = ""  ;
+		String ficOutTrace = ""  ;numberFiles = new Vector<Integer>();
 		
 		for(int j =0 ; j< listFile.length ; j++)
 		{
@@ -1172,9 +1174,10 @@ public class IHM_TraceEvent extends JFrame {
 			listNameFile[j] = strFile;			
 		}
 		
+		int cpt = 0;
 		for (int i = 0; i < listNameFile.length; i++) 
 		{
-
+			
 			//String input_format = getExtension(path_file);
 			String input_format = getExtension(listNameFile[i]);
 			// Determine which trace reader to initialize
@@ -1185,6 +1188,7 @@ public class IHM_TraceEvent extends JFrame {
 				// exists reader.setEventTagName(event_tag_name);
 				
 				File in_f = new File(listNameFile[i]);
+				
 				if ((!in_f.exists()) || (!in_f.canRead()))
 				{
 					System.err
@@ -1199,7 +1203,9 @@ public class IHM_TraceEvent extends JFrame {
 					System.exit(1);
 				}
 				
-
+				//recover the number of file and put in vector
+				String nm = in_f.getName();
+				numberFiles.add( getNumberFile(nm));
 				// Translate the trace into the output format
 				EventTrace trace = reader.parseEventTrace(in_f);
 				// Check if translator is Maude and send property
@@ -1232,6 +1238,7 @@ public class IHM_TraceEvent extends JFrame {
 				
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");
 			}
+			cpt++;
 		}
 		// display the trace
 		if (status == JFileChooser.APPROVE_OPTION) {
@@ -1366,10 +1373,11 @@ public class IHM_TraceEvent extends JFrame {
 	{
 		int res = - 1;
 		String[] tabPt = nameFile.split("\\.");
-		if(tabPt.length > 0)
+		if(tabPt.length >= 2)
 		{
 			String []tabUnder = tabPt[0].split("_");
-			res = Integer.parseInt(tabUnder[1]);
+			if(tabUnder.length >= 2)
+				res = Integer.parseInt(tabUnder[1]);
 		}
 	
 		return res ;
@@ -1860,11 +1868,12 @@ public class IHM_TraceEvent extends JFrame {
 				for (int i = 0; i < tempTrace.size(); i++) 
 				{
 					str = repertoire.concat(this.buildFile(nameFic, i));
+					int k = numberFiles.indexOf(i);
 
 					try {
 
 						fo = new FileOutputStream(new File(str));
-						fo.write(tempTrace.get(i).getBytes());
+						fo.write(tempTrace.elementAt(k).getBytes());
 						if(bMonopoly)
 						{
 							fo.write(strLTL.getBytes());
@@ -1879,6 +1888,7 @@ public class IHM_TraceEvent extends JFrame {
 				{
 					for (int j = 0; j < OutSigMonp.size(); j++) 
 					{
+						int s= numberFiles.indexOf(j);
 						String nameSig = this.buildFile(fos.getName(), j);
 						String [] listString =  nameSig.split("\\.");
 						str = repertoire.concat(listString[0]+".sig");
@@ -1886,7 +1896,8 @@ public class IHM_TraceEvent extends JFrame {
 						try {
 
 							fo = new FileOutputStream(new File(str));
-							fo.write(OutSigMonp.get(j).getBytes());
+							fo.write(OutSigMonp.elementAt(s).getBytes());
+							//fo.write(OutSigMonp.get(j).getBytes());
 							fo.close();
 
 						} catch (Exception e) {
@@ -1908,7 +1919,7 @@ public class IHM_TraceEvent extends JFrame {
 	{
 		String [] listString = nameFile.split("\\.");
 		String result  ;
-		result = listString[0] + rand +"."+listString[1];
+		result = listString[0]+"_" + rand +"."+listString[1];
 		
 		return result;
 	}
@@ -1926,6 +1937,9 @@ public class IHM_TraceEvent extends JFrame {
 		if (output_format.equalsIgnoreCase("pml")) {
 			repTrace = "/Trace_" + "Spin".toUpperCase().concat("_") + rand
 					+ "/";
+		}else if (output_format.equalsIgnoreCase("sql")) {
+			repTrace = "/Trace_" + "MySql".toUpperCase().concat("_") + rand
+			+ "/";
 		} else {
 			repTrace = "/Trace_" + output_format.toUpperCase().concat("_")
 					+ rand + "/";
@@ -2222,25 +2236,33 @@ public class IHM_TraceEvent extends JFrame {
 			File[] listDirectory = (new File(path_file)).listFiles();
 
 			// Determine which Execution to initialize
-			Vector<Thread> listThreads = new Vector<Thread>();
-			for (int k = 0; k < listDirectory.length; k++) {
-
-				String chemin = this.getDirectory(listDirectory[k]
-						.getAbsolutePath().replace("\\", "/"), false);
+			Vector<Thread> listThreads = new Vector<Thread>(listTools.size());
+			String[] nameTool = toolUtile(listTools, listDirectory);
+			
+			for (int k = 0; k < nameTool.length; k++) {
+				
+				String chemin = nameTool[k] ;
 				Execution exec = this.initializeExecution(chemin);
+				
 				if (exec == null) {
 					continue;
 				}
+				//save name of tools
+				System.out.println("in : "+chemin);
+				
 				Vector<Object> vect = new Vector<Object>();
+				
 				vect.addAll(this.getlistParamtools(chemin));
+				
 				ExecutionThread thread = new ExecutionThread(k, exec, vect);
-				listThreads.add(thread);
+				listThreads.add(k , thread);
 				thread.start();
 			}
 
 			ArrayList<int[]> data = new ArrayList<int[]>();
 			// Set of result of tools selected
 			Vector<Object> listData = new Vector<Object>();
+			
 			for (int j = 0; j < listThreads.size(); j++) {
 				try {
 					listThreads.get(j).join();
@@ -2255,7 +2277,8 @@ public class IHM_TraceEvent extends JFrame {
 						.getListResultat();
 				if(!result.isEmpty())
 					nbRow = Math.max(nbRow, result.size());
-				listData.add(result);
+				// get position Tool
+				listData.add(j,result);
 			}
 			//Initialize vector content set of event number
 			Vector<Integer> ve  = this.eventNumbers(listTraces) ;
@@ -2286,8 +2309,8 @@ public class IHM_TraceEvent extends JFrame {
 						} else {
 							int[] tab = new int[3];
 							tab = data.get(y);
-							dataRows[y][nbCol - x] = tab[0] + " | " + tab[1]
-									+ " | " + tab[2];
+							dataRows[y][ x] = tab[0] + " | " + tab[1]
+									+ " | " + tab[2]; //nbCol - x
 							System.out.println(tab[0] + " | " + tab[1] + " | "
 									+ tab[2]);
 						}
@@ -2299,6 +2322,71 @@ public class IHM_TraceEvent extends JFrame {
 				traceGraph(listData) ;
 			}
 		}
+	}
+	/**
+	 * Allow to sort set of files in the list
+	 * @param list
+	 * @return
+	 */
+	private Vector<String> triList(Vector <String> list)
+	{
+		int taille = list.size();
+		Vector<String> res = new Vector<String>();
+		String [] col = new String[taille];
+		
+		if( taille > 0 )
+		{
+			for (int i = 0; i <  taille ; i++) 
+				{
+					String str = (new File(list.get(i))).getName();
+					int k = getNumberFile(str);
+					if (k != -1)
+					
+						col[k] = list.get(i);	
+					}
+				}
+		
+		for(String c : col)
+			res.add(c);
+		
+		return res ;
+	}
+	/**
+	 * Get all the tools directory corresponding Selected
+	 * @param lisTools
+	 * @param folders
+	 * @return
+	 */
+	private String [] toolUtile (Vector<String> lisTools, File[] folders)
+	{
+		String[] ut = new String[lisTools.size()] ; 
+		int k = 0;
+		for (int i= 0 ; i < lisTools.size() ; i++) {
+			String tool = lisTools.get(i) ;
+			if(tool.equalsIgnoreCase("Beepbeep"))
+			{
+				tool = "XML" ;
+			}else if(tool.equalsIgnoreCase("NuSMV"))
+			{
+				tool = "smv" ;
+			}
+			for (File fc : folders) {
+
+				String chemin = this.getDirectory(fc.getAbsolutePath().replace(
+						"\\", "/"), false);
+				String[] tab = chemin.split("/");
+				int taille = tab.length;
+				String strTool = tab[taille - 1].split("_")[1];
+
+				if (strTool.equalsIgnoreCase(tool)) {
+					ut[k] = chemin;
+					k = k + 1;
+					System.out.println(("util" +tool));
+					break;
+				}
+			}
+		}
+		return ut;
 	}
 	/**
 	 * Recovers the set of tool selected
@@ -2313,7 +2401,7 @@ public class IHM_TraceEvent extends JFrame {
 			listTools.add("Maude");
 		}
 		if (checkMySQL.isSelected()) {
-			listTools.add("SQL");
+			listTools.add("MYSQL");
 		}
 		if (checkProM.isSelected()) {
 			listTools.add("ProM");
@@ -2353,7 +2441,7 @@ public class IHM_TraceEvent extends JFrame {
 		} else if ((strTool.compareToIgnoreCase("Maude") == 0)
 				&& (checkMaude.isSelected())) {
 			ex = new Maude();
-		} else if ((strTool.compareToIgnoreCase("SQL") == 0)
+		} else if ((strTool.compareToIgnoreCase("MYSQL") == 0)
 				&& (checkMySQL.isSelected())) {
 			ex = new MySQL();
 		}else if ((strTool.compareToIgnoreCase("XES") == 0)
@@ -2461,10 +2549,12 @@ public class IHM_TraceEvent extends JFrame {
 		 Vector<String> listLTL = new Vector<String>() ;
 		 Vector<String> listsig = new Vector<String>() ;
 		 
+		 // return sorted list 
+		 String[] listFichiers = (new File(chemin)).list();
+		 
 		 if(ext.equalsIgnoreCase("Monpoly"))
 		 {
-			 
-			 String[] listFichiers = (new File(chemin)).list();
+			
 			 
 			 for(int i = 0 ; i < listFichiers.length ; i++)
 			 {
@@ -2480,25 +2570,24 @@ public class IHM_TraceEvent extends JFrame {
 					}
 				 
 			 }
-			 array.add(listFile);
+			 array.add(triList(listFile));
 			 array.add(listLTL) ;
-			 array.add(listsig) ;
+			 array.add(triList(listsig)) ;
 		 }else if((ext.equalsIgnoreCase("Maude"))||(ext.equalsIgnoreCase("SMV"))
-				 ||(ext.equalsIgnoreCase("SQL")))
+				 ||(ext.equalsIgnoreCase("MYSQL")))
 		 {
-			 String[] listFichiers = (new File(chemin)).list();
 			 for(int i = 0 ; i < listFichiers.length ; i++)	 
 			 {
 				 File fic = new File(listFichiers[i]);
 				 String strFile = chemin + "/" + fic.getName();
 				 listFile.add(strFile);
 			 }
-			 array.add(listFile);
+			 array.add(triList(listFile));
 			 
 		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))
 				||(ext.equalsIgnoreCase("Spin"))) 
 		{
-			 String[] listFichiers = (new File(chemin)).list();
+			 
 			for (int j = 0; j < listFichiers.length; j++) {
 				File fic = new File(listFichiers[j]);
 				String strFile = chemin + "/" + fic.getName();
@@ -2516,7 +2605,7 @@ public class IHM_TraceEvent extends JFrame {
 							
 				}
 			}
-			array.add(listFile);
+			 array.add(triList(listFile));
 			array.add(listLTL) ;
 			
 		}
@@ -2592,22 +2681,40 @@ public class IHM_TraceEvent extends JFrame {
 			paneGraph.setChart(jfreechart);
 		}
 	}
-	
+	/**
+	 * recover number of events in vector
+	 * @param list
+	 * @return
+	 */
 	private Vector<Integer> eventNumbers( Vector<String> list )
 	{
 		int res = 0 ;
 		Vector<Integer> tailles = new Vector<Integer>();
+		Vector<String> resultat = new Vector<String>();
+		
+		for (int j = 0; j < list.size(); j++) {
+			for (int i = 0; i < list.size(); i++) {
+				String str = (new File(list.get(i))).getName();
+				
+				int k = getNumberFile(str);
+				if (j == k) {
+					resultat.add(list.get(i));
+					break;
+				}
+			}
+		}
+		
 		// Determine which trace reader to initialize
 		TraceReader reader = initializeReader("xml");
-		for(int i = 0 ; i < list.size() ; i++)
-		{
-			File in_f = new File(list.get(i));
+		for (String c : resultat) {
+			File in_f = new File(c);
 			// Translate the trace into the output format
 			EventTrace trace = reader.parseEventTrace(in_f);
-			
-			res= trace.size() ;
+			res = trace.size();
+			System.out.println(trace.capacity());
 			tailles.add(res);
 		}
+		
 		return tailles;
 		
 	}

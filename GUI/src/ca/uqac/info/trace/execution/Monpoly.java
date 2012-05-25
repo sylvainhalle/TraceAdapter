@@ -8,7 +8,7 @@ public class Monpoly extends Execution {
 
 	private String homeDir = "/home/aouatef/Tools/MonPoly/";//"C:/Benchmark/";
 	private String command ="monpoly ";
-	private String strResult = "@#";
+	private String strResult = "@#:#";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -39,7 +39,7 @@ public class Monpoly extends Execution {
 
 		int reponseLTL = -99;
 		
-		if(!strValue.isEmpty())
+		if((!strValue.isEmpty()) && (strValue.contains("true")))
 		{
 			reponseLTL = 1;
 		}else {

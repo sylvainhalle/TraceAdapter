@@ -38,7 +38,7 @@ public class PromelaTranslator extends Translator {
 	    Set<String> params = domains.keySet();
 		int trace_length = m_trace.size();
 		boolean found = false ; int k = params.size()- 1 ;
-		out.append("String  ");
+		out.append("int  ");
 	    for (String p : params)
 	    {
 	      String p_name = p;

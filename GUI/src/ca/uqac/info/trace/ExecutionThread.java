@@ -11,7 +11,7 @@ public class ExecutionThread extends Thread{
 	private ArrayList<int []> listResultat ;
 	protected Execution clsExec ;
 	protected Vector<Object> listParams ;
-	protected int numero ;
+	private int numero ;
 	
 	// construct
 	public ExecutionThread (int num , Execution exec , Vector<Object> fileTrace)
@@ -43,7 +43,12 @@ public class ExecutionThread extends Thread{
 //		}
 	}
 	
-	public int getResult ()
+	/**
+	 * Return the number of thread
+	 * @return
+	 */
+	
+	public int getNumber ()
 	{
 	  return this.numero ;
 	}
