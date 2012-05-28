@@ -70,9 +70,11 @@ public class SmvTranslator extends Translator
       out.append(")");
       out.append(")");
     }
-    out.append("(next(m_num) = ").append(m_trace.size()).append(" ->\n  (");
+  
+    out.append("& (next(m_num) = ").append(m_trace.size()).append(" ->\n  ("); ///ajouter &
     out.append(toSmv(true, params)).append("))");
     out.append(")");
+   
     return out.toString();
   }
   

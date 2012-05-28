@@ -1860,6 +1860,7 @@ public class IHM_TraceEvent extends JFrame {
 		}
 		if (!tempTrace.isEmpty()) 
 		{
+			int k  ;
 			String nameFic = fos.getName();
 			File file = new File(repertoire);
 
@@ -1868,7 +1869,13 @@ public class IHM_TraceEvent extends JFrame {
 				for (int i = 0; i < tempTrace.size(); i++) 
 				{
 					str = repertoire.concat(this.buildFile(nameFic, i));
-					int k = numberFiles.indexOf(i);
+					if(type.equalsIgnoreCase("Translator"))
+					{
+						k = numberFiles.indexOf(i);
+					}else
+					{
+						k = i;
+					}
 
 					try {
 
@@ -2655,7 +2662,7 @@ public class IHM_TraceEvent extends JFrame {
 			{
 				int[] tab = new int[3];
 				tab = dt.get(j);
-				s = s + tab[0] ;
+				s = s + (tab[0]/1000000) ;
 				System.out.println(tab[0]);
 				xyseries.add(j, new Double(s));
 			}
