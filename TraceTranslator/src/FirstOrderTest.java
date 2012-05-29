@@ -39,15 +39,24 @@ public class FirstOrderTest
 			formula = bt.translateFormula(o);
 		}
 		// Ensuite on fait le traitement normal
+		Operator prop_formula = null;
 		Translator smvt = new SmvTranslator();
 		try
 		{
-			smvt.setFormula(Operator.parseFromString(formula));
+			prop_formula = Operator.parseFromString(formula);
+			
 		}
 		catch (Operator.ParseException e)
 		{
 			e.printStackTrace();
 		}
+		
+		// On simplifie la formule propositionnelle résultante qui contient
+		// beaucoup de constantes ou de contradictions du type "1=2"
+		UnitPropagator up = new UnitPropagator();
+		prop_formula.accept(up);
+		prop_formula = up.getFormula();
+		smvt.setFormula(prop_formula);
 		// Résultat final: pas de quantificateurs dans la formule NuSMV
 		String out = smvt.translateFormula();
 		System.out.println(out);
