@@ -93,7 +93,7 @@ public class MaudeTranslator extends Translator {
 			StringBuffer right = m_pieces.pop();
 			StringBuffer left = m_pieces.pop();
 			StringBuffer out = new StringBuffer("(").append(left).append(") ")
-					.append("\\/").append("(").append(right).append(")");
+					.append("\\/").append(" (").append(right).append(")");
 			m_pieces.push(out);
 		}
 
