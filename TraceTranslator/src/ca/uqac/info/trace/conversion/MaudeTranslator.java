@@ -1,5 +1,6 @@
 package ca.uqac.info.trace.conversion;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -26,6 +27,7 @@ import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.ltl.UnaryOperator;
 import ca.uqac.info.ltl.XPathAtom;*/
 import ca.uqac.info.trace.EventTrace;
+import ca.uqac.info.trace.XmlTraceReader;
 import ca.uqac.info.util.Relation;
 
 
@@ -367,11 +369,16 @@ public class MaudeTranslator extends Translator {
 	{
 		
 		MaudeTranslator md = new MaudeTranslator() ;
-		String s = "F ((e2 | e0) | (e3 |e4)| (e3 |e4)) ";
+		File f = new File("traces/trace2.xml");
+		XmlTraceReader reader = new XmlTraceReader();
+		EventTrace trace = reader.parseEventTrace(f);
+		String sop = "G (p0 = 4) ";
 		Operator op;
 		try {
-			op = Operator.parseFromString(s);
+			op = Operator.parseFromString(sop);
 			System.out.println(md.translateFormula(op));
+			md.setFormula(op);
+			System.out.println(md.translateTrace(trace));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
