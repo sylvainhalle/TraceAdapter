@@ -17,6 +17,7 @@
  */
 package ca.uqac.info.ltl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.w3c.dom.Node;
@@ -29,8 +30,11 @@ public class XPathAtom extends Operator
 	public XPathAtom(String s)
 	{
 		super();
-		// Trim s from braces
-		s = s.substring(1, s.length() - 1);
+		if (s.startsWith("{"))
+		{
+			// Trim s from braces
+			s = s.substring(1, s.length() - 1);
+		}
 		m_parts = s.split("/");
 	}
 	
@@ -68,31 +72,38 @@ public class XPathAtom extends Operator
     v.visit(this);
   }
 
-	@Override
-  public int getDepth()
-  {
-	  // TODO Auto-generated method stub
-	  return 0;
-  }
+	public final boolean isAtom()
+	{
+		return true;
+	}
 
 	@Override
-  public Set<Operator> getSubformulas()
-  {
-	  // TODO Auto-generated method stub
-	  return null;
-  }
+	public Set<Operator> getSubformulas()
+	{
+		Set<Operator> out = new HashSet<Operator>();
+		out.add(this);
+		return out;
+	}
 
 	@Override
-  public boolean hasOperand(Operator o)
-  {
-	  // TODO Auto-generated method stub
-	  return false;
-  }
-
+	public boolean hasOperand(Operator o)
+	{
+		return false;
+	}
+	
 	@Override
-  public boolean isAtom()
-  {
-	  // TODO Auto-generated method stub
-	  return false;
-  }
+	public String toString()
+	{
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < m_parts.length; i++)
+		{
+			out.append("/").append(m_parts[i]);
+		}
+		return out.toString();
+	}
+	
+	public int getDepth()
+	{
+		return 1;
+	}
 }
