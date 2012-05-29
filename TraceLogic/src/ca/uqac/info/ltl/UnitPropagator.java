@@ -143,34 +143,13 @@ public class UnitPropagator extends GenericOperatorVisitor
   }
 
 	@Override
-  public void visit(OperatorEquals o)
-  {
-	  Operator right = m_pieces.pop();
-	  Operator left = m_pieces.pop();
-	  if (left instanceof Atom && right instanceof Atom)
-	  {
-	  	if (left.equals(right))
-	  		m_pieces.push(new OperatorTrue());
-	  	else
-	  		m_pieces.push(new OperatorFalse());
-	  }
-	  else
-	  {
-	  	OperatorEquals op = new OperatorEquals();
-	  	op.setLeft(left);
-	  	op.setRight(right);
-	  	m_pieces.push(op);
-	  }
-  }
-
-	@Override
   public void visit(OperatorImplies o)
   {
 	  Operator right = m_pieces.pop();
 	  Operator left = m_pieces.pop();
 	  if (left instanceof OperatorFalse || right instanceof OperatorTrue)
 	  	m_pieces.push(new OperatorTrue());
-	  if (left instanceof OperatorTrue)
+	  else if (left instanceof OperatorTrue)
 	  	m_pieces.push(right);
 	  else if (right instanceof OperatorFalse)
 	  {

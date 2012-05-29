@@ -14,7 +14,7 @@ public class FirstOrderTest
 	public static void main(String[] args)
 	{
 		// Formule originale, telle que saisie par l'utilisateur
-		String formula = "F (∀i ∈ /a : (F (∀j ∈ /b : (i=j))))";
+		String formula = "F (∀i ∈ /a : (F (∃j ∈ /b : (i=j))))";
 		Operator o = null;
 		try
 		{
