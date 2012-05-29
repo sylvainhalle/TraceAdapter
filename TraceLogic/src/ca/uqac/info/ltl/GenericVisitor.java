@@ -1,3 +1,20 @@
+/*
+    LTL trace validation using MapReduce
+    Copyright (C) 2012 Sylvain Hallé
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ca.uqac.info.ltl;
 
 import java.util.Stack;
@@ -96,12 +113,30 @@ public class GenericVisitor implements OperatorVisitor
     StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
     m_pieces.push(out);
   }
-
+	
 	@Override
   public void visit(OperatorU o)
   {
     // TODO Auto-generated method stub
     
+  }
+	
+	@Override
+  public void visit(ForAll o)
+  {
+    StringBuffer operand = m_pieces.pop();
+    StringBuffer variable = m_pieces.pop();
+    StringBuffer out = new StringBuffer("[").append(variable).append("] (").append(operand).append(")");
+    m_pieces.push(out);
+  }
+	
+	@Override
+  public void visit(Exists o)
+  {
+    StringBuffer operand = m_pieces.pop();
+    StringBuffer variable = m_pieces.pop();
+    StringBuffer out = new StringBuffer("<").append(variable).append("> (").append(operand).append(")");
+    m_pieces.push(out);
   }
 
 	@Override
@@ -109,5 +144,12 @@ public class GenericVisitor implements OperatorVisitor
   {
     m_pieces.push(new StringBuffer(o.toString()));
     
+  }
+
+	@Override
+  public void visit(XmlPath p)
+  {
+		m_pieces.push(new StringBuffer(p.toString()));
+	  
   }
 }

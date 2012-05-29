@@ -17,33 +17,16 @@
  */
 package ca.uqac.info.ltl;
 
-public interface OperatorVisitor
-{
-  public void visit(OperatorAnd o);
-  
-  public void visit(OperatorOr o);
-  
-  public void visit(OperatorNot o);
-  
-  public void visit(OperatorF o);
-  
-  public void visit(OperatorX o);
-  
-  public void visit(OperatorG o);
-  
-  public void visit(OperatorEquals o);
-  
-  public void visit(OperatorImplies o);
-  
-  public void visit(OperatorEquiv o);
-  
-  public void visit(OperatorU o);
-  
-  public void visit(Exists o);
-  
-  public void visit(ForAll o);
-  
-  public void visit(Atom o);
+import java.util.Set;
 
-	public void visit(XmlPath xmlPath);
+public class Exists extends Quantifier
+{
+
+	@Override
+	public void accept(OperatorVisitor v)
+	{
+    super.accept(v);
+    v.visit(this);
+	}
+
 }

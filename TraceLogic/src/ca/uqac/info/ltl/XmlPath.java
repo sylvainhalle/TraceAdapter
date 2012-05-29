@@ -17,33 +17,40 @@
  */
 package ca.uqac.info.ltl;
 
-public interface OperatorVisitor
+public class XmlPath
 {
-  public void visit(OperatorAnd o);
-  
-  public void visit(OperatorOr o);
-  
-  public void visit(OperatorNot o);
-  
-  public void visit(OperatorF o);
-  
-  public void visit(OperatorX o);
-  
-  public void visit(OperatorG o);
-  
-  public void visit(OperatorEquals o);
-  
-  public void visit(OperatorImplies o);
-  
-  public void visit(OperatorEquiv o);
-  
-  public void visit(OperatorU o);
-  
-  public void visit(Exists o);
-  
-  public void visit(ForAll o);
-  
-  public void visit(Atom o);
-
-	public void visit(XmlPath xmlPath);
+	protected String[] m_parts;
+	
+	public XmlPath()
+	{
+		super();
+	}
+	
+	public XmlPath(String p)
+	{
+		this();
+		if (p == null)
+			return;
+		m_parts = p.split("/");
+	}
+	
+	@Override
+	public String toString()
+	{
+		if (m_parts == null)
+			return "";
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < m_parts.length; i++)
+		{
+			out.append(m_parts[i]);
+			if (i < m_parts.length - 1)
+				out.append("/");
+		}
+		return out.toString();
+	}
+	
+  public void accept(OperatorVisitor v)
+  {
+    v.visit(this);
+  }
 }
