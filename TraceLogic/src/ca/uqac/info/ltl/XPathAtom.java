@@ -69,6 +69,39 @@ public class XPathAtom extends Operator
 		return false;
 	}
 	
+	/**
+	 * For the given node, returns the set of values appearing at
+	 * the end of the present path.
+	 * @param n
+	 * @return
+	 */
+	public Set<String> getValues(Node n)
+	{
+		return getValues(n, 0);
+	}
+	
+	protected Set<String> getValues(Node n, int p)
+	{
+		Set<String> out = new HashSet<String>();
+		NodeList nl = n.getChildNodes();
+		int length = nl.getLength();
+		for (int i = 0; i < length; i++)
+		{
+			Node child_n = nl.item(i);
+			if (p == m_parts.length - 1)
+			{
+				if (child_n.getNodeType() != Node.TEXT_NODE)
+					continue;
+				out.add(child_n.getTextContent());
+			}
+			else if (m_parts[p].compareTo(child_n.getNodeName()) == 0)
+			{
+				return (getValues(child_n, p + 1));
+			}
+		}
+		return out;
+	}
+	
   @Override
   public void accept(OperatorVisitor v)
   {
@@ -120,6 +153,12 @@ public class XPathAtom extends Operator
 		return equals((XPathAtom) o);
 	}
 	
+	/**
+	 * Two paths are equal if they have the same length their respective
+	 * parts are identical
+	 * @param x
+	 * @return
+	 */
 	public boolean equals(XPathAtom x)
 	{
 		if (x == null)
