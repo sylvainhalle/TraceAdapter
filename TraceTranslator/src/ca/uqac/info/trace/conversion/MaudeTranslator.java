@@ -63,7 +63,8 @@ public class MaudeTranslator extends Translator {
 		return out.toString();
 	}
 
-	protected class MaudeFormulaTranslator implements OperatorVisitor {
+	protected class MaudeFormulaTranslator implements OperatorVisitor
+	{
 		Stack<StringBuffer> m_pieces;
 
 		public MaudeFormulaTranslator() {
@@ -173,9 +174,8 @@ public class MaudeTranslator extends Translator {
 		@Override
 		public void visit(XPathAtom p)
     {
-			// Not supposed to happen!
-			System.err.println("Error: XML path found in Maude translator");
-	    assert false;
+			// false because no leading slash
+			m_pieces.push(new StringBuffer(p.toString(false)));
     }
 
 	}
@@ -281,45 +281,21 @@ public class MaudeTranslator extends Translator {
 	@Override
 	public String translateFormula()
 	{
-		 
-		//at.setParameters(o_params);
-		m_atomicTranslator.translateTrace(m_trace);
+		// We assume translateTrace has been called first!
 		String prop = m_atomicTranslator.translateFormula(m_formula);
-		return generateFormula(prop);
-	}
-
-	protected String generateFormula(String chaine)
-	{
-		String res = "";
-		String [] tab = chaine.split(" ");
-		for(String c : tab)
+		Operator op = null;
+		try
 		{
-			if(c.equalsIgnoreCase("G"))
-			{
-				res = res.concat("[] ");
-			}else if (c.equalsIgnoreCase("F"))
-			{
-				res = res.concat("<> ");
-			}else if (c.equalsIgnoreCase("X"))
-			{
-				res = res.concat("o ");
-			}else if (c.equalsIgnoreCase("|"))
-			{
-				res = res.concat("\\/ ");
-			}else if (c.equalsIgnoreCase("&"))
-			{
-				res = res.concat("/\\ ");
-			}else if (c.equalsIgnoreCase("!"))
-			{
-				res = res.concat("~ ");
-			}else{
-				
-				res = res.concat(c).concat(" ");
-			}
-			
+			op = Operator.parseFromString(prop);
 		}
-		res = res.concat(".");
-		return res ;
+		catch (ParseException e)
+		{
+			System.err.println("Parse error in MaudeTranslator");
+			return "";
+		}
+		MaudeFormulaTranslator mft = new MaudeFormulaTranslator();
+		op.accept(mft);
+		return mft.getFormula();
 	}
 	
 	@Override
@@ -329,8 +305,6 @@ public class MaudeTranslator extends Translator {
 		StringBuffer out_Trace = new StringBuffer();
 		Vector<String> listParm = new Vector<String>();
 		out = m_atomicTranslator.translateTrace(m_trace);
-		prop = generateFormula(m_atomicTranslator.translateFormula(m_formula));
-
 		String[] tab = out.split(" ");
 		for (int j = 0; j < tab.length; j++) {
 			String c = tab[j];

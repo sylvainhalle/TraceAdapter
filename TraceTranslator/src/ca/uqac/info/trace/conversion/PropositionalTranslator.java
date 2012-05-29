@@ -103,7 +103,9 @@ public class PropositionalTranslator extends Translator
 			Operator path = m_pieces.pop();
 			Operator var = m_pieces.pop();
 			assert var instanceof Atom;
+			assert path instanceof XPathAtom;
 			Atom variable = (Atom) var;
+			XPathAtom p = (XPathAtom) path;
 			Set<Atom> values = m_domains.get(path);
 			Operator out = null;
 			if (values == null) // No value for the given path
@@ -115,7 +117,7 @@ public class PropositionalTranslator extends Translator
 				Operator c = rv.getFormula();
 				OperatorAnd oa = new OperatorAnd();
 				OperatorEquals oeq = new OperatorEquals();
-				oeq.setLeft(path); oeq.setRight(v);
+				oeq.setLeft(p); oeq.setRight(v);
 				oa.setLeft(oeq);
 				oa.setRight(c);
 				out = Operator.disjunctTo(out, oa);
@@ -130,7 +132,9 @@ public class PropositionalTranslator extends Translator
 			Operator path = m_pieces.pop();
 			Operator var = m_pieces.pop();
 			assert var instanceof Atom;
+			assert path instanceof XPathAtom;
 			Atom variable = (Atom) var;
+			XPathAtom p = (XPathAtom) path;
 			Set<Atom> values = m_domains.get(path);
 			Operator out = null;
 			if (values == null) // No value for the given path
@@ -142,7 +146,7 @@ public class PropositionalTranslator extends Translator
 				Operator c = rv.getFormula();
 				OperatorImplies oa = new OperatorImplies();
 				OperatorEquals oeq = new OperatorEquals();
-				oeq.setLeft(path); oeq.setRight(v);
+				oeq.setLeft(p); oeq.setRight(v);
 				oa.setLeft(oeq);
 				oa.setRight(c);
 				out = Operator.conjunctTo(out, oa);

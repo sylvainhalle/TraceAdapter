@@ -1184,7 +1184,7 @@ public class IHM_TraceEvent extends JFrame {
 					Operator o;
 					try {
 						o = Operator.parseFromString(textFiel_path_LTL.getText());
-						((MaudeTranslator) trans).getParamFormula(textFiel_path_LTL.getText());
+						//((MaudeTranslator) trans).getParamFormula(textFiel_path_LTL.getText());
 						trans.setFormula(o);
 						txtAreaLTL.setText("");
 						
@@ -1194,7 +1194,8 @@ public class IHM_TraceEvent extends JFrame {
 					}
 					
 				}
-				String out_trace = trans.translateTrace(trace);
+				trans.setTrace(trace);
+				String out_trace = trans.translateTrace();
 				outTrace.add(out_trace);
 				//Add signature if the output is monpoly
 				if(output_format.equalsIgnoreCase("monpoly"))

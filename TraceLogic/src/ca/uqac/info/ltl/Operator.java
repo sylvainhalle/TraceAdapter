@@ -134,7 +134,7 @@ public abstract class Operator
 		else
 		{
 			// Atom or XPathAtom, last remaining case
-			if (s.startsWith("{"))
+			if (s.startsWith("/"))
 				out = new XPathAtom(s);
 			else
 				out = new Atom(s);

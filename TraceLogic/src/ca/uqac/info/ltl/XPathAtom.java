@@ -146,7 +146,14 @@ public class XPathAtom extends Operator
 	@Override
 	public String toString()
 	{
+		return toString(true);
+	}
+	
+	public String toString(boolean leadingSlash)
+	{
 		StringBuilder out = new StringBuilder();
+		if (leadingSlash)
+			out.append("/");
 		for (int i = 0; i < m_parts.length; i++)
 		{
 			out.append(m_parts[i]);

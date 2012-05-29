@@ -291,9 +291,8 @@ public class SmvTranslator extends Translator
 		@Override
 		public void visit(XPathAtom p)
 		{
-			// Not supposed to happen!
-			System.err.println("Error: XML path found in NuSMV translator");
-			assert false;
+			// false because no leading slash
+			m_pieces.push(new StringBuffer(toSmvToken(p.toString(false))));
 		}
 
 	}
