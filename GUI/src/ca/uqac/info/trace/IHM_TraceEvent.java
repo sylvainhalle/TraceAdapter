@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -55,40 +54,11 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import com.sun.java_cup.internal.runtime.virtual_parse_stack;
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-import com.sun.org.apache.xerces.internal.impl.dv.dtd.NMTOKENDatatypeValidator;
-
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
-import ca.uqac.info.trace.conversion.JavaMopTranslator;
-import ca.uqac.info.trace.conversion.JsonTranslator;
-import ca.uqac.info.trace.conversion.MaudeTranslator;
-import ca.uqac.info.trace.conversion.MonpolyTranslator;
-import ca.uqac.info.trace.conversion.PromelaTranslator;
-import ca.uqac.info.trace.conversion.SmvTranslator;
-import ca.uqac.info.trace.conversion.SqlTranslator;
-import ca.uqac.info.trace.conversion.Translator;
-import ca.uqac.info.trace.conversion.XesTranslator;
-import ca.uqac.info.trace.conversion.XmlTranslator;
-import ca.uqac.info.trace.execution.Beepbeep;
-import ca.uqac.info.trace.execution.Execution;
-import ca.uqac.info.trace.execution.Maude;
-import ca.uqac.info.trace.execution.Monpoly;
-import ca.uqac.info.trace.execution.MySQL;
-import ca.uqac.info.trace.execution.Nusmv;
-import ca.uqac.info.trace.execution.Spin;
-//import ca.uqac.info.trace.execution.JavaMop;
-//import ca.uqac.info.trace.execution.MySQL;
-import ca.uqac.info.trace.execution.Saxon;
-//import ca.uqac.info.trace.execution.Spin;
-import ca.uqac.info.trace.generation.AmazonEcsGenerator;
-import ca.uqac.info.trace.generation.BookstoreGenerator;
-import ca.uqac.info.trace.generation.CycleGenerator;
-import ca.uqac.info.trace.generation.LlrpGenerator;
-import ca.uqac.info.trace.generation.PetriNetGenerator;
-import ca.uqac.info.trace.generation.RandomTraceGenerator;
-import ca.uqac.info.trace.generation.TraceGenerator;
+import ca.uqac.info.trace.conversion.*;
+import ca.uqac.info.trace.execution.*;
+import ca.uqac.info.trace.generation.*;
 
 /**
  *
@@ -2031,9 +2001,9 @@ public class IHM_TraceEvent extends JFrame {
 			trans = new MonpolyTranslator();
 		} else if (output_format.compareToIgnoreCase("xes") == 0) {
 			trans = new XesTranslator();
-		}else if (output_format.compareToIgnoreCase("mop") == 0) {
+		}/*else if (output_format.compareToIgnoreCase("mop") == 0) {
 			trans = new JavaMopTranslator();
-		} else if (output_format.compareToIgnoreCase("maude") == 0) {
+		}*/ else if (output_format.compareToIgnoreCase("maude") == 0) {
 			trans = new MaudeTranslator();
 		}
 		return trans;

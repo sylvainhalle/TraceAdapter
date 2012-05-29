@@ -12,16 +12,7 @@ import javax.swing.JOptionPane;
 
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
-import ca.uqac.info.trace.conversion.JavaMopTranslator;
-import ca.uqac.info.trace.conversion.JsonTranslator;
-import ca.uqac.info.trace.conversion.MaudeTranslator;
-import ca.uqac.info.trace.conversion.MonpolyTranslator;
-import ca.uqac.info.trace.conversion.PromelaTranslator;
-import ca.uqac.info.trace.conversion.SmvTranslator;
-import ca.uqac.info.trace.conversion.SqlTranslator;
-import ca.uqac.info.trace.conversion.Translator;
-import ca.uqac.info.trace.conversion.XesTranslator;
-import ca.uqac.info.trace.conversion.XmlTranslator;
+import ca.uqac.info.trace.conversion.*;
 
 /**
  * @author Samatar
@@ -959,10 +950,10 @@ public class IHM_TraceConverter extends javax.swing.JFrame {
 			trans = new MonpolyTranslator();
 		} else if (output_format.compareToIgnoreCase("xes") == 0) {
 			trans = new XesTranslator();
-		}else if (output_format.compareToIgnoreCase("mop") == 0) {
+		}/*else if (output_format.compareToIgnoreCase("mop") == 0) {
 			trans = new JavaMopTranslator();
 
-		} else if (output_format.compareToIgnoreCase("json") == 0) {
+		}*/ else if (output_format.compareToIgnoreCase("json") == 0) {
 			trans = new JsonTranslator();
 		}
 		 else if (output_format.compareToIgnoreCase("maude") == 0)
