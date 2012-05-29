@@ -35,6 +35,9 @@ public class XPathAtom extends Operator
 			// Trim s from braces
 			s = s.substring(1, s.length() - 1);
 		}
+		// Trim leading slash if any
+		if (s.startsWith("/"))
+			s = s.substring(1);
 		m_parts = s.split("/");
 	}
 	
