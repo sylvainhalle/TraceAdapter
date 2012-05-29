@@ -109,4 +109,35 @@ public class XPathAtom extends Operator
 	{
 		return 1;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o == null)
+			return false;
+		if (!(o instanceof XPathAtom))
+			return false;
+		return equals((XPathAtom) o);
+	}
+	
+	public boolean equals(XPathAtom x)
+	{
+		if (x == null)
+			return false;
+		assert x != null;
+		if (m_parts.length != x.m_parts.length)
+			return false;
+		for (int i = 0; i < m_parts.length; i++)
+		{
+			if (m_parts[i].compareTo(x.m_parts[i]) != 0)
+				return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return m_parts[m_parts.length - 1].hashCode();
+	}
 }
