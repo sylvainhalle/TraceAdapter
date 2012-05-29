@@ -257,6 +257,40 @@ public abstract class Operator
 	}
 	
 	public Operator getNegated(){
-		return this;
+		return this; // QSH: un opérateur ne peut pas être sa propre négation
+	}
+	
+	/**
+	 * Helper method to build large conjunctions of operators
+	 * incrementally
+	 * @param existing Existing formula
+	 * @param to_add New operator to add via a conjunction
+	 * @return
+	 */
+	public static Operator conjunctTo(Operator existing, Operator to_add)
+	{
+		if (existing == null)
+			return to_add;
+		OperatorAnd o = new OperatorAnd();
+		o.setLeft(existing);
+		o.setRight(to_add);
+		return o;
+	}
+	
+	/**
+	 * Helper method to build large conjunctions of operators
+	 * incrementally
+	 * @param existing Existing formula
+	 * @param to_add New operator to add via a conjunction
+	 * @return
+	 */
+	public static Operator disjunctTo(Operator existing, Operator to_add)
+	{
+		if (existing == null)
+			return to_add;
+		OperatorOr o = new OperatorOr();
+		o.setLeft(existing);
+		o.setRight(to_add);
+		return o;
 	}
 }
