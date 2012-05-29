@@ -10,6 +10,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ca.uqac.info.ltl.Atom;
+import ca.uqac.info.ltl.Exists;
+import ca.uqac.info.ltl.ForAll;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
@@ -22,6 +24,7 @@ import ca.uqac.info.ltl.OperatorOr;
 import ca.uqac.info.ltl.OperatorU;
 import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
+import ca.uqac.info.ltl.XmlPath;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
@@ -176,7 +179,6 @@ public class MonpolyTranslator extends Translator {
 	 */
 	public String translateFormula(Operator o) {
 		
-		// TODO Auto-generated method stub
 				StringBuffer out = new StringBuffer();
 				MonpolyFormulaTranslator mft = new MonpolyFormulaTranslator();
 				    o.accept(mft);
@@ -307,6 +309,28 @@ public class MonpolyTranslator extends Translator {
 
 				}
 
+				@Override
+        public void visit(Exists o)
+        {
+	        // TODO Auto-generated method stub
+	        
+        }
+
+				@Override
+        public void visit(ForAll o)
+        {
+	        // TODO Auto-generated method stub
+	        
+        }
+
+				@Override
+        public void visit(XmlPath xmlPath)
+        {
+					// Not supposed to happen!
+					System.err.println("Error: XML Path found in MonPoly translator");
+			    assert false;	        
+        }
+
 				
 			  }
 			  
@@ -334,63 +358,71 @@ public class MonpolyTranslator extends Translator {
 			    
 				@Override
 				public void visit(OperatorU o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorAnd o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorOr o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorNot o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorF o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorX o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorG o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorImplies o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(OperatorEquiv o) {
-					// TODO Auto-generated method stub
 					
 				}
 
 				@Override
 				public void visit(Atom o) {
-					// TODO Auto-generated method stub
 					
 				}
+
+				@Override
+        public void visit(Exists o)
+        {
+
+        }
+
+				@Override
+        public void visit(ForAll o)
+        {
+
+        }
+
+				@Override
+        public void visit(XmlPath xmlPath)
+        {
+
+        }
 
 			
 			  }
