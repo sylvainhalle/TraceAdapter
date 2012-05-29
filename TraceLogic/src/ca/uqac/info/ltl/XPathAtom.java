@@ -149,7 +149,9 @@ public class XPathAtom extends Operator
 		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < m_parts.length; i++)
 		{
-			out.append("/").append(m_parts[i]);
+			out.append(m_parts[i]);
+			if (i < m_parts.length - 1)
+				out.append("/");
 		}
 		return out.toString();
 	}

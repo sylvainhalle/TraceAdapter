@@ -7,7 +7,7 @@ public abstract class Quantifier extends UnaryOperator
 	 */
 	protected Atom m_variable;
 	
-	protected static final String ELEMENT_SYMBOL = "\u2208";
+	public static final String ELEMENT_SYMBOL = "\u2208";
 	
 	/**
 	 * The path over which the variable takes its values

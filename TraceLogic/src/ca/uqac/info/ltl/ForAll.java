@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 public class ForAll extends Quantifier
 {
-	private static final String SYMBOL = "\u2200";
+	public static final String SYMBOL = "\u2200";
 	
 	public ForAll()
 	{

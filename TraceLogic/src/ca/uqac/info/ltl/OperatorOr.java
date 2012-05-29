@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 public class OperatorOr extends BinaryOperator
 {
-	private static final String SYMBOL = "\u2228"; //"|";
+	public static final String SYMBOL = "\u2228"; //"|";
 
 	public OperatorOr()
 	{

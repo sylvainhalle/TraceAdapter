@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 public class OperatorImplies extends BinaryOperator
 {
-	private static final String SYMBOL = "\u2192"; //"->";
+	public static final String SYMBOL = "\u2192"; //"->";
 
 	public OperatorImplies()
 	{

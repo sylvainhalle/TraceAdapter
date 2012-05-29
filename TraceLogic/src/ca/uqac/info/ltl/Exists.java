@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 public class Exists extends Quantifier
 {
-	private static final String SYMBOL = "\u2203";
+	public static final String SYMBOL = "\u2203";
 	
 	public Exists()
 	{

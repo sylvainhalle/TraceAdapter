@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 public class OperatorAnd extends BinaryOperator
 {
-	private static final String SYMBOL = "\u2227"; //"∧";
+	public static final String SYMBOL = "\u2227"; //"∧";
 	
 	public OperatorAnd()
 	{

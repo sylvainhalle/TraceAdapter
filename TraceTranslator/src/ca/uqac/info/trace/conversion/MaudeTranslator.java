@@ -32,9 +32,8 @@ import ca.uqac.info.util.Relation;
 public class MaudeTranslator extends Translator {
 
 	Vector<String> o_params;
-	AtomicTranslator at = new AtomicTranslator(); //QSH: at n'a pas besoin d'être une donnée membre
+	//QSH: at n'a pas besoin d'être une donnée membre
 		// il suffit de l'instancier dans translateFormula
-	private EventTrace trace;
 
 	/**
 	 * Constructor
@@ -47,225 +46,16 @@ public class MaudeTranslator extends Translator {
 	public MaudeTranslator(EventTrace t) {
 		super();
 		o_params = new Vector<String>();
-		this.trace = t;
+		m_trace = t;
 	}
 
 	@Override
-	public String translateTrace(EventTrace t) {
-		String out = "", operandes = "", chaine = "",prop="";
-		StringBuffer out_Trace = new StringBuffer();
-		this.trace = t;
-		Vector<String> listParm = new Vector<String>();
-		Operator op = this.getFormula();
-		try {
-//			getParamFormula(op.toString());
-
-			at.setParameters(o_params);
-			out = at.translateTrace(t);
-			prop = generateFormula(at.translateFormula(op));
-			String s="";
-			for(String c: o_params)
-			{
-				s = s.concat(c);
-			}
-			System.out.println(s);
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String[] tab = out.split(" ");
-		for (int j = 0; j < tab.length; j++) {
-			String c = tab[j];
-			if (j == 0) {
-				chaine = chaine.concat(c);
-			} else {
-				chaine = chaine.concat(" , " + c);
-			}
-			if (!listParm.contains(c)) {
-				listParm.add(c);
-				operandes = operandes.concat(c + " ");
-			}
-		}
-
-		chaine = chaine.concat("    |= ").concat(prop);
-		// Start writing the Java program
-		out_Trace.append("in ltl.maude");
-		out_Trace.append("\n \n \n");
-		out_Trace.append("fmod MY-TRACE is").append("\t");
-		out_Trace.append("\n ");
-		out_Trace.append("extending LTL .").append("\t");
-		out_Trace.append("ops  ").append(operandes).append(" : -> Atom .")
-		.append("\t");
-		out_Trace.append("\n \n \n");
-		out_Trace.append("endfm \n ");
-		out_Trace.append("");
-		out_Trace.append("reduce").append(" ");
-		out_Trace.append(chaine);
-		out_Trace.append("\n quit");
-		return out_Trace.toString();
-	}
-
-	private Operator getFormula() {
-		return m_formula;
+	public String translateTrace(EventTrace t)
+	{
+		setTrace(t);
+		return translateTrace();
 	}
 	
-	// QSH: cette méthode et les suivantes sont un copier-coller du parser
-	// de la classe Operator (qui n'est d'ailleurs plus à jour). Pourquoi?
-	public Operator getParamFormula(String s) throws ParseException {
-
-		s = s.trim();
-		String c = s.substring(0, 1);
-		Operator out = null;
-		if (isUnaryOperator(c)) {
-			// Unary operator
-			s = s.substring(1).trim();
-			if (s.startsWith(("("))) {
-				// We trim surrounding parentheses, if any
-				s = s.substring(1, s.length() - 1).trim();
-			}
-			Operator in = getParamFormula(s);
-			UnaryOperator uo = null;
-			if (c.compareTo("F") == 0)
-				uo = new OperatorF();
-			else if (c.compareTo("X") == 0)
-				uo = new OperatorX();
-			else if (c.compareTo("G") == 0)
-				uo = new OperatorG();
-			else if (c.compareTo("!") == 0)
-				uo = new OperatorNot();
-			if (uo == null)
-				throw new ParseException();
-			uo.setOperand(in);
-			out = uo;
-		} else if (containsBinaryOperator(s)) {
-			// Here, we know s contains either a binary operator or is
-			// an atom. We discriminate by checking for the presence of
-			// a binary operator
-			String left = getLeft(s);
-			String right = getRight(s);
-			assert !left.isEmpty() && !right.isEmpty();
-			int pars_left = s.indexOf(left);
-			int pars_right = s.length() - s.lastIndexOf(right) - right.length();
-			assert pars_left >= 0 && pars_right >= 0;
-			String op = getOperator(s, left.length() + pars_left * 2,
-					right.length() + pars_right * 2);
-
-			if (op.compareTo("=") == 0) {
-
-				this.o_params.add(left);
-			}
-			Operator o_left = getParamFormula(left);
-
-			Operator o_right = getParamFormula(right);
-			if (o_left == null || o_right == null)
-				throw new ParseException();
-			BinaryOperator bo = null;
-			if (op.compareTo("&") == 0)
-				bo = new OperatorAnd();
-			else if (op.compareTo("|") == 0)
-				bo = new OperatorOr();
-			else if (op.compareTo("->") == 0)
-				bo = new OperatorImplies();
-			else if (op.compareTo("=") == 0)
-				bo = new OperatorEquals();
-			else if (op.compareTo("<->") == 0)
-				bo = new OperatorEquiv();
-			else if (op.compareTo("U") == 0)
-				bo = new OperatorU();
-
-			if (bo == null)
-				throw new ParseException();
-			bo.setLeft(o_left);
-			bo.setRight(o_right);
-			out = bo;
-		} else {
-			// Atom or XPathAtom, last remaining case
-			if (s.startsWith("{"))
-				out = new XPathAtom(s);
-			else {
-				out = new Atom(s);
-
-			}
-		}
-		if (out == null)
-			throw new ParseException();
-		return out;
-	}
-
-	private static boolean isUnaryOperator(String c) {
-		return c.compareTo("F") == 0 || c.compareTo("G") == 0
-				|| c.compareTo("X") == 0 || c.compareTo("!") == 0;
-	}
-
-	private static boolean containsBinaryOperator(String s) {
-		return s.indexOf("&") != -1 || s.indexOf("|") != -1
-				|| s.indexOf("->") != -1 || s.indexOf("=") != -1;
-	}
-
-	private static String getLeft(String s) {
-		if (s.startsWith("(")) {
-			// Find matching right parenthesis
-			int paren_level = 1;
-			for (int i = 1; i < s.length(); i++) {
-				String c = s.substring(i, i + 1);
-				if (c.compareTo("(") == 0)
-					paren_level++;
-				if (c.compareTo(")") == 0)
-					paren_level--;
-				if (paren_level == 0)
-					return s.substring(1, i);
-			}
-		} else {
-			// Loop until operator or space found
-			for (int i = 1; i < s.length(); i++) {
-				String c = s.substring(i, i + 1);
-				if (c.compareTo("(") == 0 || c.compareTo(")") == 0
-						|| c.compareTo("&") == 0 || c.compareTo("|") == 0
-						|| c.compareTo("=") == 0)
-					return s.substring(0, i);
-				if (i < s.length() - 1
-						&& s.substring(i, i + 2).compareTo("->") == 0)
-					return s.substring(0, i);
-			}
-		}
-		return "";
-	}
-
-	private static String getRight(String s) {
-		if (s.endsWith(")")) {
-			// Find matching left parenthesis
-			int paren_level = 1;
-			for (int i = s.length() - 1; i >= 0; i--) {
-				String c = s.substring(i, i + 1);
-				if (c.compareTo(")") == 0)
-					paren_level++;
-				if (c.compareTo("(") == 0)
-					paren_level--;
-				if (paren_level == 1)
-					return s.substring(i + 1, s.length() - 1);
-			}
-		} else {
-			// Loop until operator or space found
-			for (int i = s.length() - 1; i >= 0; i--) {
-				String c = s.substring(i, i + 1);
-				if (c.compareTo("(") == 0 || c.compareTo(")") == 0
-						|| c.compareTo("&") == 0 || c.compareTo("|") == 0
-						|| c.compareTo("=") == 0)
-					return s.substring(i + 1);
-				if (i < s.length() - 1
-						&& s.substring(i, i + 2).compareTo("->") == 0)
-					return s.substring(i + 2);
-			}
-		}
-		return "";
-	}
-
-	private static String getOperator(String s, int size_left, int size_right) {
-		assert size_left + size_right < s.length();
-		return s.substring(size_left, s.length() - size_right).trim();
-	}
 	public String translateFormula(Operator o) {
 		
 		StringBuffer out = new StringBuffer();
@@ -494,18 +284,10 @@ public class MaudeTranslator extends Translator {
 	@Override
 	public String translateFormula() {
 		String prop = "";
-		Operator op = this.getFormula();
-		try {
-			getParamFormula(op.toString()); // QSH: à quoi sert cet appel? On n'utilise pas sa valeur de retour!
-
-			at.setParameters(o_params);
-			
-			at.translateTrace(this.trace);
-			prop = at.translateFormula(op);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
+		AtomicTranslator at = new AtomicTranslator(); 
+		at.setParameters(o_params);
+		at.translateTrace(m_trace);
+		prop = at.translateFormula(m_formula);
 		return generateFormula(prop);
 	}
 
@@ -544,13 +326,56 @@ public class MaudeTranslator extends Translator {
 	}
 	
 	@Override
-	public String translateTrace() {
-		// QSH: pourquoi null? On avait dit qu'on interagirait avec les
-		// translators via les méthodes sans argument, puisqu'on passerait
-		// par setTrace et setFormula avant... cette méthode devrait être
-		// implémentée.
-		return null;
+	public String translateTrace()
+	{
+		String out = "", operandes = "", chaine = "",prop="";
+		StringBuffer out_Trace = new StringBuffer();
+		Vector<String> listParm = new Vector<String>();
+
+		AtomicTranslator at = new AtomicTranslator(); 
+		at.setParameters(o_params);
+		out = at.translateTrace(m_trace);
+		prop = generateFormula(at.translateFormula(m_formula));
+		String s="";
+		for(String c: o_params)
+		{
+			s = s.concat(c);
+		}
+		System.out.println(s);
+
+
+		String[] tab = out.split(" ");
+		for (int j = 0; j < tab.length; j++) {
+			String c = tab[j];
+			if (j == 0) {
+				chaine = chaine.concat(c);
+			} else {
+				chaine = chaine.concat(" , " + c);
+			}
+			if (!listParm.contains(c)) {
+				listParm.add(c);
+				operandes = operandes.concat(c + " ");
+			}
+		}
+
+		chaine = chaine.concat("    |= ").concat(prop);
+		// Start writing the Java program
+		out_Trace.append("in ltl.maude");
+		out_Trace.append("\n \n \n");
+		out_Trace.append("fmod MY-TRACE is").append("\t");
+		out_Trace.append("\n ");
+		out_Trace.append("extending LTL .").append("\t");
+		out_Trace.append("ops  ").append(operandes).append(" : -> Atom .")
+		.append("\t");
+		out_Trace.append("\n \n \n");
+		out_Trace.append("endfm \n ");
+		out_Trace.append("");
+		out_Trace.append("reduce").append(" ");
+		out_Trace.append(chaine);
+		out_Trace.append("\n quit");
+		return out_Trace.toString();
 	}
+	
 	public static void main (String [] args)
 	{
 		

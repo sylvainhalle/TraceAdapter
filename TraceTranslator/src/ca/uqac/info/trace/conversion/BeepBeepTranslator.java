@@ -180,7 +180,7 @@ public class BeepBeepTranslator extends Translator
 		StringBuffer path = m_pieces.pop();
 		StringBuffer variable = m_pieces.pop();
 		StringBuffer out = new StringBuffer();
-		out.append("<").append(variable).append(" ").append(path).append("> (").append(operand).append(")");
+		out.append("<").append(variable).append(" /").append(path).append("> (").append(operand).append(")");
 		m_pieces.push(out);
   }
 
@@ -191,7 +191,7 @@ public class BeepBeepTranslator extends Translator
 		StringBuffer path = m_pieces.pop();
 		StringBuffer variable = m_pieces.pop();
 		StringBuffer out = new StringBuffer();
-		out.append("[").append(variable).append(" ").append(path).append("] (").append(operand).append(")");
+		out.append("[").append(variable).append(" /").append(path).append("] (").append(operand).append(")");
 		m_pieces.push(out);
   }
 

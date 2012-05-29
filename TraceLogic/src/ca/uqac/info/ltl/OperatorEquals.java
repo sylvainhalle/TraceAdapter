@@ -24,7 +24,7 @@ package ca.uqac.info.ltl;
  */
 public class OperatorEquals extends BinaryOperator
 {
-  private static final String SYMBOL = "=";
+  public static final String SYMBOL = "=";
 
   public OperatorEquals()
   {

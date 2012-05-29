@@ -47,29 +47,26 @@ public abstract class Operator
 		if (isQuantifierStart(c))
 		{
 			Quantifier oq = null;
-			String end_symbol = "";
-			if (c.compareTo("<") == 0)
+			if (c.compareTo(Exists.SYMBOL) == 0)
 			{
 				oq = new Exists();
-				end_symbol = ">";
 			}
-			if (c.compareTo("[") == 0)
+			if (c.compareTo(ForAll.SYMBOL) == 0)
 			{
 				oq = new ForAll();
-				end_symbol = "]";
 			}
 			// Quantifier: get end
-			int end_quantif = s.indexOf(end_symbol);
+			int end_quantif = s.indexOf(":");
 			if (end_quantif == -1)
 				throw new ParseException();
 			// Process quantifier
 			String inside_quantif = s.substring(1, end_quantif).trim();
-			String[] parts = inside_quantif.split("\\s+");
+			String[] parts = inside_quantif.split(Quantifier.ELEMENT_SYMBOL);
 			if (parts.length != 2)
 				throw new ParseException();
-			Atom a = new Atom(parts[0]);
+			Atom a = new Atom(parts[0].trim());
 			oq.setVariable(a);
-			XPathAtom p = new XPathAtom(parts[1]);
+			XPathAtom p = new XPathAtom(parts[1].trim());
 			oq.setPath(p);
 			// Process operand
 			s = s.substring(end_quantif + 1).trim();
@@ -91,7 +88,7 @@ public abstract class Operator
 				uo = new OperatorX();
 			else if (c.compareTo("G") == 0)
 				uo = new OperatorG();
-			else if (c.compareTo("!") == 0)
+			else if (c.compareTo(OperatorNot.SYMBOL) == 0)
 				uo = new OperatorNot();
 			if (uo == null)
 				throw new ParseException();
@@ -115,15 +112,15 @@ public abstract class Operator
 			if (o_left == null || o_right == null)
 				throw new ParseException();
 			BinaryOperator bo = null;
-			if (op.compareTo("&") == 0)
+			if (op.compareTo(OperatorAnd.SYMBOL) == 0)
 				bo = new OperatorAnd();
-			else if (op.compareTo("|") == 0)
+			else if (op.compareTo(OperatorOr.SYMBOL) == 0)
 				bo = new OperatorOr();
-			else if (op.compareTo("->") == 0)
+			else if (op.compareTo(OperatorImplies.SYMBOL) == 0)
 				bo = new OperatorImplies();
-			else if (op.compareTo("=") == 0)
+			else if (op.compareTo(OperatorEquals.SYMBOL) == 0)
 				bo = new OperatorEquals();
-			else if (op.compareTo("<->") == 0)
+			else if (op.compareTo(OperatorEquiv.SYMBOL) == 0)
 				bo = new OperatorEquiv();
 			else if (op.compareTo("U") == 0)
 				bo  = new OperatorU();
@@ -159,17 +156,17 @@ public abstract class Operator
 	
 	private static boolean isQuantifierStart(String c)
 	{
-		return c.compareTo("<") == 0 || c.compareTo("[") == 0;
+		return c.compareTo(Exists.SYMBOL) == 0 || c.compareTo(ForAll.SYMBOL) == 0;
 	}
 	
 	private static boolean isUnaryOperator(String c)
 	{
-		return c.compareTo("F") == 0 || c.compareTo("G") == 0 || c.compareTo("X") == 0 || c.compareTo("!") == 0;
+		return c.compareTo("F") == 0 || c.compareTo("G") == 0 || c.compareTo("X") == 0 || c.compareTo(OperatorNot.SYMBOL) == 0;
 	}
 	
 	private static boolean containsBinaryOperator(String s)
 	{
-		return s.indexOf("&") != -1 || s.indexOf("|") != -1 || s.indexOf("->") != -1 || s.indexOf("=") != -1;
+		return s.indexOf(OperatorAnd.SYMBOL) != -1 || s.indexOf(OperatorOr.SYMBOL) != -1 || s.indexOf(OperatorImplies.SYMBOL) != -1 || s.indexOf(OperatorEquals.SYMBOL) != -1;
 	}
 	
 	private static String getLeft(String s)

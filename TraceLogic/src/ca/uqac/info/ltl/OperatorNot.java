@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 public class OperatorNot extends UnaryOperator
 {
-	private static final String SYMBOL = "\u00AC";
+	public static final String SYMBOL = "\u00AC";
 
 	public OperatorNot()
 	{

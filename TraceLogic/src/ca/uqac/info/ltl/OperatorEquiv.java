@@ -2,7 +2,7 @@ package ca.uqac.info.ltl;
 
 public class OperatorEquiv extends BinaryOperator
 {
-	private static final String SYMBOL = "\u2194"; //"<->";
+	public static final String SYMBOL = "\u2194"; //"<->";
 
 	public OperatorEquiv()
 	{
@@ -27,5 +27,12 @@ public class OperatorEquiv extends BinaryOperator
 			return false;
 		return super.equals((BinaryOperator) o);
 	}
+	
+  @Override
+  public void accept(OperatorVisitor v)
+  {
+    super.accept(v);
+    v.visit(this);
+  }
 
 }
