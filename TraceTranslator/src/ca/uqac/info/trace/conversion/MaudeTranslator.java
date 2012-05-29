@@ -9,6 +9,8 @@ import ca.uqac.info.ltl.Atom;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.ltl.BinaryOperator;
+import ca.uqac.info.ltl.Exists;
+import ca.uqac.info.ltl.ForAll;
 import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
 import ca.uqac.info.ltl.OperatorEquiv;
@@ -22,6 +24,7 @@ import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.ltl.UnaryOperator;
 import ca.uqac.info.ltl.XPathAtom;
+import ca.uqac.info.ltl.XmlPath;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
 
@@ -360,6 +363,30 @@ public class MaudeTranslator extends Translator {
 		public void visit(OperatorU o) {
 		}
 
+		@Override
+    public void visit(Exists o)
+    {
+			// Not supposed to happen!
+			System.err.println("Error: quantifier found in Maude translator");
+	    assert false;
+    }
+
+		@Override
+    public void visit(ForAll o)
+    {
+			// Not supposed to happen!
+			System.err.println("Error: quantifier found in Maude translator");
+	    assert false;
+    }
+
+		@Override
+    public void visit(XmlPath xmlPath)
+    {
+			// Not supposed to happen!
+			System.err.println("Error: XML path found in Maude translator");
+	    assert false;
+    }
+
 	}
 
 	protected class MaudeEqualityGetter implements OperatorVisitor {
@@ -420,6 +447,24 @@ public class MaudeTranslator extends Translator {
 		public void visit(OperatorU o) {
 
 		}
+
+		@Override
+    public void visit(Exists o)
+    {
+	    
+    }
+
+		@Override
+    public void visit(ForAll o)
+    {
+	    
+    }
+
+		@Override
+    public void visit(XmlPath xmlPath)
+    {
+	    
+    }
 
 	}
 
