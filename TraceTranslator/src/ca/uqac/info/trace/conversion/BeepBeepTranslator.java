@@ -148,14 +148,16 @@ public class BeepBeepTranslator extends Translator
     {
       StringBuffer o_right = m_pieces.pop(); // Pop right-hand side
       StringBuffer o_left = m_pieces.pop(); // Pop left-hand side
-      StringBuffer out = new StringBuffer().append(o_left).append(" = ").append(o_right);
+      StringBuffer out = new StringBuffer("(").append(o_left).append(") = (").append(o_right).append(")");
       m_pieces.push(out);
     }
 
     @Override
     public void visit(Atom o)
     {
-      m_pieces.push(new StringBuffer(o.toString()));
+    	StringBuffer out = new StringBuffer();
+    	out.append(o.toString());
+      m_pieces.push(out);
     }
 
 	@Override
@@ -199,6 +201,22 @@ public class BeepBeepTranslator extends Translator
 		m_pieces.push(new StringBuffer(p.toString()));
   }
 
+  }
+  
+  public static void main(String[] args)
+  {
+		Operator o = null;
+		try
+		{
+			o = Operator.parseFromString("F (<i /message/p0> (i=0))");
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		BeepBeepTranslator bt = new BeepBeepTranslator();
+		String f = bt.translateFormula(o);
+		System.out.println(f);
   }
 
 }

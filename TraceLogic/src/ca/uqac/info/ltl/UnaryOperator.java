@@ -50,7 +50,11 @@ public abstract class UnaryOperator extends Operator
 	public String toString()
 	{
 		StringBuffer out = new StringBuffer();
-		out.append(m_symbol).append(m_operand);
+		out.append(m_symbol);
+		if (m_operand.isAtom())
+			out.append(m_operand);
+		else
+			out.append("(").append(m_operand).append(")");
 		return out.toString();
 	}
 	

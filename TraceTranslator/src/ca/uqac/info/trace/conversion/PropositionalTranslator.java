@@ -18,10 +18,9 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.io.File;
+import java.util.*;
+import org.w3c.dom.Node;
 
 import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.*;
@@ -107,12 +106,19 @@ public class PropositionalTranslator extends Translator
 			Atom variable = (Atom) var;
 			Set<Atom> values = m_domains.get(path);
 			Operator out = null;
-			for (Atom v : values)
+			if (values == null) // No value for the given path
+				out = new OperatorFalse();
+			else for (Atom v : values)
 			{
 				ReplaceVisitor rv = new ReplaceVisitor(variable, v);
 				operand.accept(rv);
 				Operator c = rv.getFormula();
-				Operator.disjunctTo(out, c);
+				OperatorAnd oa = new OperatorAnd();
+				OperatorEquals oeq = new OperatorEquals();
+				oeq.setLeft(path); oeq.setRight(v);
+				oa.setLeft(oeq);
+				oa.setRight(c);
+				out = Operator.disjunctTo(out, oa);
 			}
 	    m_pieces.push(out);
     }
@@ -127,12 +133,19 @@ public class PropositionalTranslator extends Translator
 			Atom variable = (Atom) var;
 			Set<Atom> values = m_domains.get(path);
 			Operator out = null;
-			for (Atom v : values)
+			if (values == null) // No value for the given path
+				out = new OperatorTrue();
+			else for (Atom v : values)
 			{
 				ReplaceVisitor rv = new ReplaceVisitor(variable, v);
 				operand.accept(rv);
 				Operator c = rv.getFormula();
-				Operator.conjunctTo(out, c);
+				OperatorImplies oa = new OperatorImplies();
+				OperatorEquals oeq = new OperatorEquals();
+				oeq.setLeft(path); oeq.setRight(v);
+				oa.setLeft(oeq);
+				oa.setRight(c);
+				out = Operator.conjunctTo(out, oa);
 			}
 	    m_pieces.push(out);
     }
@@ -213,7 +226,8 @@ public class PropositionalTranslator extends Translator
 		{
 			for (XPathAtom x : paths)
 			{
-				Set<String> vals = x.getValues(e.getDomNode());
+				Node n = e.getDomNode();
+				Set<String> vals = x.getValues(n);
 				for (String s : vals)
 				{
 					Atom a = new Atom(s);
@@ -222,6 +236,24 @@ public class PropositionalTranslator extends Translator
 			}
 		}
 		return domains;
+	}
+	
+	public static void main(String[] args)
+	{
+		Operator o = null;
+		try
+		{
+			o = Operator.parseFromString("F ([i /a] (F ([j /b] (i=j))))");
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		EventTrace t = new XmlTraceReader().parseEventTrace(new File("traces/trace1.xml"));
+		Translator bt = new PropositionalTranslator();
+		bt.setTrace(t);
+		String f = bt.translateFormula(o);
+		System.out.println(f);
 	}
 
 }

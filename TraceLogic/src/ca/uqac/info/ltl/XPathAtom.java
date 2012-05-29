@@ -77,26 +77,42 @@ public class XPathAtom extends Operator
 	 */
 	public Set<String> getValues(Node n)
 	{
-		return getValues(n, 0);
+		return getValues(n, 0, true);
 	}
 	
-	protected Set<String> getValues(Node n, int p)
+	public Set<String> getValues(Node n, boolean trim_whitespace)
+	{
+		return getValues(n, 0, trim_whitespace);
+	}
+	
+	protected Set<String> getValues(Node n, int p, boolean trim_whitespace)
 	{
 		Set<String> out = new HashSet<String>();
 		NodeList nl = n.getChildNodes();
 		int length = nl.getLength();
-		for (int i = 0; i < length; i++)
+		if (p < m_parts.length)
 		{
-			Node child_n = nl.item(i);
-			if (p == m_parts.length - 1)
+			for (int i = 0; i < length; i++)
 			{
-				if (child_n.getNodeType() != Node.TEXT_NODE)
-					continue;
-				out.add(child_n.getTextContent());
+				Node child_n = nl.item(i);
+				if (m_parts[p].compareTo(child_n.getNodeName()) == 0)
+				{
+					out.addAll(getValues(child_n, p + 1, trim_whitespace));
+				}
 			}
-			else if (m_parts[p].compareTo(child_n.getNodeName()) == 0)
+		}
+		else
+		{
+			for (int i = 0; i < length; i++)
 			{
-				return (getValues(child_n, p + 1));
+				Node child_n = nl.item(i);
+				if (child_n.getNodeType() == Node.TEXT_NODE)
+				{
+					String v = child_n.getTextContent();
+					if (trim_whitespace)
+						v = v.trim();
+					out.add(v);
+				}
 			}
 		}
 		return out;
