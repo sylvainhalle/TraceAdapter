@@ -31,21 +31,18 @@ import ca.uqac.info.util.Relation;
 
 public class MaudeTranslator extends Translator {
 
-	Vector<String> o_params;
-	//QSH: at n'a pas besoin d'être une donnée membre
-		// il suffit de l'instancier dans translateFormula
+	protected AtomicTranslator m_atomicTranslator;
 
 	/**
 	 * Constructor
 	 */
 	public MaudeTranslator() {
 		super();
-		o_params = new Vector<String>();
+		m_atomicTranslator = new AtomicTranslator();
 	}
 
 	public MaudeTranslator(EventTrace t) {
-		super();
-		o_params = new Vector<String>();
+		this();
 		m_trace = t;
 	}
 
@@ -282,16 +279,16 @@ public class MaudeTranslator extends Translator {
 	}
 
 	@Override
-	public String translateFormula() {
-		String prop = "";
-		AtomicTranslator at = new AtomicTranslator(); 
-		at.setParameters(o_params);
-		at.translateTrace(m_trace);
-		prop = at.translateFormula(m_formula);
+	public String translateFormula()
+	{
+		 
+		//at.setParameters(o_params);
+		m_atomicTranslator.translateTrace(m_trace);
+		String prop = m_atomicTranslator.translateFormula(m_formula);
 		return generateFormula(prop);
 	}
 
-	public String generateFormula(String chaine)
+	protected String generateFormula(String chaine)
 	{
 		String res = "";
 		String [] tab = chaine.split(" ");
@@ -309,10 +306,10 @@ public class MaudeTranslator extends Translator {
 			}else if (c.equalsIgnoreCase("|"))
 			{
 				res = res.concat("\\/ ");
-			}else if (c.equalsIgnoreCase("& "))
+			}else if (c.equalsIgnoreCase("&"))
 			{
 				res = res.concat("/\\ ");
-			}else if (c.equalsIgnoreCase("! "))
+			}else if (c.equalsIgnoreCase("!"))
 			{
 				res = res.concat("~ ");
 			}else{
@@ -331,18 +328,8 @@ public class MaudeTranslator extends Translator {
 		String out = "", operandes = "", chaine = "",prop="";
 		StringBuffer out_Trace = new StringBuffer();
 		Vector<String> listParm = new Vector<String>();
-
-		AtomicTranslator at = new AtomicTranslator(); 
-		at.setParameters(o_params);
-		out = at.translateTrace(m_trace);
-		prop = generateFormula(at.translateFormula(m_formula));
-		String s="";
-		for(String c: o_params)
-		{
-			s = s.concat(c);
-		}
-		System.out.println(s);
-
+		out = m_atomicTranslator.translateTrace(m_trace);
+		prop = generateFormula(m_atomicTranslator.translateFormula(m_formula));
 
 		String[] tab = out.split(" ");
 		for (int j = 0; j < tab.length; j++) {

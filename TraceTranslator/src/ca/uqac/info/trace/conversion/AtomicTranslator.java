@@ -214,26 +214,8 @@ public class AtomicTranslator extends Translator
 	@Override
   public String translateTrace(EventTrace t)
   {
-		// TODO: this whole process could be done in one pass
-		m_tokens = new HashMap<Event,String>();
-	  StringBuilder out = new StringBuilder();
-	  // First pass on the trace: compute projection over
-	  // parameters to retain, and give each event
-	  // an atomic token
-	  for (Event e : t)
-	  {
-	  	String token = createTokenFromEvent(e);
-	  	m_tokens.put(e, token);
-	  }
-	  // Replace all tokens with atomic letters
-	  m_tokens = sanitizeMap(m_tokens);
-	  // Return trace with atomic events
-	  for (Event e : t)
-	  {
-	  	String simple_token = m_tokens.get(e);
-	  	out.append(simple_token).append(" ");
-	  }
-	  return out.toString();
+		setTrace(t);
+		return translateTrace();
   }
 	
 	protected Map<Event,String> sanitizeMap(Map<Event,String> tokens)
@@ -340,15 +322,35 @@ public class AtomicTranslator extends Translator
 
 
 	@Override
-	public String getSignature(EventTrace t) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getSignature(EventTrace t)
+	{
+		// No signature
+		return "";
 	}
 
 	@Override
-	public String translateTrace() {
-		// TODO Auto-generated method stub
-		return null;
+	public String translateTrace()
+	{
+		// TODO: this whole process could be done in one pass
+		m_tokens = new HashMap<Event,String>();
+	  StringBuilder out = new StringBuilder();
+	  // First pass on the trace: compute projection over
+	  // parameters to retain, and give each event
+	  // an atomic token
+	  for (Event e : m_trace)
+	  {
+	  	String token = createTokenFromEvent(e);
+	  	m_tokens.put(e, token);
+	  }
+	  // Replace all tokens with atomic letters
+	  m_tokens = sanitizeMap(m_tokens);
+	  // Return trace with atomic events
+	  for (Event e : m_trace)
+	  {
+	  	String simple_token = m_tokens.get(e);
+	  	out.append(simple_token).append(" ");
+	  }
+	  return out.toString();
 	}
 
 }
