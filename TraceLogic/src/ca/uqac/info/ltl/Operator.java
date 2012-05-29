@@ -72,19 +72,17 @@ public abstract class Operator
 			XmlPath p = new XmlPath(parts[1]);
 			oq.setPath(p);
 			// Process operand
-			s = s.substring(end_quantif).trim();
+			s = s.substring(end_quantif + 1).trim();
+			s = trimSurroundingPars(s);
 			Operator in = parseFromString(s);
 			oq.setOperand(in);
+			out = oq;
 		}
 		else if (isUnaryOperator(c))
 		{
 			// Unary operator
 			s = s.substring(1).trim();
-			if (s.startsWith(("(")))
-			{
-				// We trim surrounding parentheses, if any
-				s = s.substring(1, s.length() - 1).trim();
-			}
+			s = trimSurroundingPars(s);
 			Operator in = parseFromString(s);
 			UnaryOperator uo = null;
 			if (c.compareTo("F") == 0)
@@ -147,6 +145,16 @@ public abstract class Operator
 		if (out == null)
 			throw new ParseException();
 		return out;
+	}
+	
+	private static String trimSurroundingPars(String s)
+	{
+		if (s.startsWith(("(")))
+		{
+			// We trim surrounding parentheses, if any
+			s = s.substring(1, s.length() - 1).trim();
+		}
+		return s;
 	}
 	
 	private static boolean isQuantifierStart(String c)

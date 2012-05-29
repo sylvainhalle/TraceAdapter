@@ -7,6 +7,8 @@ public abstract class Quantifier extends UnaryOperator
 	 */
 	protected Atom m_variable;
 	
+	protected static final String ELEMENT_SYMBOL = "\u2208";
+	
 	/**
 	 * The path over which the variable takes its values
 	 */
@@ -37,5 +39,13 @@ public abstract class Quantifier extends UnaryOperator
   	m_variable.accept(v);
   	m_path.accept(v);
     m_operand.accept(v);
+  }
+  
+  @Override
+  public String toString()
+  {
+  	StringBuilder out = new StringBuilder();
+  	out.append(m_symbol).append(m_variable.toString()).append(" ").append(ELEMENT_SYMBOL).append(" ").append(m_path.toString()).append(" : (").append(m_operand.toString()).append(")");
+  	return out.toString();
   }
 }

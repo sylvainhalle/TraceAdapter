@@ -17,10 +17,15 @@
  */
 package ca.uqac.info.ltl;
 
-import java.util.Set;
-
 public class Exists extends Quantifier
 {
+	private static final String SYMBOL = "\u2203";
+	
+	public Exists()
+	{
+		super();
+		m_symbol = SYMBOL;
+	}
 
 	@Override
 	public void accept(OperatorVisitor v)
