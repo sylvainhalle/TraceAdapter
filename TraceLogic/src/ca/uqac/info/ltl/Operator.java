@@ -44,7 +44,39 @@ public abstract class Operator
 		s = s.trim();
 		String c = s.substring(0, 1);
 		Operator out = null;
-		if (isUnaryOperator(c))
+		if (isQuantifierStart(c))
+		{
+			Quantifier oq = null;
+			String end_symbol = "";
+			if (c.compareTo("<") == 0)
+			{
+				oq = new Exists();
+				end_symbol = ">";
+			}
+			if (c.compareTo("[") == 0)
+			{
+				oq = new ForAll();
+				end_symbol = "]";
+			}
+			// Quantifier: get end
+			int end_quantif = s.indexOf(end_symbol);
+			if (end_quantif == -1)
+				throw new ParseException();
+			// Process quantifier
+			String inside_quantif = s.substring(1, end_quantif).trim();
+			String[] parts = inside_quantif.split("\\s+");
+			if (parts.length != 2)
+				throw new ParseException();
+			Atom a = new Atom(parts[0]);
+			oq.setVariable(a);
+			XmlPath p = new XmlPath(parts[1]);
+			oq.setPath(p);
+			// Process operand
+			s = s.substring(end_quantif).trim();
+			Operator in = parseFromString(s);
+			oq.setOperand(in);
+		}
+		else if (isUnaryOperator(c))
 		{
 			// Unary operator
 			s = s.substring(1).trim();
@@ -115,6 +147,11 @@ public abstract class Operator
 		if (out == null)
 			throw new ParseException();
 		return out;
+	}
+	
+	private static boolean isQuantifierStart(String c)
+	{
+		return c.compareTo("<") == 0 || c.compareTo("[") == 0;
 	}
 	
 	private static boolean isUnaryOperator(String c)
