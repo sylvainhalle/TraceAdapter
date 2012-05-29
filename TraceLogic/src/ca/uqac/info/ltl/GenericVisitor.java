@@ -42,7 +42,7 @@ public class GenericVisitor implements OperatorVisitor
   {
     StringBuffer right = m_pieces.pop();
     StringBuffer left = m_pieces.pop();
-    StringBuffer out = new StringBuffer("(").append(left).append(") & (").append(right).append(")");
+    StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorAnd.SYMBOL).append(" (").append(right).append(")");
     m_pieces.push(out);
   }
 
@@ -51,7 +51,7 @@ public class GenericVisitor implements OperatorVisitor
   {
     StringBuffer right = m_pieces.pop();
     StringBuffer left = m_pieces.pop();
-    StringBuffer out = new StringBuffer("(").append(left).append(") | (").append(right).append(")");
+    StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorOr.SYMBOL).append(" (").append(right).append(")");
     m_pieces.push(out);
   }
 
@@ -59,7 +59,7 @@ public class GenericVisitor implements OperatorVisitor
   public void visit(OperatorNot o)
   {
     StringBuffer op = m_pieces.pop();
-    StringBuffer out = new StringBuffer("! (").append(op).append(")");
+    StringBuffer out = new StringBuffer(OperatorNot.SYMBOL).append("(").append(op).append(")");
     m_pieces.push(out);
   }
 
@@ -92,7 +92,7 @@ public class GenericVisitor implements OperatorVisitor
   {
     StringBuffer right = m_pieces.pop();
     StringBuffer left = m_pieces.pop();
-    StringBuffer out = new StringBuffer("").append(left).append(" = ").append(right).append("");
+    StringBuffer out = new StringBuffer("").append(left).append(") ").append(OperatorEquals.SYMBOL).append(" (").append(right).append("");
     m_pieces.push(out);
   }
 
@@ -101,7 +101,7 @@ public class GenericVisitor implements OperatorVisitor
   {
     StringBuffer right = m_pieces.pop();
     StringBuffer left = m_pieces.pop();
-    StringBuffer out = new StringBuffer("(").append(left).append(") -> (").append(right).append(")");
+    StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorImplies.SYMBOL).append(" (").append(right).append(")");
     m_pieces.push(out);
   }
 
@@ -110,32 +110,36 @@ public class GenericVisitor implements OperatorVisitor
   {
     StringBuffer right = m_pieces.pop();
     StringBuffer left = m_pieces.pop();
-    StringBuffer out = new StringBuffer("(").append(left).append(") <-> (").append(right).append(")");
+    StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorEquiv.SYMBOL).append(" (").append(right).append(")");
     m_pieces.push(out);
   }
 	
 	@Override
   public void visit(OperatorU o)
   {
-    // TODO Auto-generated method stub
-    
+    StringBuffer right = m_pieces.pop();
+    StringBuffer left = m_pieces.pop();
+    StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorU.SYMBOL).append(" (").append(right).append(")");
+    m_pieces.push(out);
   }
 	
 	@Override
   public void visit(ForAll o)
   {
-    StringBuffer operand = m_pieces.pop();
-    StringBuffer variable = m_pieces.pop();
-    StringBuffer out = new StringBuffer("[").append(variable).append("] (").append(operand).append(")");
+		StringBuffer operand = m_pieces.pop();
+		StringBuffer path = m_pieces.pop();
+		StringBuffer var = m_pieces.pop();
+    StringBuffer out = new StringBuffer(ForAll.SYMBOL).append(var).append(" ").append(Quantifier.ELEMENT_SYMBOL).append(" ").append(path).append(" : (").append(operand).append(")");
     m_pieces.push(out);
   }
 	
 	@Override
   public void visit(Exists o)
   {
-    StringBuffer operand = m_pieces.pop();
-    StringBuffer variable = m_pieces.pop();
-    StringBuffer out = new StringBuffer("<").append(variable).append("> (").append(operand).append(")");
+		StringBuffer operand = m_pieces.pop();
+		StringBuffer path = m_pieces.pop();
+		StringBuffer var = m_pieces.pop();
+    StringBuffer out = new StringBuffer(Exists.SYMBOL).append(var).append(" ").append(Quantifier.ELEMENT_SYMBOL).append(" ").append(path).append(" : (").append(operand).append(")");
     m_pieces.push(out);
   }
 

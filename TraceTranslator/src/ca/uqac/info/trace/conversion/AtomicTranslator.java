@@ -23,6 +23,7 @@ import java.util.*;
 import ca.uqac.info.ltl.GenericVisitor;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.OperatorEquals;
+import ca.uqac.info.ltl.XPathAtom;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.util.Relation;
 
@@ -172,7 +173,11 @@ public class AtomicTranslator extends Translator
 			// Check all events that satisfy the said equality
 			final Map<Event,String> tokens = AtomicTranslator.this.m_tokens;
 			Set<Event> events = tokens.keySet();
-			String left = o.getLeft().toString();
+			String left = "";
+			if (o.getLeft() instanceof XPathAtom)
+				left = ((XPathAtom)(o.getLeft())).toString(false); // no leading slash
+			else
+				left = o.getLeft().toString();
 			String right = o.getRight().toString();
 			Set<String> disjunct_tokens = new HashSet<String>();
 			for (Event e : events)

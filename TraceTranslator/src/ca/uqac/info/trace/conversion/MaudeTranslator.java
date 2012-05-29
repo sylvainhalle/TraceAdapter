@@ -182,82 +182,26 @@ public class MaudeTranslator extends Translator {
 
 	}
 
-	protected class MaudeEqualityGetter implements OperatorVisitor {
+	protected class MaudeEqualityGetter extends EmptyVisitor {
 
 		Set<OperatorEquals> m_equalities;
 
-		public MaudeEqualityGetter() {
+		public MaudeEqualityGetter()
+		{
 			super();
 			m_equalities = new HashSet<OperatorEquals>();
 		}
 
-		public Set<OperatorEquals> getEqualities() {
+		public Set<OperatorEquals> getEqualities()
+		{
 			return m_equalities;
 		}
 
 		@Override
-		public void visit(OperatorEquals o) {
+		public void visit(OperatorEquals o)
+		{
 			m_equalities.add(o);
 		}
-
-		@Override
-		public void visit(OperatorAnd o) {
-		}
-
-		@Override
-		public void visit(OperatorOr o) {
-		}
-
-		@Override
-		public void visit(OperatorImplies o) {
-		}
-
-		@Override
-		public void visit(OperatorNot o) {
-		}
-
-		@Override
-		public void visit(OperatorF o) {
-		}
-
-		@Override
-		public void visit(OperatorX o) {
-		}
-
-		@Override
-		public void visit(OperatorG o) {
-		}
-
-		@Override
-		public void visit(Atom o) {
-		}
-
-		@Override
-		public void visit(OperatorEquiv o) {
-		}
-
-		@Override
-		public void visit(OperatorU o) {
-
-		}
-
-		@Override
-    public void visit(Exists o)
-    {
-	    
-    }
-
-		@Override
-    public void visit(ForAll o)
-    {
-	    
-    }
-
-		@Override
-		public void visit(XPathAtom p)
-    {
-	    
-    }
 
 	}
 
@@ -320,7 +264,7 @@ public class MaudeTranslator extends Translator {
 				operandes = operandes.concat(c + " ");
 			}
 		}
-
+		prop = translateFormula();
 		chaine = chaine.concat("    |= ").concat(prop);
 		// Start writing the Java program
 		out_Trace.append("in ltl.maude");
