@@ -64,14 +64,7 @@ public class FirstOrderTest
 		// Si on veut la traduire dans Maude, il faut en plus réduire
 		// les égalités en symboles atomiques
 		MaudeTranslator mt = new MaudeTranslator();
-		try
-		{
-			mt.setFormula(Operator.parseFromString(formula));
-		}
-		catch (Operator.ParseException e)
-		{
-			e.printStackTrace();
-		}
+		mt.setFormula(prop_formula);
 		mt.setTrace(t);
 		out = mt.translateTrace();
 		// Résultat final: on est passé d'une formule du premier ordre

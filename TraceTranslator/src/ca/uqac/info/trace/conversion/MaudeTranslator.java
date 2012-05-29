@@ -84,7 +84,7 @@ public class MaudeTranslator extends Translator {
 			StringBuffer right = m_pieces.pop();
 			StringBuffer left = m_pieces.pop();
 			StringBuffer out = new StringBuffer("(").append(left).append(") ")
-					.append("/\\").append("(").append(right).append(")");
+					.append("/\\").append(" (").append(right).append(")");
 			m_pieces.push(out);
 		}
 
@@ -92,7 +92,7 @@ public class MaudeTranslator extends Translator {
 		public void visit(OperatorOr o) {
 			StringBuffer right = m_pieces.pop();
 			StringBuffer left = m_pieces.pop();
-			StringBuffer out = new StringBuffer("(").append(left).append(")")
+			StringBuffer out = new StringBuffer("(").append(left).append(") ")
 					.append("\\/").append("(").append(right).append(")");
 			m_pieces.push(out);
 		}
@@ -109,7 +109,7 @@ public class MaudeTranslator extends Translator {
 		@Override
 		public void visit(OperatorNot o) {
 			StringBuffer op = m_pieces.pop();
-			StringBuffer out = new StringBuffer("~ (").append(op).append(")");
+			StringBuffer out = new StringBuffer("~(").append(op).append(")");
 			m_pieces.push(out);
 		}
 
@@ -117,7 +117,7 @@ public class MaudeTranslator extends Translator {
 		public void visit(OperatorF o) {
 			StringBuffer op = m_pieces.pop();
 
-			StringBuffer out = new StringBuffer("<> ( ").append(op).append(" )");
+			StringBuffer out = new StringBuffer("<> (").append(op).append(")");
 			m_pieces.push(out);
 
 		}
@@ -146,7 +146,12 @@ public class MaudeTranslator extends Translator {
 
 		@Override
 		public void visit(Atom o) {
-			m_pieces.push(new StringBuffer(o.getSymbol()));
+			if (o instanceof OperatorFalse)
+				m_pieces.push(new StringBuffer("false"));
+			else if (o instanceof OperatorTrue)
+				m_pieces.push(new StringBuffer("true"));
+			else
+				m_pieces.push(new StringBuffer(o.getSymbol()));
 		}
 
 		@Override
@@ -269,11 +274,11 @@ public class MaudeTranslator extends Translator {
 		// Start writing the Java program
 		out_Trace.append("in ltl.maude");
 		out_Trace.append("\n \n \n");
-		out_Trace.append("fmod MY-TRACE is").append("\t");
+		out_Trace.append("fmod MY-TRACE is").append("\n");
 		out_Trace.append("\n ");
-		out_Trace.append("extending LTL .").append("\t");
+		out_Trace.append("extending LTL .").append("\n");
 		out_Trace.append("ops  ").append(operandes).append(" : -> Atom .")
-		.append("\t");
+		.append("\n");
 		out_Trace.append("\n \n \n");
 		out_Trace.append("endfm \n ");
 		out_Trace.append("");

@@ -20,10 +20,7 @@ package ca.uqac.info.trace.conversion;
 
 import java.util.*;
 
-import ca.uqac.info.ltl.GenericVisitor;
-import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.XPathAtom;
+import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.util.Relation;
 
@@ -167,9 +164,25 @@ public class AtomicTranslator extends Translator
       return out.toString();
     }
     
+    //@Override
+    /*public void visit(Atom o)
+    {
+    	// Do nothing
+    	// (Override default behaviour from GenericVisitor)
+    }*/
+    
+    //@Override
+    /*public void visit(XPathAtom p)
+    {
+    	// Do nothing
+    	// (Override default behaviour from GenericVisitor)
+    }*/
+    
 		@Override
     public void visit(OperatorEquals o)
     {
+			m_pieces.pop(); // Discard right-hand side
+			m_pieces.pop(); // Discard left-hand side
 			// Check all events that satisfy the said equality
 			final Map<Event,String> tokens = AtomicTranslator.this.m_tokens;
 			Set<Event> events = tokens.keySet();
