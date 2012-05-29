@@ -32,7 +32,8 @@ import ca.uqac.info.util.Relation;
 public class MaudeTranslator extends Translator {
 
 	Vector<String> o_params;
-	AtomicTranslator at = new AtomicTranslator();
+	AtomicTranslator at = new AtomicTranslator(); //QSH: at n'a pas besoin d'être une donnée membre
+		// il suffit de l'instancier dans translateFormula
 	private EventTrace trace;
 
 	/**
@@ -109,6 +110,9 @@ public class MaudeTranslator extends Translator {
 	private Operator getFormula() {
 		return m_formula;
 	}
+	
+	// QSH: cette méthode et les suivantes sont un copier-coller du parser
+	// de la classe Operator (qui n'est d'ailleurs plus à jour). Pourquoi?
 	public Operator getParamFormula(String s) throws ParseException {
 
 		s = s.trim();
@@ -492,7 +496,7 @@ public class MaudeTranslator extends Translator {
 		String prop = "";
 		Operator op = this.getFormula();
 		try {
-			getParamFormula(op.toString());
+			getParamFormula(op.toString()); // QSH: à quoi sert cet appel? On n'utilise pas sa valeur de retour!
 
 			at.setParameters(o_params);
 			
@@ -541,6 +545,10 @@ public class MaudeTranslator extends Translator {
 	
 	@Override
 	public String translateTrace() {
+		// QSH: pourquoi null? On avait dit qu'on interagirait avec les
+		// translators via les méthodes sans argument, puisqu'on passerait
+		// par setTrace et setFormula avant... cette méthode devrait être
+		// implémentée.
 		return null;
 	}
 	public static void main (String [] args)
