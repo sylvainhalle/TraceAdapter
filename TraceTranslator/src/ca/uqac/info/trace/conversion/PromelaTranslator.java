@@ -9,6 +9,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ca.uqac.info.ltl.Atom;
+import ca.uqac.info.ltl.Exists;
+import ca.uqac.info.ltl.ForAll;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
@@ -19,6 +21,7 @@ import ca.uqac.info.ltl.OperatorImplies;
 import ca.uqac.info.ltl.OperatorNot;
 import ca.uqac.info.ltl.OperatorOr;
 import ca.uqac.info.ltl.OperatorU;
+import ca.uqac.info.ltl.XmlPath;
 
 import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
@@ -307,6 +310,30 @@ public class PromelaTranslator extends Translator {
 		      m_pieces.push(out);
 		}
 
+		@Override
+	  public void visit(Exists o)
+	  {
+			// Not supposed to happen!
+			System.err.println("Error: quantifier found in Promela translator");
+	    assert false;
+	  }
+
+		@Override
+	  public void visit(ForAll o)
+	  {
+			// Not supposed to happen!
+			System.err.println("Error: quantifier found in Promela translator");
+	    assert false;
+	  }
+
+		@Override
+	  public void visit(XmlPath xmlPath)
+	  {
+			// Not supposed to happen!
+			System.err.println("Error: XML path found in Promela translator");
+	    assert false;
+	  }
+
 		
 	  }
 	  
@@ -352,24 +379,38 @@ public class PromelaTranslator extends Translator {
 
 	    @Override
 	    public void visit(OperatorG o) {}
-//	    public void visit(OperatorEquivalences o){
-//	    	
-//	    }
+
 
 	    @Override
 	    public void visit(Atom o) {}
 
 		@Override
 		public void visit(OperatorEquiv o) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void visit(OperatorU o) {
-			// TODO Auto-generated method stub
 			
 		}
+
+		@Override
+    public void visit(Exists o)
+    {
+	    
+    }
+
+		@Override
+    public void visit(ForAll o)
+    {
+	    
+    }
+
+		@Override
+    public void visit(XmlPath xmlPath)
+    {
+	    
+    }
 
 		
 	  }
