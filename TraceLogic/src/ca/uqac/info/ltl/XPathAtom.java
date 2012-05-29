@@ -17,16 +17,18 @@
  */
 package ca.uqac.info.ltl;
 
+import java.util.Set;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XPathAtom extends Atom
+public class XPathAtom extends Operator
 {
 	String[] m_parts;
 	
 	public XPathAtom(String s)
 	{
-		super(s);
+		super();
 		// Trim s from braces
 		s = s.substring(1, s.length() - 1);
 		m_parts = s.split("/");
@@ -63,7 +65,34 @@ public class XPathAtom extends Atom
   @Override
   public void accept(OperatorVisitor v)
   {
-    super.accept(v);
     v.visit(this);
+  }
+
+	@Override
+  public int getDepth()
+  {
+	  // TODO Auto-generated method stub
+	  return 0;
+  }
+
+	@Override
+  public Set<Operator> getSubformulas()
+  {
+	  // TODO Auto-generated method stub
+	  return null;
+  }
+
+	@Override
+  public boolean hasOperand(Operator o)
+  {
+	  // TODO Auto-generated method stub
+	  return false;
+  }
+
+	@Override
+  public boolean isAtom()
+  {
+	  // TODO Auto-generated method stub
+	  return false;
   }
 }

@@ -147,7 +147,7 @@ public class GenericVisitor implements OperatorVisitor
   }
 
 	@Override
-  public void visit(XmlPath p)
+  public void visit(XPathAtom p)
   {
 		m_pieces.push(new StringBuffer(p.toString()));
 	  

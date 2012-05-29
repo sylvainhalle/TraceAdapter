@@ -12,7 +12,7 @@ public abstract class Quantifier extends UnaryOperator
 	/**
 	 * The path over which the variable takes its values
 	 */
-	protected XmlPath m_path;
+	protected XPathAtom m_path;
 	
 	public void setVariable(Atom v)
 	{
@@ -24,12 +24,12 @@ public abstract class Quantifier extends UnaryOperator
 		return m_variable;
 	}
 	
-	public void setPath(XmlPath p)
+	public void setPath(XPathAtom p)
 	{
 		m_path = p;
 	}
 	
-	public XmlPath getPath()
+	public XPathAtom getPath()
 	{
 		return m_path;
 	}

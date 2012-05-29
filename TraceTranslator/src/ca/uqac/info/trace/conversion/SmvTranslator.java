@@ -292,7 +292,7 @@ public class SmvTranslator extends Translator
   }
 
 	@Override
-  public void visit(XmlPath xmlPath)
+	public void visit(XPathAtom p)
   {
 		// Not supposed to happen!
 		System.err.println("Error: XML path found in NuSMV translator");

@@ -21,7 +21,7 @@ import ca.uqac.info.ltl.OperatorImplies;
 import ca.uqac.info.ltl.OperatorNot;
 import ca.uqac.info.ltl.OperatorOr;
 import ca.uqac.info.ltl.OperatorU;
-import ca.uqac.info.ltl.XmlPath;
+import ca.uqac.info.ltl.XPathAtom;
 
 import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
@@ -327,7 +327,7 @@ public class PromelaTranslator extends Translator {
 	  }
 
 		@Override
-	  public void visit(XmlPath xmlPath)
+		public void visit(XPathAtom p)
 	  {
 			// Not supposed to happen!
 			System.err.println("Error: XML path found in Promela translator");
@@ -407,7 +407,7 @@ public class PromelaTranslator extends Translator {
     }
 
 		@Override
-    public void visit(XmlPath xmlPath)
+		public void visit(XPathAtom p)
     {
 	    
     }

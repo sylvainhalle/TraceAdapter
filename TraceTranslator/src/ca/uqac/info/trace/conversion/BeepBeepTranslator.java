@@ -194,7 +194,7 @@ public class BeepBeepTranslator extends Translator
   }
 
 	@Override
-  public void visit(XmlPath p)
+  public void visit(XPathAtom p)
   {
 		m_pieces.push(new StringBuffer(p.toString()));
   }

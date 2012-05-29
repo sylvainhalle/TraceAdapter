@@ -69,7 +69,7 @@ public abstract class Operator
 				throw new ParseException();
 			Atom a = new Atom(parts[0]);
 			oq.setVariable(a);
-			XmlPath p = new XmlPath(parts[1]);
+			XPathAtom p = new XPathAtom(parts[1]);
 			oq.setPath(p);
 			// Process operand
 			s = s.substring(end_quantif + 1).trim();

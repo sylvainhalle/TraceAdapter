@@ -24,7 +24,7 @@ import ca.uqac.info.ltl.OperatorOr;
 import ca.uqac.info.ltl.OperatorU;
 import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
-import ca.uqac.info.ltl.XmlPath;
+import ca.uqac.info.ltl.XPathAtom;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
@@ -324,7 +324,7 @@ public class MonpolyTranslator extends Translator {
         }
 
 				@Override
-        public void visit(XmlPath xmlPath)
+				public void visit(XPathAtom p)
         {
 					// Not supposed to happen!
 					System.err.println("Error: XML Path found in MonPoly translator");
@@ -419,7 +419,7 @@ public class MonpolyTranslator extends Translator {
         }
 
 				@Override
-        public void visit(XmlPath xmlPath)
+				public void visit(XPathAtom p)
         {
 
         }

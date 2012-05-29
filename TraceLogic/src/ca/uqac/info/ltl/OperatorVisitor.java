@@ -45,5 +45,5 @@ public interface OperatorVisitor
   
   public void visit(Atom o);
 
-	public void visit(XmlPath xmlPath);
+	public void visit(XPathAtom xPathAtom);
 }

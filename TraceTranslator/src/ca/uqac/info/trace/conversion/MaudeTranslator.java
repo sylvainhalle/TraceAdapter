@@ -5,9 +5,10 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
-import ca.uqac.info.ltl.Atom;
-import ca.uqac.info.ltl.Operator;
+import ca.uqac.info.ltl.*;
 import ca.uqac.info.ltl.Operator.ParseException;
+/*import ca.uqac.info.ltl.Operator;
+
 import ca.uqac.info.ltl.BinaryOperator;
 import ca.uqac.info.ltl.Exists;
 import ca.uqac.info.ltl.ForAll;
@@ -23,8 +24,7 @@ import ca.uqac.info.ltl.OperatorU;
 import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.ltl.UnaryOperator;
-import ca.uqac.info.ltl.XPathAtom;
-import ca.uqac.info.ltl.XmlPath;
+import ca.uqac.info.ltl.XPathAtom;*/
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
 
@@ -384,7 +384,7 @@ public class MaudeTranslator extends Translator {
     }
 
 		@Override
-    public void visit(XmlPath xmlPath)
+		public void visit(XPathAtom p)
     {
 			// Not supposed to happen!
 			System.err.println("Error: XML path found in Maude translator");
@@ -465,7 +465,7 @@ public class MaudeTranslator extends Translator {
     }
 
 		@Override
-    public void visit(XmlPath xmlPath)
+		public void visit(XPathAtom p)
     {
 	    
     }
