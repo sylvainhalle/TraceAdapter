@@ -243,10 +243,10 @@ public class TraceConverter
     {
         trans = new SqlTranslator();
     }
-    else if (output_format.compareToIgnoreCase("javamop") == 0)
+    /*else if (output_format.compareToIgnoreCase("javamop") == 0)
     {
         trans = new JavaMopTranslator();
-    }
+    }*/
     else if (output_format.compareToIgnoreCase("json") == 0)
     {
         trans = new JsonTranslator();
