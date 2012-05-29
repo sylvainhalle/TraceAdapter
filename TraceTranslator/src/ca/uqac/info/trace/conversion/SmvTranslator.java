@@ -275,6 +275,30 @@ public class SmvTranslator extends Translator
 		
 	}
 
+	@Override
+  public void visit(Exists o)
+  {
+		// Not supposed to happen!
+		System.err.println("Error: quantifier found in NuSMV translator");
+    assert false;
+  }
+
+	@Override
+  public void visit(ForAll o)
+  {
+		// Not supposed to happen!
+		System.err.println("Error: quantifier found in NuSMV translator");
+    assert false;
+  }
+
+	@Override
+  public void visit(XmlPath xmlPath)
+  {
+		// Not supposed to happen!
+		System.err.println("Error: XML path found in NuSMV translator");
+    assert false;
+  }
+
   }
 
 @Override
