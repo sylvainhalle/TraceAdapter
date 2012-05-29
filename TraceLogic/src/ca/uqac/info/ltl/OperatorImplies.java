@@ -44,4 +44,11 @@ public class OperatorImplies extends BinaryOperator
 			return false;
 		return super.equals((BinaryOperator) o);
 	}
+	
+  @Override
+  public void accept(OperatorVisitor v)
+  {
+    super.accept(v);
+    v.visit(this);
+  }
 }

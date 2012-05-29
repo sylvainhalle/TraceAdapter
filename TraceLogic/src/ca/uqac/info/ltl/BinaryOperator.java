@@ -66,7 +66,15 @@ public abstract class BinaryOperator extends Operator
 	public String toString()
 	{
 		StringBuffer out = new StringBuffer();
-		out.append(m_left).append(m_symbol).append(m_right);
+		if (m_left.isAtom())
+			out.append(m_left);
+		else
+			out.append("(").append(m_left).append(")");
+		out.append(m_symbol);
+		if (m_right.isAtom())
+			out.append(m_right);
+		else
+			out.append("(").append(m_right).append(")");
 		return out.toString();
 	}
 	
