@@ -1294,11 +1294,11 @@ public class IHM_TraceEvent extends JFrame {
 				str_out = trans.translateFormula();
 				System.out.println("Après traduction: " + str_out);
 				outTrace.add(out_trace);
-				/*
+			/*
 				// Check if translator is Maude and send property
 				if (trans instanceof MaudeTranslator) {
 					trans = new MaudeTranslator(trace);
-					Operator o;
+					//Operator o;
 					try {
 						o = Operator.parseFromString(textFiel_path_LTL.getText());
 						//((MaudeTranslator) trans).getParamFormula(textFiel_path_LTL.getText());
@@ -1311,8 +1311,8 @@ public class IHM_TraceEvent extends JFrame {
 					
 				}
 				trans.setTrace(trace);
-				String out_trace = trans.translateTrace();
-				outTrace.add(out_trace);
+				 out_trace = trans.translateTrace();
+				outTrace.add(out_trace);*/
 				//Add signature if the output is monpoly
 				if(output_format.equalsIgnoreCase("monpoly"))
 				{
@@ -1322,7 +1322,7 @@ public class IHM_TraceEvent extends JFrame {
 					OutSigMonp.add(strTemp);
 					out_trace = out_trace.concat(out_sig);
 				}
-				*/
+				
 				
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");
 			}
