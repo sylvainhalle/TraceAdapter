@@ -173,15 +173,13 @@ public class BeepBeepTranslator extends Translator
 
 	@Override
 	public void visit(OperatorEquiv o) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void visit(OperatorU o)
 	{
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override

@@ -349,7 +349,6 @@ public class AtomicTranslator extends Translator
 	@Override
 	public String translateTrace()
 	{
-		// TODO: this whole process could be done in one pass
 		m_tokens = new HashMap<Event,String>();
 	  StringBuilder out = new StringBuilder();
 	  // First pass on the trace: compute projection over

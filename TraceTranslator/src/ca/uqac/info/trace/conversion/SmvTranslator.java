@@ -271,7 +271,6 @@ public class SmvTranslator extends Translator
 			// TODO Auto-generated method stub
 
 		}
-
 		@Override
 		public void visit(Exists o)
 		{

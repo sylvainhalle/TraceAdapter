@@ -303,7 +303,6 @@ public class MaudeTranslator extends Translator {
 			md.setFormula(op);
 			System.out.println(md.translateTrace(trace));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

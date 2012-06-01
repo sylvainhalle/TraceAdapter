@@ -318,15 +318,13 @@ public class MonpolyTranslator extends Translator {
 				@Override
         public void visit(Exists o)
         {
-	        // TODO Auto-generated method stub
 	        
         }
 
 				@Override
         public void visit(ForAll o)
         {
-	        // TODO Auto-generated method stub
-	        
+	       
         }
 
 				@Override
