@@ -37,7 +37,7 @@ import ca.uqac.info.util.Relation;
  */
 public class EventTrace extends Vector<Event>
 {
-  protected String m_eventTagName = "Event";
+  protected String m_eventTagName = "Event";//message
   
   /**
    * An internal instance of DOM Document used to create

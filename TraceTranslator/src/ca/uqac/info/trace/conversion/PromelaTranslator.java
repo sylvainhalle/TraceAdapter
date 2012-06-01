@@ -34,43 +34,46 @@ public class PromelaTranslator extends Translator {
 	protected final String m_logname = "log";
 	Vector<String> o_params;
 	
-	public String translateTrace(EventTrace m_trace)
+	public String translateTrace()
 	{
 		StringBuffer out = new StringBuffer();
 		Relation<String,String> domains = m_trace.getParameterDomain();
-	    Set<String> params = domains.keySet();
-		int trace_length = m_trace.size();
-		boolean found = false ; int k = params.size()- 1 ;
-		out.append("int  ");
-	    for (String p : params)
-	    {
-	      String p_name = p;
-	      if(k == 0)
-	    	  found = true ;
-	      out.append("  ").append(p_name) ;
-	      if(!found)
-	      {
-	    	  out.append(",");
-	      }
-	      k-- ;
-	    }
-	    out.append(";\n");
-	    
-		out.append(" init");
-		out.append("{");
-		for (int i = 0; i < trace_length; i++) {
+        Set<String> params = domains.keySet();
+        boolean found = false ; int k = params.size()- 1 ;
+        out.append("int  ");
+        for (String p : params)
+        {
+          String p_name = p;
+          if(k == 0)
+              found = true ;
+          out.append("  ").append(p_name) ;
+          if(!found)
+          {
+              out.append(",");
+          }
+          k-- ;
+        }
+        out.append(";\n");
+        out.append("int msgno = 0;\n");
+		out.append("active proctype A(){\n");
+		out.append("do\n");
+		for(int i = 0; i<m_trace.size(); i++)
+		{
+			out.append("::");
+			out.append("(msgno  == ").append(i).append(")").append(" -> \n");
 			Event e = m_trace.elementAt(i);
+			out.append("atomic {\n");
+			out.append(" msgno = msgno + 1;");
 			Node n = e.getDomNode();
 			NodeList children = n.getChildNodes();
 			Node child;
 			String val = "";
 			if (children.getLength() > 1) {
 				NodeList level1 = children.item(1).getChildNodes();
+				//out.append(" ").append( children.item(1).getNodeName());
 				if (level1.getLength() > 1) {
 
 					NodeList level2 = level1.item(1).getChildNodes();
-					out.append("\n");
-					
 					if (level2.getLength() > 1) {
 					
 						for (int index = 1; index < level2.getLength(); index++) {
@@ -147,8 +150,14 @@ public class PromelaTranslator extends Translator {
 					
 				}
 			}
+			
+			out.append("\n");
+			out.append("}\n");
+			
+			
 		}
-		out.append(" } ");
+		out.append("od;\n");
+		out.append("}");
 		return out.toString();
 	}
  
@@ -168,6 +177,7 @@ public class PromelaTranslator extends Translator {
         return out;
       }
       out.append("\n\t").append(indent).append(n.getNodeName()).append(" = ").append(val).append(" ; ");
+      
 
       return out;
     }
@@ -182,23 +192,18 @@ public class PromelaTranslator extends Translator {
            continue;
       }
       out.append(toPromela(child, ""));
+     
       }
    
       return out;
   }
 	  
-	public String translateFormula(Operator o) {
-		// TODO Auto-generated method stub
+	public String translateFormula() {
 		StringBuffer out = new StringBuffer();
-	    
-	    // Step 1: define the events as AspectJ pointcuts
 	    PromelaEqualityGetter f_eq= new PromelaEqualityGetter();
-	    o.accept(f_eq);
-	   
-	    
-	    // Step 2: append translated formula on those events 
+	    m_formula.accept(f_eq);
 	    PromelaFormulaTranslator f_trans = new PromelaFormulaTranslator();
-	    o.accept(f_trans);
+	    m_formula.accept(f_trans);
 	    out.append("  ltl ").append("p1").append("{ ").append(f_trans.getFormula()).append("}").append("\n");
 	    
 	    return out.toString();
@@ -281,9 +286,11 @@ public class PromelaTranslator extends Translator {
 	    @Override
 	    public void visit(OperatorEquals o)
 	    {
-	      m_pieces.pop(); // Pop right-hand side
-	      m_pieces.pop(); // Pop left-hand side
-	      StringBuffer out = new StringBuffer(toPromelaIdentifier(o));
+	      StringBuffer right = m_pieces.pop(); // Pop right-hand side
+	      StringBuffer left = m_pieces.pop(); // Pop left-hand side
+	      StringBuffer out = new StringBuffer();
+	      out.append(left).append("==").append(right);
+	      //StringBuffer out = new StringBuffer(toPromelaIdentifier(o));
 	      //StringBuffer out = new StringBuffer("eq").append(left).append("_").append(right);
 	      m_pieces.push(out);
 	    }
@@ -329,9 +336,8 @@ public class PromelaTranslator extends Translator {
 		@Override
 		public void visit(XPathAtom p)
 	  {
-			// Not supposed to happen!
-			System.err.println("Error: XML path found in Promela translator");
-	    assert false;
+			// false because no leading slash
+			m_pieces.push(new StringBuffer(p.toString(false)));
 	  }
 
 		
@@ -414,13 +420,6 @@ public class PromelaTranslator extends Translator {
 
 		
 	  }
-	  
-	  protected static String toPromelaIdentifier(OperatorEquals o)
-	  {
-	    String left = o.getLeft().toString();
-	    String right = o.getRight().toString();
-	    return new StringBuffer("").append(left).append("==").append(right).toString();
-	  }
 
 	@Override
 	public String getSignature(EventTrace m_trace) {
@@ -429,15 +428,20 @@ public class PromelaTranslator extends Translator {
 	}
 
 	@Override
-	public String translateFormula() {
-		// TODO Auto-generated method stub
-		return null;
+	public String translateFormula(Operator o)
+	{
+		setFormula(o);
+		return translateFormula();
 	}
-
 	@Override
-	public String translateTrace() {
-		// TODO Auto-generated method stub
-		return null;
+	public String translateTrace(EventTrace t) {
+			setTrace(t);
+			return translateTrace();
+	}
+	
+	@Override
+	public boolean requiresPropositional() {
+		return true;
 	}
 	
 }

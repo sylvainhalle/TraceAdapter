@@ -33,7 +33,7 @@ public class SmvTranslator extends Translator
 	 */
 	private final String m_undefinedSymbol = "UNDEF";
 
-	public String translateTrace(EventTrace m_trace)
+	public String translateTrace()
 	{
 		StringBuilder out = new StringBuilder();
 		Relation<String,String> domains = m_trace.getParameterDomain();
@@ -316,8 +316,13 @@ public class SmvTranslator extends Translator
 	}
 
 	@Override
-	public String translateTrace() {
-		// TODO Auto-generated method stub
-		return null;
-	}  
+	public String translateTrace(EventTrace m_trace) {
+		setTrace(m_trace);
+		return translateTrace();
+	}
+	
+	@Override
+	public boolean requiresPropositional() {
+		return true;
+	}
 }

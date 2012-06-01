@@ -308,5 +308,10 @@ public class MaudeTranslator extends Translator {
 		}
 		
 	}
+	
+	@Override
+	public boolean requiresPropositional() {
+		return true;
+	}
 
 }

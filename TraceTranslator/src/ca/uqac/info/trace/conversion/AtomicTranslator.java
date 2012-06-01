@@ -371,4 +371,9 @@ public class AtomicTranslator extends Translator
 	  return out.toString();
 	}
 
+	@Override
+	public boolean requiresPropositional() {
+		return true;
+	}
+
 }

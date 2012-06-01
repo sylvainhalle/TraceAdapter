@@ -44,8 +44,14 @@ public class SqlTranslator extends Translator
    * Attribute name for message number
    */
   protected final String m_eventId = "msgno";
+  @Override
+	public String translateTrace(EventTrace t)
+	{
+		setTrace(t);
+		return translateTrace();
+	}
 
-  public String translateTrace(EventTrace m_trace)
+  public String translateTrace()
   {
     StringBuffer out = new StringBuffer();
     Relation<String,String> domains = m_trace.getParameterDomain();
@@ -234,8 +240,8 @@ public String translateFormula() {
 }
 
 @Override
-public String translateTrace() {
-	// TODO Auto-generated method stub
-	return null;
-} 
+public boolean requiresPropositional() {
+	return true;
+}
+
 }

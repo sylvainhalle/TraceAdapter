@@ -75,6 +75,11 @@ public class XesTranslator extends Translator {
 	    
 		return out.toString();
 	}
+	
+	@Override
+	public boolean requiresPropositional() {
+		return true;
+	}
 
 
 	  private StringBuffer toXes(Event e, Set<String> all_params)

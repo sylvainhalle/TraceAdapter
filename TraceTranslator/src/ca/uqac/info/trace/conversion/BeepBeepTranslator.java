@@ -18,10 +18,13 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
+import java.io.File;
 import java.util.Stack;
 
 import ca.uqac.info.ltl.*;
+import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
+import ca.uqac.info.trace.XmlTraceReader;
 
 /**
  * Translator for BeepBeep. This translator does essentially "nothing":
@@ -62,10 +65,18 @@ public class BeepBeepTranslator extends Translator
 		return translateTrace();
 	}
 
+	/**
+	 * Note: BeepBeep assumes there is not root element in the trace
+	 */
 	@Override
 	public String translateTrace()
 	{
-		return m_trace.toString();
+		StringBuilder out = new StringBuilder();
+		for (Event e : m_trace)
+		{
+			out.append(e.toString()).append("\n");
+		}
+		return out.toString();
 	}
 	
   protected class BeepBeepFormulaTranslator implements OperatorVisitor
@@ -198,7 +209,7 @@ public class BeepBeepTranslator extends Translator
 	@Override
   public void visit(XPathAtom p)
   {
-		m_pieces.push(new StringBuffer(p.toString()));
+		m_pieces.push(new StringBuffer(p.toString(false)));
   }
 
   }
@@ -206,17 +217,26 @@ public class BeepBeepTranslator extends Translator
   public static void main(String[] args)
   {
 		Operator o = null;
+		File fic = new File("traces/trace2.xml");
+		XmlTraceReader xtr = new XmlTraceReader();
 		try
 		{
-			o = Operator.parseFromString("F (<i /message/p0> (i=0))");
+			o = Operator.parseFromString("F (∃i ∈ /Event/p0 : (i=0))");
 		}
 		catch (Operator.ParseException e)
 		{
 			System.out.println("Parse exception");
 		}
 		BeepBeepTranslator bt = new BeepBeepTranslator();
+		EventTrace t = xtr.parseEventTrace(fic);
 		String f = bt.translateFormula(o);
 		System.out.println(f);
+		System.out.println(bt.translateTrace(t));
   }
+  
+	@Override
+	public boolean requiresPropositional() {
+		return false;
+	}
 
 }

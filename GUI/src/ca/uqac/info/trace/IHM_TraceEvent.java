@@ -276,7 +276,7 @@ public class IHM_TraceEvent extends JFrame {
 
 	        lblTitre2.setText("3.  Select output format");
 
-	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML","MAUDE"  }));
+	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "BeepBeep", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","SPIN","MAUDE"  }));
 	        comboBox.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                comboBoxActionPerformed(evt);
@@ -1118,13 +1118,14 @@ public class IHM_TraceEvent extends JFrame {
 		if (evt.getSource() == btnConvertir) 
 		{
 			int nbfiles = myFile.list().length;
-			if (output_format.equalsIgnoreCase("monpoly"))
+			if ((output_format.equalsIgnoreCase("monpoly"))||
+					(output_format.equalsIgnoreCase("beepbeep")))
 			{
 				btnSaveLTL.setEnabled(true);
 			}
-			if ((!textFiel_path_LTL.getText().isEmpty())) {
-				this.translateLTL();
-			}
+//			IF ((!TEXTFIEL_PATH_LTL.GETTEXT().ISEMPTY())) {
+//				THIS.TRANSLATELTL();
+//			}
 			if( nbfiles < 100)
 			{
 				this.translate();
@@ -1205,6 +1206,7 @@ public class IHM_TraceEvent extends JFrame {
 		String [] listNameFile = new String [listFile.length] ;
 		outTrace = new Vector<String>(); OutSigMonp = new Vector<String>();
 		String ficOutTrace = ""  ;numberFiles = new Vector<Integer>();
+		String strLTL, str_out = null;;
 		
 		for(int j =0 ; j< listFile.length ; j++)
 		{
@@ -1246,6 +1248,53 @@ public class IHM_TraceEvent extends JFrame {
 				numberFiles.add( getNumberFile(nm));
 				// Translate the trace into the output format
 				EventTrace trace = reader.parseEventTrace(in_f);
+			    strLTL = textFiel_path_LTL.getText();
+				
+				Operator o = null ;
+				String out_trace = "";
+				
+				try {
+					o = Operator.parseFromString(strLTL);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				// On vérifie si cette formule est du premier ordre (i.e. contient quantificateurs)
+				if (FirstOrderDetector.isFirstOrder(o) && trans.requiresPropositional())
+				{
+					// Si oui et qu'on veut l'envoyer dans un outil qui ne supporte
+					// pas les quantificateurs, on doit d'abord la réduire au cas
+					// propositionnel...
+					Translator bt = new PropositionalTranslator();
+					bt.setTrace(trace);
+					bt.setFormula(o);
+					str_out = bt.translateFormula();
+					System.out.println("Après propositinal: " + str_out);
+					try {
+						o = Operator.parseFromString(str_out);
+					}
+					catch (ParseException e)
+					{
+						e.printStackTrace();
+					}
+				} /*else
+				{
+					
+					try {
+						o = Operator.parseFromString(strLTL);
+					}
+					catch (ParseException e)
+					{
+						e.printStackTrace();
+					}
+					str_out = trans.translateFormula(o);
+				}*/
+				trans.setFormula(o);
+				trans.setTrace(trace);
+				out_trace = trans.translateTrace();
+				str_out = trans.translateFormula();
+				System.out.println("Après traduction: " + str_out);
+				outTrace.add(out_trace);
+				/*
 				// Check if translator is Maude and send property
 				if (trans instanceof MaudeTranslator) {
 					trans = new MaudeTranslator(trace);
@@ -1273,10 +1322,13 @@ public class IHM_TraceEvent extends JFrame {
 					OutSigMonp.add(strTemp);
 					out_trace = out_trace.concat(out_sig);
 				}
+				*/
 				
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");
 			}
 		}
+		if (str_out != null)
+			txtAreaLTL.setText(str_out);
 		// display the trace
 		if (status == JFileChooser.APPROVE_OPTION) {
 		
@@ -1484,29 +1536,53 @@ public class IHM_TraceEvent extends JFrame {
 	private void translateLTL() 
 	{
 		String strLTL = textFiel_path_LTL.getText();
-		String str_out;
+		String str_out = null;
+		Operator o = null ;
 		// Determine which translator to initialize
 		Translator tr = initializeTranslator(output_format);
-		if(!(tr instanceof MaudeTranslator))
-		{
+		try {
+			o = Operator.parseFromString(strLTL);
+			str_out = tr.translateFormula(o);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		tr.setFormula(o);
+		if (tr instanceof XmlTranslator) {
+			try {
+				o = Operator.parseFromString(strLTL);
+			} catch (Operator.ParseException e) {
+				System.out.println("Parse exception");
+			}
+			BeepBeepTranslator bt = new BeepBeepTranslator();
+			str_out = bt.translateFormula(o);
+		}else if ((tr instanceof SmvTranslator)||(tr instanceof SqlTranslator)
+				 ||(tr instanceof PromelaTranslator)||(tr instanceof MonpolyTranslator)) {
 			if (tr != null) {
 				try {
-					Operator o = Operator.parseFromString(strLTL);
-	                
-					
+					o = Operator.parseFromString(strLTL);
 					str_out = tr.translateFormula(o);
-
-					if (str_out != null) {
-						txtAreaLTL.setText(str_out);
-					} else {
-						txtAreaLTL
-								.setText("This method does not implemented yet, come back later !!!");
-					}
-
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				PropositionalTranslator pt = new PropositionalTranslator();
+				str_out = pt.translateFormula(o);
+			}
+		} else if (!(tr instanceof MaudeTranslator)) {
+			if (tr != null) {
+				try {
+					o = Operator.parseFromString(strLTL);
+					str_out = tr.translateFormula(o);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
+		} 
+		
+		if (str_out != null) {
+			txtAreaLTL.setText(str_out);
+		} else {
+			txtAreaLTL
+					.setText("This method does not implemented yet, come back later !!!");
 		}
 		if(output_format.equalsIgnoreCase("pml"))
 		{
@@ -1766,6 +1842,11 @@ public class IHM_TraceEvent extends JFrame {
 		{
 			strExt = "Save File (.log )";
 			filter = new FileNameExtensionFilter(strExt, "log");
+		}else if(output_format.equalsIgnoreCase("beepbeep"))
+		{
+			strExt = "Save File (.xml )";
+			filter = new FileNameExtensionFilter(strExt, "xml");
+			output_format = "xml";
 		}else
 		 {
 			strExt = "Save File (."+output_format+" )";
@@ -1805,7 +1886,7 @@ public class IHM_TraceEvent extends JFrame {
 
 							this.saveTrace(file, type);
 							txtArea.setText("");
-							if ((!output_format.equalsIgnoreCase("monpoly"))
+							if ((!output_format.equalsIgnoreCase("monpoly"))&&(!output_format.equalsIgnoreCase("xml"))
 									&&(!output_format.equalsIgnoreCase("pml"))){
 								txtAreaLTL.setText("");
 							}
@@ -1883,7 +1964,8 @@ public class IHM_TraceEvent extends JFrame {
 				.replace("\\", "/"), true);
 		
 		Boolean bMonopoly = (type.equalsIgnoreCase("Translator") &&
-							(!output_format.equalsIgnoreCase("monpoly")));
+							(!output_format.equalsIgnoreCase("monpoly"))&&
+							(!output_format.equalsIgnoreCase("xml")));
 		String strLTL = "\n".concat(txtAreaLTL.getText());
 		
 		Vector<String> tempTrace = new Vector<String>();
@@ -2058,12 +2140,12 @@ public class IHM_TraceEvent extends JFrame {
 			trans = new SmvTranslator();
 		} else if (output_format.compareToIgnoreCase("sql") == 0) {
 			trans = new SqlTranslator();
-		} else if (output_format.compareToIgnoreCase("pml") == 0) {
+		} else if (output_format.compareToIgnoreCase("Spin") == 0) {
 			trans = new PromelaTranslator();
 		} else if (output_format.compareToIgnoreCase("json") == 0) {
 			trans = new JsonTranslator();
-		} else if (output_format.compareToIgnoreCase("xml") == 0) {
-			trans = new XmlTranslator();
+		} else if (output_format.compareToIgnoreCase("BeepBeep") == 0) {
+			trans = new BeepBeepTranslator();//XmlTranslator();
 		} else if (output_format.compareToIgnoreCase("monpoly") == 0) {
 			trans = new MonpolyTranslator();
 		} else if (output_format.compareToIgnoreCase("xes") == 0) {

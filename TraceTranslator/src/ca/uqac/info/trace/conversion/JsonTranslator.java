@@ -274,4 +274,9 @@ public String translateTrace() {
 	return null;
 }
 
+@Override
+public boolean requiresPropositional() {
+	return false;
+}
+
 }
