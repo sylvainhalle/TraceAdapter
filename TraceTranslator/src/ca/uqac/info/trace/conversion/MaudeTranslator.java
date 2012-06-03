@@ -138,9 +138,10 @@ public class MaudeTranslator extends Translator {
 
 		@Override
 		public void visit(OperatorEquals o) {
-			m_pieces.pop(); // Pop right-hand side
-			m_pieces.pop(); // Pop left-hand side
-			StringBuffer out = new StringBuffer(toMaudeIdentifier(o));
+			 StringBuffer right = m_pieces.pop(); // Pop right-hand side
+			 StringBuffer left = m_pieces.pop(); // Pop left-hand side
+			 StringBuffer out = new StringBuffer();
+			 out.append(left).append(" = ").append(right);
 			m_pieces.push(out);
 		}
 
@@ -208,12 +209,6 @@ public class MaudeTranslator extends Translator {
 			m_equalities.add(o);
 		}
 
-	}
-
-	protected static String toMaudeIdentifier(OperatorEquals o) {
-		String left = o.getLeft().toString();
-		String right = o.getRight().toString();
-		return new StringBuffer(left).append(" = ").append(right).toString();
 	}
 
 	@Override

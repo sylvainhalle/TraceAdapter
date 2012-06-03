@@ -218,7 +218,8 @@ public class AtomicTranslator extends Translator
 				{
 					if (!first)
 					{
-						out.append(" | ");
+						//out.append(" | ");
+						out.append(" \\/ ");
 					}
 					first = false;
 					out.append(token);	

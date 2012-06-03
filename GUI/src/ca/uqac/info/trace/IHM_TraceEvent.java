@@ -1276,18 +1276,7 @@ public class IHM_TraceEvent extends JFrame {
 					{
 						e.printStackTrace();
 					}
-				} /*else
-				{
-					
-					try {
-						o = Operator.parseFromString(strLTL);
-					}
-					catch (ParseException e)
-					{
-						e.printStackTrace();
-					}
-					str_out = trans.translateFormula(o);
-				}*/
+				} 
 				trans.setFormula(o);
 				trans.setTrace(trace);
 				out_trace = trans.translateTrace();
@@ -1334,13 +1323,27 @@ public class IHM_TraceEvent extends JFrame {
 	 * Can translate the input file in the choice of output file
 	 * and save  directly to the files when they're over 1000 files 
 	 */
+	/**
+	 * Can translate the input file in the choice of output file
+	 * and save  directly to the files when they're over 1000 files 
+	 */
+	/**
+	 * Can translate the input file in the choice of output file
+	 * and save  directly to the files when they're over 1000 files 
+	 */
+	/**
+	 * Can translate the input file in the choice of output file
+	 * and save  directly to the files when they're over 1000 files 
+	 */
 	private void translateAndSave ()
 	{
 		//add filter extension file
 		FileFilter filter ;
 		String ext ="";
-		Boolean bMonopoly = (!output_format.equalsIgnoreCase("monpoly"));
-		String strLTL = "\n".concat(txtAreaLTL.getText());
+		Boolean bMonopoly = (!output_format.equalsIgnoreCase("monpoly")
+							&& !output_format.equalsIgnoreCase("maude")
+							&& !output_format.equalsIgnoreCase("beepbeep"));
+		String strLTL = null; 
 		// save the file MonPoly with extension .log
 		if(output_format.equalsIgnoreCase("monpoly"))
 		{
@@ -1351,8 +1354,12 @@ public class IHM_TraceEvent extends JFrame {
 		{
 			ext ="Save file (.pml)";
 			filter = new FileNameExtensionFilter(ext, "pml");
-		}
-		else{
+		}else  if(output_format.equalsIgnoreCase("beepbeep"))
+		{
+			ext = "Save File (.xml )";
+			filter = new FileNameExtensionFilter(ext, "xml");
+			output_format = "xml";
+		}else{
 			ext = "Save file (."+output_format+" )";
 			filter = new FileNameExtensionFilter(ext, output_format);
 		}
@@ -1376,6 +1383,9 @@ public class IHM_TraceEvent extends JFrame {
 			else if(output_format.equalsIgnoreCase("Spin"))
 			{
 				nameFile = fc.getSelectedFile().getAbsolutePath()+".pml";
+			} else if(output_format.equalsIgnoreCase("beepbeep"))
+			{
+				nameFile = fc.getSelectedFile().getAbsolutePath()+".xml";
 			}
 			else{
 				nameFile = fc.getSelectedFile().getAbsolutePath()+"."+output_format;
@@ -1410,14 +1420,21 @@ public class IHM_TraceEvent extends JFrame {
 							try {
 								FileOutputStream fos = new FileOutputStream(
 										new File(str));
+								
 								fos.write(resultat.get(0).getBytes());
 								if(bMonopoly)
 								{
+								 strLTL = "\n".concat(resultat.get(1)); ;
 							     fos.write(strLTL.getBytes());
-								}
+								} 
 								fos.close();
+								if(output_format.equalsIgnoreCase("monpoly") ||output_format.equalsIgnoreCase("beepbeep"))
+								{
+									strLTL = resultat.get(1);
+								}
 								if(output_format.equalsIgnoreCase("monpoly"))
 								{
+									
 									String nameSig = this.buildFile(namefic, number); 
 									String [] listString =  nameSig.split("\\.");
 									String strSig = repertoire.concat(listString[0]+".sig");
@@ -1425,7 +1442,7 @@ public class IHM_TraceEvent extends JFrame {
 									try {
 
 										fos = new FileOutputStream(new File(strSig));
-										fos.write(resultat.get(1).getBytes());
+										fos.write(resultat.get(2).getBytes());
 										fos.close();
 
 									} catch (Exception e) {
@@ -1437,7 +1454,9 @@ public class IHM_TraceEvent extends JFrame {
 
 							}
 						}						
-					}					
+					}	
+					if(strLTL !=null)
+						txtAreaLTL.setText(strLTL);
 					txtArea.setText(chaine);
 				}
 			}
@@ -1446,6 +1465,9 @@ public class IHM_TraceEvent extends JFrame {
 		}
 		
 	}
+	
+	
+	
 	/**
 	 * Allow to recover the number of input file
 	 * @param nameFile
@@ -1465,10 +1487,12 @@ public class IHM_TraceEvent extends JFrame {
 	
 		return res ;
 	}
+
 	private Vector<String> getTraceEvent( String path)
 	{
-		String out_trace = null;
+		String out_trace = null, str_out;
 		Vector<String> res = new Vector<String>();
+		
 
 		//String input_format = getExtension(path_file);
 		String input_format = getExtension(path);
@@ -1488,6 +1512,10 @@ public class IHM_TraceEvent extends JFrame {
 			}
 
 			// Determine which translator to initialize
+			if(output_format.equalsIgnoreCase("xml"))
+			{
+				output_format ="beepbeep";
+			}
 			Translator trans = initializeTranslator(output_format);
 			if (trans == null) {
 				System.err.println("ERROR: Unrecognized output format");
@@ -1497,28 +1525,44 @@ public class IHM_TraceEvent extends JFrame {
 
 			// Translate the trace into the output format
 			EventTrace trace = reader.parseEventTrace(in_f);
-			// Check if translator is Maude and send property
-			if (trans instanceof MaudeTranslator) {
-				trans = new MaudeTranslator(trace);
-				Operator o;
+			Operator o = null ;
+			String strLTL = textFiel_path_LTL.getText();
+			
+			try {
+				o = Operator.parseFromString(strLTL);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			// On vÃ©rifie si cette formule est du premier ordre (i.e. contient quantificateurs)
+			if (FirstOrderDetector.isFirstOrder(o) && trans.requiresPropositional())
+			{
+				// Si oui et qu'on veut l'envoyer dans un outil qui ne supporte
+				// pas les quantificateurs, on doit d'abord la rÃ©duire au cas
+				// propositionnel...
+				Translator bt = new PropositionalTranslator();
+				bt.setTrace(trace);
+				bt.setFormula(o);
+				str_out = bt.translateFormula();
 				try {
-					o = Operator.parseFromString(textFiel_path_LTL.getText());
-					trans.setFormula(o);
-					txtAreaLTL.setText("");
-					
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+					o = Operator.parseFromString(str_out);
+				}
+				catch (ParseException e)
+				{
 					e.printStackTrace();
 				}
-				
 			}
-			out_trace = trans.translateTrace(trace);
-			res.add(out_trace);
+			trans.setFormula(o);
+			trans.setTrace(trace);
+			out_trace = trans.translateTrace();
+			str_out = trans.translateFormula();
+			res.add(0,out_trace);
+			if(! output_format.equalsIgnoreCase("maude"))
+			res.add(1, str_out);
 			//Add signature if the output is monpoly
 			if(output_format.equalsIgnoreCase("monpoly"))
 			{	
 				String strTemp = trans.getSignature(trace);
-				res.add(strTemp);
+				res.add(2,strTemp);
 			}
 			
 		}
@@ -1890,14 +1934,10 @@ public class IHM_TraceEvent extends JFrame {
 					fo.close();
 					txtAreaLTL.setText("");
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 			}
-		
-		
-
 	}
 /**
  * Traces recorded in a directory
@@ -1910,7 +1950,7 @@ public class IHM_TraceEvent extends JFrame {
 		
 		Boolean bMonopoly = (type.equalsIgnoreCase("Translator") &&
 							(!output_format.equalsIgnoreCase("monpoly"))&&
-							(!output_format.equalsIgnoreCase("xml")));
+							(!output_format.equalsIgnoreCase("xml")) && (!output_format.equalsIgnoreCase("maude")));
 		String strLTL = "\n".concat(txtAreaLTL.getText());
 		
 		Vector<String> tempTrace = new Vector<String>();
@@ -2338,7 +2378,6 @@ public class IHM_TraceEvent extends JFrame {
 				try {
 					listThreads.get(j).join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -2436,6 +2475,7 @@ public class IHM_TraceEvent extends JFrame {
 			if(tool.equalsIgnoreCase("Beepbeep"))
 			{
 				tool = "XML" ;
+				
 			}else if(tool.equalsIgnoreCase("NuSMV"))
 			{
 				tool = "smv" ;
@@ -2508,7 +2548,9 @@ public class IHM_TraceEvent extends JFrame {
 		if ((strTool.compareToIgnoreCase("XML") == 0)
 				&& (checkBeepBeep.isSelected())) {
 			ex = new Beepbeep();
-		} else if ((strTool.compareToIgnoreCase("Maude") == 0)
+	} 
+		
+	else if ((strTool.compareToIgnoreCase("Maude") == 0)
 				&& (checkMaude.isSelected())) {
 			ex = new Maude();
 		} else if ((strTool.compareToIgnoreCase("MYSQL") == 0)
@@ -2655,9 +2697,9 @@ public class IHM_TraceEvent extends JFrame {
 			 array.add(triList(listFile));
 			 
 		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))
-				||(ext.equalsIgnoreCase("Spin"))) 
+			||(ext.equalsIgnoreCase("Spin"))) 
 		{
-			 
+		 			 
 			for (int j = 0; j < listFichiers.length; j++) {
 				File fic = new File(listFichiers[j]);
 				String strFile = chemin + "/" + fic.getName();

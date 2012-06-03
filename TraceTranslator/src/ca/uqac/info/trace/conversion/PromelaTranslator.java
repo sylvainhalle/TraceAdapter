@@ -204,7 +204,7 @@ public class PromelaTranslator extends Translator {
 	    m_formula.accept(f_eq);
 	    PromelaFormulaTranslator f_trans = new PromelaFormulaTranslator();
 	    m_formula.accept(f_trans);
-	    out.append("  ltl ").append("p1").append("{ ").append(f_trans.getFormula()).append("}").append("\n");
+	    out.append("  ltl ").append("property ").append("{ ").append(f_trans.getFormula()).append("}").append("\n");
 	    
 	    return out.toString();
 	}
