@@ -137,7 +137,14 @@ public abstract class Operator
 			if (s.startsWith("/"))
 				out = new XPathAtom(s);
 			else
-				out = new Atom(s);
+			{
+				if (s.compareTo(OperatorFalse.SYMBOL) == 0)
+					out = new OperatorFalse();
+				else if (s.compareTo(OperatorTrue.SYMBOL) == 0)
+					out = new OperatorTrue();
+				else
+					out = new Atom(s);
+			}
 		}
 		if (out == null)
 			throw new ParseException();
