@@ -18,19 +18,13 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
+import java.io.File;
 import java.util.Set;
 
-import ca.uqac.info.ltl.Atom;
-import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.ltl.OperatorAnd;
-import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.OperatorF;
-import ca.uqac.info.ltl.OperatorG;
-import ca.uqac.info.ltl.OperatorNot;
-import ca.uqac.info.ltl.OperatorOr;
-import ca.uqac.info.ltl.OperatorX;
+import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
+import ca.uqac.info.trace.XmlTraceReader;
 import ca.uqac.info.util.Relation;
 
 public class SqlTranslator extends Translator
@@ -118,27 +112,52 @@ public class SqlTranslator extends Translator
     return translateFormula(o, 0);
   }
   
+ 
+  
   protected String translateFormula(Operator o, int level)
   {
     String out = "";
-    if (o.getClass() == OperatorAnd.class)
+    if (o instanceof Exists)
+        return translateFormula((Exists) o, level);
+    if (o instanceof ForAll)
+        return translateFormula((ForAll) o, level);
+    if (o instanceof OperatorAnd)
       return translateFormula((OperatorAnd) o, level);
-    if (o.getClass() == OperatorOr.class)
+    if (o instanceof OperatorOr)
       return translateFormula((OperatorOr) o, level);
-    if (o.getClass() == OperatorNot.class)
+    if (o instanceof OperatorNot)
       return translateFormula((OperatorNot) o, level);
-    if (o.getClass() == OperatorEquals.class)
+    if (o instanceof OperatorEquals)
       return translateFormula((OperatorEquals) o, level);
-    if (o.getClass() == OperatorF.class)
+    if (o instanceof OperatorF)
       return translateFormula((OperatorF) o, level);
-    if (o.getClass() == OperatorG.class)
+    if (o instanceof OperatorG)
       return translateFormula((OperatorG) o, level);
-    if (o.getClass() == OperatorX.class)
+    if (o instanceof OperatorX)
       return translateFormula((OperatorX) o, level);
-    if (o.getClass() == Atom.class)
+    if (o instanceof Atom)
       return translateFormula((Atom) o, level);
+    if (o instanceof XPathAtom)
+        return translateFormula((XPathAtom) o, level);
     return out;
   }
+  
+  protected String translateFormula(Exists o, int level)
+  {
+	  // Not supposed to happen!
+    assert false;
+    System.err.println("ERROR: quantifier in SQL input formula");
+    return "";
+  }
+  
+  protected String translateFormula(ForAll o, int level)
+  {
+	  // Not supposed to happen!
+    assert false;
+    System.err.println("ERROR: quantifier in SQL input formula");
+    return "";
+  }
+
 
   protected String translateFormula(OperatorAnd o, int level)
   {
@@ -211,11 +230,17 @@ public class SqlTranslator extends Translator
     return o.getSymbol();
   }
   
+  protected String translateFormula(XPathAtom o, int level)
+  {
+    return o.toString(false);
+  }
+  
   protected String translateFormula(OperatorEquals o, int level)
   {
     StringBuffer out = new StringBuffer();
     out.append("SELECT ").append(m_eventId).append(" FROM ").append(m_tableName).append(" AS ").append(m_tableName).append(level).append(" WHERE ");
-    out.append("`").append(translateFormula(o.getLeft(), level + 1)).append("` = '").append(translateFormula(o.getRight(), level + 1)).append("'");
+    out.append("`").append(translateFormula(o.getLeft(), level + 1));
+    out.append("` = '").append(translateFormula(o.getRight(), level + 1)).append("'");
     return out.toString();
   } 
   
@@ -244,4 +269,23 @@ public boolean requiresPropositional() {
 	return true;
 }
 
+public static void main(String[] args)
+{
+	Operator o = null;
+	File fic = new File("traces/traces_0.txt");
+	XmlTraceReader xtr = new XmlTraceReader();
+	try
+	{
+		o = Operator.parseFromString("F (/p0 = 0)");
+	}
+	catch (Operator.ParseException e)
+	{
+		System.out.println("Parse exception");
+	}
+	SqlTranslator bt = new SqlTranslator();
+	EventTrace t = xtr.parseEventTrace(fic);
+	String f = bt.translateFormula(o);
+	System.out.println(f);
+	System.out.println(bt.translateTrace(t));
+}
 }
