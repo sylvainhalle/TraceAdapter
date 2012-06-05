@@ -17,7 +17,7 @@
  */
 package ca.uqac.info.ltl;
 
-import java.util.Set;
+import java.util.*;
 
 /**
  * (Very) basic re-implementation of Boolean and LTL connectives.
@@ -40,6 +40,12 @@ public abstract class Operator
 	public abstract void accept(OperatorVisitor v);
 	
 	public static Operator parseFromString(String s) throws ParseException
+	{
+		Set<Atom> bound_variables = new HashSet<Atom>();
+		return parseFromString(s, bound_variables);
+	}
+	
+	protected static Operator parseFromString(String s, Set<Atom> bound_variables) throws ParseException
 	{
 		s = s.trim();
 		String c = s.substring(0, 1);
@@ -65,13 +71,16 @@ public abstract class Operator
 			if (parts.length != 2)
 				throw new ParseException();
 			Atom a = new Atom(parts[0].trim());
+			Set<Atom> new_bound_variables = new HashSet<Atom>();
+			new_bound_variables.addAll(bound_variables);
+			new_bound_variables.add(a);
 			oq.setVariable(a);
 			XPathAtom p = new XPathAtom(parts[1].trim());
 			oq.setPath(p);
 			// Process operand
 			s = s.substring(end_quantif + 1).trim();
 			s = trimSurroundingPars(s);
-			Operator in = parseFromString(s);
+			Operator in = parseFromString(s, new_bound_variables);
 			oq.setOperand(in);
 			out = oq;
 		}
@@ -143,7 +152,13 @@ public abstract class Operator
 				else if (s.compareTo(OperatorTrue.SYMBOL) == 0)
 					out = new OperatorTrue();
 				else
-					out = new Atom(s);
+				{
+					Atom a = new Atom(s);
+					if (bound_variables.contains(a))
+						out = a;
+					else
+						out = new Constant(s);
+				}
 			}
 		}
 		if (out == null)
