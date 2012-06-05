@@ -54,6 +54,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import ca.uqac.info.ltl.ConstantConverter;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.conversion.*;
@@ -1276,6 +1277,11 @@ public class IHM_TraceEvent extends JFrame {
 					{
 						e.printStackTrace();
 					}
+					// On convertit aussi les égalités entre des constantes produites par
+					// le translator en	booléens vrai ou faux (puisqu'on le sait déjà)
+					ConstantConverter cc = new ConstantConverter();
+					o.accept(cc);
+					o = cc.getFormula();
 				} 
 				trans.setFormula(o);
 				trans.setTrace(trace);
@@ -1550,6 +1556,11 @@ public class IHM_TraceEvent extends JFrame {
 				{
 					e.printStackTrace();
 				}
+				// On convertit aussi les égalités entre des constantes produites par
+				// le translator en	booléens vrai ou faux (puisqu'on le sait déjà)
+				ConstantConverter cc = new ConstantConverter();
+				o.accept(cc);
+				o = cc.getFormula();
 			}
 			trans.setFormula(o);
 			trans.setTrace(trace);
