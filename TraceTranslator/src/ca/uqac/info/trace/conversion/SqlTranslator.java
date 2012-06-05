@@ -163,9 +163,20 @@ public class SqlTranslator extends Translator
   protected String translateFormula(OperatorAnd o, int level)
   {
     StringBuffer out = new StringBuffer();
+    /*
+    // Old version: INTERSECT not supported by MySQL :-(
     out.append("(").append(translateFormula(o.getLeft(), level + 1)).append(")");
     out.append(" INTERSECT ");
     out.append("(").append(translateFormula(o.getRight(), level + 1)).append(")");
+    */
+    StringBuffer table_left = new StringBuffer().append("trace").append(level).append("L");
+    StringBuffer table_right = new StringBuffer().append("trace").append(level).append("R");
+    out.append("SELECT ").append(table_left).append(".* FROM (");
+    out.append("(").append(translateFormula(o.getLeft(), level + 1)).append(") AS ").append(table_left);
+    out.append(" INNER JOIN ");
+    out.append("(").append(translateFormula(o.getRight(), level + 1)).append(") AS ").append(table_right);
+    out.append(" ON ").append(table_left).append(".msgno = ").append(table_right).append(".msgno");
+    out.append(")");
     return out.toString();
   }
 
@@ -276,7 +287,7 @@ public boolean requiresPropositional() {
 	return true;
 }
 
-public static void main(String[] args)
+/*public static void main(String[] args)
 {
 	Operator o = null;
 	File fic = new File("traces/traces_0.txt");
@@ -294,5 +305,40 @@ public static void main(String[] args)
 	String f = bt.translateFormula(o);
 	System.out.println(f);
 	System.out.println(bt.translateTrace(t));
+}*/
+
+public static void main(String[] args)
+{
+		Operator o = null;
+		File fic = new File("traces/traces_0.txt");
+		XmlTraceReader xtr = new XmlTraceReader();
+		EventTrace t = xtr.parseEventTrace(fic);
+		try
+		{
+			o = Operator.parseFromString("F (∃i ∈ /p0 : (i=0))");
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		PropositionalTranslator pt = new PropositionalTranslator();
+		pt.setFormula(o);
+		pt.setTrace(t);
+		String s = pt.translateFormula();
+		//System.out.println(s);
+		try
+		{
+			o = Operator.parseFromString(s);
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		Translator bt = new SqlTranslator();
+		bt.setFormula(o);
+		bt.setTrace(t);
+		System.out.println(bt.translateTrace());
+		String f = bt.translateFormula();
+		System.out.println(f);
 }
 }
