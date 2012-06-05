@@ -206,7 +206,10 @@ public class MaudeTranslator extends Translator {
 		@Override
 		public void visit(OperatorEquals o)
 		{
-			m_equalities.add(o);
+			// We only add equalities between an XPathAtom and something
+			// Other equalities are between constants
+			if (o.getLeft() instanceof XPathAtom || o.getRight() instanceof XPathAtom)
+				m_equalities.add(o);
 		}
 
 	}
@@ -287,19 +290,36 @@ public class MaudeTranslator extends Translator {
 	{
 		
 		MaudeTranslator md = new MaudeTranslator() ;
-		File f = new File("traces/trace2.xml");
+		File f = new File("traces/traces_0.txt");
 		XmlTraceReader reader = new XmlTraceReader();
 		EventTrace trace = reader.parseEventTrace(f);
-		String sop = "G (p0 = 4) ";
-		Operator op;
+		String sop = "F (∃i ∈ /p0 : (i=0))";
+		Operator o = null;
 		try {
-			op = Operator.parseFromString(sop);
-			System.out.println(md.translateFormula(op));
-			md.setFormula(op);
-			System.out.println(md.translateTrace(trace));
+			o = Operator.parseFromString(sop);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		PropositionalTranslator pt = new PropositionalTranslator();
+		pt.setFormula(o);
+		pt.setTrace(trace);
+		String s = pt.translateFormula();
+		//System.out.println(s);
+		try
+		{
+			o = Operator.parseFromString(s);
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		ConstantConverter cc = new ConstantConverter();
+		o.accept(cc);
+		o = cc.getFormula();
+		System.out.println(o);
+		md.setTrace(trace);
+		md.setFormula(o);
+		System.out.println(md.translateTrace(trace));
 		
 	}
 	
