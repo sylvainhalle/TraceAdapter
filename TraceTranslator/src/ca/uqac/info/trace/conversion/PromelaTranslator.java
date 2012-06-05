@@ -70,7 +70,6 @@ public class PromelaTranslator extends Translator {
 			String val = "";
 			if (children.getLength() > 1) {
 				NodeList level1 = children.item(1).getChildNodes();
-				//out.append(" ").append( children.item(1).getNodeName());
 				if (level1.getLength() > 1) {
 
 					NodeList level2 = level1.item(1).getChildNodes();
@@ -286,12 +285,10 @@ public class PromelaTranslator extends Translator {
 	    @Override
 	    public void visit(OperatorEquals o)
 	    {
-	      StringBuffer right = m_pieces.pop(); // Pop right-hand side
-	      StringBuffer left = m_pieces.pop(); // Pop left-hand side
+	      StringBuffer right = m_pieces.pop(); 
+	      StringBuffer left = m_pieces.pop(); 
 	      StringBuffer out = new StringBuffer();
 	      out.append(left).append("==").append(right);
-	      //StringBuffer out = new StringBuffer(toPromelaIdentifier(o));
-	      //StringBuffer out = new StringBuffer("eq").append(left).append("_").append(right);
 	      m_pieces.push(out);
 	    }
 
@@ -403,7 +400,7 @@ public class PromelaTranslator extends Translator {
 		@Override
     public void visit(Exists o)
     {
-	    
+			//out.append(" ").append( children.item(1).getNodeName());
     }
 
 		@Override

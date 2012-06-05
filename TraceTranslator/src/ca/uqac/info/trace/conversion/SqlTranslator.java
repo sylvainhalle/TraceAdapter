@@ -109,8 +109,8 @@ public class SqlTranslator extends Translator
   
   public String translateFormula(Operator o)
   {
-	setFormula(o);
-    return translateFormula();
+	  setFormula(o);
+    return translateFormula(o, 0);
   }
   
  
@@ -228,25 +228,31 @@ public class SqlTranslator extends Translator
   
   protected String translateFormula(Atom o, int level)
   {
+    //return o.getSymbol();
 	  StringBuffer out = new StringBuffer();
-	  if (o instanceof Constant)
-	  	out.append("\"").append(o.getSymbol()).append("\"");
+	  if(o instanceof Constant)
+		  
+		  out.append("\"").append(o.getSymbol()).append("\"");
 	  else
 		  out.append(o.getSymbol());
 	  return out.toString();
+    
   }
   
   protected String translateFormula(XPathAtom o, int level)
   {
+	  //return o.toString(false);
 	  StringBuffer out = new StringBuffer();
 	  out.append("`").append(o.toString(false)).append("`");
-	  return out.toString();
+	  return  out.toString();
   }
   
   protected String translateFormula(OperatorEquals o, int level)
   {
     StringBuffer out = new StringBuffer();
     out.append("SELECT ").append(m_eventId).append(" FROM ").append(m_tableName).append(" AS ").append(m_tableName).append(level).append(" WHERE ");
+    //out.append("`").append(translateFormula(o.getLeft(), level + 1));
+    //out.append("` = '").append(translateFormula(o.getRight(), level + 1)).append("'");
     out.append(translateFormula(o.getLeft(), level + 1));
     out.append(" = ").append(translateFormula(o.getRight(), level + 1));
     return out.toString();
@@ -268,6 +274,7 @@ public String getSignature(EventTrace t) {
 
 @Override
 public String translateFormula() {
+	// TODO Auto-generated method stub
 	return translateFormula(m_formula, 0);
 }
 
