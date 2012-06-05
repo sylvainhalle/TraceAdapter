@@ -1286,7 +1286,12 @@ public class IHM_TraceEvent extends JFrame {
 				trans.setFormula(o);
 				trans.setTrace(trace);
 				out_trace = trans.translateTrace();
-				str_out = trans.translateFormula();
+				//if(output_format.equalsIgnoreCase("sql"))
+				//{
+				//	str_out = trans.translateFormula(o);					
+			//	}
+				//else
+					str_out = trans.translateFormula();
 				System.out.println("Après traduction: " + str_out);
 				outTrace.add(out_trace);
 		
@@ -1356,7 +1361,7 @@ public class IHM_TraceEvent extends JFrame {
 			ext ="Save file (.log)";
 			filter = new FileNameExtensionFilter(ext, "log");
 		}
-		else if(output_format.equalsIgnoreCase("spin"))
+		else if(output_format.equalsIgnoreCase("Spin"))
 		{
 			ext ="Save file (.pml)";
 			filter = new FileNameExtensionFilter(ext, "pml");
@@ -1837,7 +1842,7 @@ public class IHM_TraceEvent extends JFrame {
 			filter = new FileNameExtensionFilter(strExt, "log");
 		
 		}
-		else if(output_format.equalsIgnoreCase("spin"))
+		else if(output_format.equalsIgnoreCase("Spin"))
 		{
 			strExt = "Save File (.pml )";
 			filter = new FileNameExtensionFilter(strExt, "pml");
@@ -1868,6 +1873,8 @@ public class IHM_TraceEvent extends JFrame {
 				String nameFile;
 				if (output_format.equalsIgnoreCase("monpoly")) {
 					nameFile = fileSave.getSelectedFile().getPath() + ".log";
+				} else if (output_format.equalsIgnoreCase("spin")) {
+					nameFile = fileSave.getSelectedFile().getPath() + ".pml";
 				} else {
 					nameFile = fileSave.getSelectedFile().getPath() + "."
 							+ output_format;
