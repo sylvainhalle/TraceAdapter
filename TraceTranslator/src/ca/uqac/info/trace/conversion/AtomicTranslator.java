@@ -163,20 +163,24 @@ public class AtomicTranslator extends Translator
       StringBuffer out = m_pieces.peek();
       return out.toString();
     }
-    
-    //@Override
-    /*public void visit(Atom o)
-    {
-    	// Do nothing
-    	// (Override default behaviour from GenericVisitor)
-    }*/
-    
+        
     //@Override
     /*public void visit(XPathAtom p)
     {
     	// Do nothing
     	// (Override default behaviour from GenericVisitor)
     }*/
+    
+	/*@Override
+	  public void visit(Atom o)
+	  {
+		if (o instanceof OperatorTrue)
+			m_pieces.push(new StringBuffer("true"));
+		else if (o instanceof OperatorFalse)
+			m_pieces.push(new StringBuffer("false"));
+		else
+			m_pieces.
+	  }*/
     
 		@Override
     public void visit(OperatorEquals o)
@@ -187,10 +191,9 @@ public class AtomicTranslator extends Translator
 			final Map<Event,String> tokens = AtomicTranslator.this.m_tokens;
 			Set<Event> events = tokens.keySet();
 			String left = "";
-			if (o.getLeft() instanceof XPathAtom)
-				left = ((XPathAtom)(o.getLeft())).toString(false); // no leading slash
-			else
-				left = o.getLeft().toString();
+			if (!(o.getLeft() instanceof XPathAtom))
+				return; // We don't process equalities between atoms
+			left = ((XPathAtom)(o.getLeft())).toString(false); // no leading slash
 			String right = o.getRight().toString();
 			Set<String> disjunct_tokens = new HashSet<String>();
 			for (Event e : events)
