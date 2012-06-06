@@ -1277,21 +1277,19 @@ public class IHM_TraceEvent extends JFrame {
 					{
 						e.printStackTrace();
 					}
-					// On convertit aussi les égalités entre des constantes produites par
-					// le translator en	booléens vrai ou faux (puisqu'on le sait déjà)
-					ConstantConverter cc = new ConstantConverter();
-					o.accept(cc);
-					o = cc.getFormula();
+					// On convertit aussi les ï¿½galitï¿½s entre des constantes produites par
+					// le translator en	boolï¿½ens vrai ou faux (puisqu'on le sait dï¿½jï¿½)
+					if (output_format.equalsIgnoreCase("Maude"))
+					{
+						ConstantConverter cc = new ConstantConverter();
+						o.accept(cc);
+						o = cc.getFormula();
+					}
 				} 
 				trans.setFormula(o);
 				trans.setTrace(trace);
 				out_trace = trans.translateTrace();
-				//if(output_format.equalsIgnoreCase("sql"))
-				//{
-				//	str_out = trans.translateFormula(o);					
-			//	}
-				//else
-					str_out = trans.translateFormula();
+				str_out = trans.translateFormula();
 				System.out.println("AprÃ¨s traduction: " + str_out);
 				outTrace.add(out_trace);
 		
@@ -1334,18 +1332,7 @@ public class IHM_TraceEvent extends JFrame {
 	 * Can translate the input file in the choice of output file
 	 * and save  directly to the files when they're over 1000 files 
 	 */
-	/**
-	 * Can translate the input file in the choice of output file
-	 * and save  directly to the files when they're over 1000 files 
-	 */
-	/**
-	 * Can translate the input file in the choice of output file
-	 * and save  directly to the files when they're over 1000 files 
-	 */
-	/**
-	 * Can translate the input file in the choice of output file
-	 * and save  directly to the files when they're over 1000 files 
-	 */
+	
 	private void translateAndSave ()
 	{
 		//add filter extension file
@@ -1561,8 +1548,8 @@ public class IHM_TraceEvent extends JFrame {
 				{
 					e.printStackTrace();
 				}
-				// On convertit aussi les égalités entre des constantes produites par
-				// le translator en	booléens vrai ou faux (puisqu'on le sait déjà)
+				// On convertit aussi les ï¿½galitï¿½s entre des constantes produites par
+				// le translator en	boolï¿½ens vrai ou faux (puisqu'on le sait dï¿½jï¿½)
 				ConstantConverter cc = new ConstantConverter();
 				o.accept(cc);
 				o = cc.getFormula();

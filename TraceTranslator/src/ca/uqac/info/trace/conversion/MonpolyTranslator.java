@@ -191,7 +191,7 @@ public class MonpolyTranslator extends Translator {
 		return out.toString();
 	}
 	protected class MonpolyFormulaTranslator implements OperatorVisitor
-			  {
+	{
 			    Stack<StringBuffer> m_pieces;
 			    
 			    public MonpolyFormulaTranslator()
@@ -316,28 +316,38 @@ public class MonpolyTranslator extends Translator {
 				}
 
 				@Override
-        public void visit(Exists o)
-        {
-	        
-        }
+                public void visit(Exists o)
+				{
+					StringBuffer operand = m_pieces.pop();
+					StringBuffer variable = m_pieces.pop();
+					StringBuffer var = m_pieces.peek();
+					StringBuffer out = new StringBuffer();
+					out.append("EXISTS ").append("?").append(var).append(". ").append("(").append(variable).append("(?").append(var).append(")")
+					                     .append(" AND ").append(variable).append(operand).append(")");
+					m_pieces.push(out);
+				}
 
 				@Override
-        public void visit(ForAll o)
-        {
-	       
-        }
+				public void visit(ForAll o)
+		        {
+					StringBuffer operand = m_pieces.pop();
+					StringBuffer variable = m_pieces.pop();
+					StringBuffer out = new StringBuffer();
+					out.append("FORALL ").append("?").append(variable).append(". ").append("(").append(operand).append(")");
+					m_pieces.push(out);
+			       
+		        }
+        
 
 				@Override
 				public void visit(XPathAtom p)
-        {
+				{
 					// Not supposed to happen!
 					//System.err.println("Error: XML Path found in MonPoly translator");
 			    //assert false;
 					m_pieces.push(new StringBuffer(p.toString(false)));
-        }
-
-				
-			  }
+				}
+	}
 			  
 			  protected class MonpolyEqualityGetter implements OperatorVisitor
 			  {
@@ -412,16 +422,18 @@ public class MonpolyTranslator extends Translator {
 				}
 
 				@Override
-        public void visit(Exists o)
-        {
+				public void visit(Exists o)
+		        {
 
-        }
+		        }
+        
 
 				@Override
-        public void visit(ForAll o)
-        {
+				public void visit(ForAll o)
+		        {
 
-        }
+		        }
+        
 
 				@Override
 				public void visit(XPathAtom p)
@@ -433,9 +445,9 @@ public class MonpolyTranslator extends Translator {
 			  }
 			  
 			
-			@Override
-			public String getSignature(EventTrace m_trace) {
-				
+			  @Override
+			  public String getSignature(EventTrace m_trace) {
+					
 				  StringBuffer out = new StringBuffer() ;
 				  Relation<String,String> param_domains = m_trace.getParameterDomain();
 				  Set<String> params = param_domains.keySet();
@@ -445,6 +457,7 @@ public class MonpolyTranslator extends Translator {
 			      out = this.toMonpolySignature(vectParams) ;
 				return out.toString();
 			}
+			
 
 	
 	/**
@@ -477,7 +490,7 @@ public class MonpolyTranslator extends Translator {
 
 	@Override
 	public boolean requiresPropositional() {
-		return true;
+		return false;
 	}	
 }
 	

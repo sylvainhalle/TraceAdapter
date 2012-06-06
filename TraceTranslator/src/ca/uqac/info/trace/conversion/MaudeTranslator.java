@@ -8,24 +8,6 @@ import java.util.Vector;
 
 import ca.uqac.info.ltl.*;
 import ca.uqac.info.ltl.Operator.ParseException;
-/*import ca.uqac.info.ltl.Operator;
-
-import ca.uqac.info.ltl.BinaryOperator;
-import ca.uqac.info.ltl.Exists;
-import ca.uqac.info.ltl.ForAll;
-import ca.uqac.info.ltl.OperatorAnd;
-import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.OperatorEquiv;
-import ca.uqac.info.ltl.OperatorF;
-import ca.uqac.info.ltl.OperatorG;
-import ca.uqac.info.ltl.OperatorImplies;
-import ca.uqac.info.ltl.OperatorNot;
-import ca.uqac.info.ltl.OperatorOr;
-import ca.uqac.info.ltl.OperatorU;
-import ca.uqac.info.ltl.OperatorVisitor;
-import ca.uqac.info.ltl.OperatorX;
-import ca.uqac.info.ltl.UnaryOperator;
-import ca.uqac.info.ltl.XPathAtom;*/
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.trace.XmlTraceReader;
 import ca.uqac.info.util.Relation;

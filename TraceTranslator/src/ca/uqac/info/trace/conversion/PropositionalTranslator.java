@@ -256,7 +256,6 @@ public class PropositionalTranslator extends Translator
 		}
 		EventTrace t = new XmlTraceReader().parseEventTrace(new File("traces/trace2.xml"));
 		Translator bt = new PropositionalTranslator();
-		
 		String c = bt.translateTrace(t);
 		String f = bt.translateFormula(o);
 		System.out.println(f);

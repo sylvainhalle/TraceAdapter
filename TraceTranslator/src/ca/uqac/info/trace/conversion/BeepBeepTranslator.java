@@ -167,10 +167,7 @@ public class BeepBeepTranslator extends Translator
     public void visit(Atom o)
     {
     	StringBuffer out = new StringBuffer();
-    	if (o instanceof Constant)
-    		out.append("{").append(o.toString()).append("}");
-    	else
-    		out.append(o.toString());
+    	out.append(o.toString());
       m_pieces.push(out);
     }
 
