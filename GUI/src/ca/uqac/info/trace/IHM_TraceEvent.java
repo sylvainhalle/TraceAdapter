@@ -1279,7 +1279,7 @@ public class IHM_TraceEvent extends JFrame {
 					}
 					// On convertit aussi les �galit�s entre des constantes produites par
 					// le translator en	bool�ens vrai ou faux (puisqu'on le sait d�j�)
-					if (output_format.equalsIgnoreCase("Maude"))
+					if (output_format.equalsIgnoreCase("Maude")||output_format.equalsIgnoreCase("spin"))
 					{
 						ConstantConverter cc = new ConstantConverter();
 						o.accept(cc);
@@ -1464,8 +1464,6 @@ public class IHM_TraceEvent extends JFrame {
 		
 	}
 	
-	
-	
 	/**
 	 * Allow to recover the number of input file
 	 * @param nameFile
@@ -1550,9 +1548,13 @@ public class IHM_TraceEvent extends JFrame {
 				}
 				// On convertit aussi les �galit�s entre des constantes produites par
 				// le translator en	bool�ens vrai ou faux (puisqu'on le sait d�j�)
-				ConstantConverter cc = new ConstantConverter();
-				o.accept(cc);
-				o = cc.getFormula();
+				if(output_format.equalsIgnoreCase("Maude")|| output_format.equalsIgnoreCase("Spin"))
+				{
+					ConstantConverter cc = new ConstantConverter();
+					o.accept(cc);
+					o = cc.getFormula();
+				}
+				
 			}
 			trans.setFormula(o);
 			trans.setTrace(trace);
@@ -1591,13 +1593,15 @@ public class IHM_TraceEvent extends JFrame {
 			tf = tf + 2;
 			k++;
 		}
+		CommandLine c_line = null;
 		// Determine which translator to initialize
 		t_gen = initializeGenerator(selectedMenu);
+		t_gen.initialize(c_line);
 
 		Options options = t_gen.getCommandLineOptions();
 		options.addOption("h", "help", false, "Show help");
 		CommandLineParser parser = new PosixParser();
-		CommandLine c_line = null;
+		
 		try {
 			// parse the command line arguments
 			c_line = parser.parse(options, args);
@@ -1689,9 +1693,6 @@ public class IHM_TraceEvent extends JFrame {
 			k++;
 		}
 		String chaine ="";
-		
-		
-
 		Options options = t_gen.getCommandLineOptions();
 		options.addOption("h", "help", false, "Show help");
 		CommandLineParser parser = new PosixParser();
@@ -1715,6 +1716,7 @@ public class IHM_TraceEvent extends JFrame {
 		int cpt = Integer.parseInt(tfNbTraces.getText());
 		// Determine which translator to initialize
 		t_gen = initializeGenerator(selectedMenu);
+		t_gen.initialize(c_line);
 		for(int i=0 ; i< cpt ; i++)
 		{
 			EventTrace trace = t_gen.generate();
