@@ -40,7 +40,7 @@ public class TraceConverter
     // Default values
     String input_format = "xml", output_format = "smv";
     String input_filename = "trace.xml", output_filename = "";
-    String event_tag_name = "Event";
+    //String event_tag_name = "Event";
     
     // Define and process command line arguments
     Options options = new Options();
@@ -74,8 +74,8 @@ public class TraceConverter
     input_filename = c_line.getOptionValue("f");
     if (c_line.hasOption("o"))
       output_filename = c_line.getOptionValue("o");
-    if (c_line.hasOption("e"))
-      event_tag_name = c_line.getOptionValue("e");
+    /*if (c_line.hasOption("e"))
+      event_tag_name = c_line.getOptionValue("e");*/
     
     // Determine the input format
     if (!c_line.hasOption("i"))

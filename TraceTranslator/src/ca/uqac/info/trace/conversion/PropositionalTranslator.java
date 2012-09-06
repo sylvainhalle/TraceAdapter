@@ -242,6 +242,7 @@ public class PropositionalTranslator extends Translator
 		return domains;
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args)
 	{
 		Operator o = null;

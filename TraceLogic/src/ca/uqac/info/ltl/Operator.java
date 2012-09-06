@@ -161,8 +161,6 @@ public abstract class Operator
 				}
 			}
 		}
-		if (out == null)
-			throw new ParseException();
 		return out;
 	}
 	
