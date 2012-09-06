@@ -47,11 +47,11 @@ public class Relation<K,V> extends HashMap<K,Set<V>>
    * @param key
    * @param value
    */
-  public void put(K key, V value)
+  public Set<V> putValue(K key, V value)
   {
     Set<V> v = new HashSet<V>();
     v.add(value);
-    put(key, v);
+    return put(key, v);
   }
   
   /**
@@ -64,7 +64,7 @@ public class Relation<K,V> extends HashMap<K,Set<V>>
   public void add(K key, V value)
   {
   	if (!containsKey(key))
-  		put(key, value);
+  		putValue(key, value);
   	else
   	{
   		Set<V> vals = get(key);
@@ -80,15 +80,15 @@ public class Relation<K,V> extends HashMap<K,Set<V>>
    * @param key
    * @param value
    */
-  public void add(K key, Set<V> values)
+  public Set<V> add(K key, Set<V> values)
   {
   	if (!containsKey(key))
-  		put(key, values);
+  		return put(key, values);
   	else
   	{
   		Set<V> vals = get(key);
   		vals.addAll(values);
-  		put(key, vals);
+  		return put(key, vals);
   	}
   }
 
