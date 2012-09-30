@@ -31,14 +31,14 @@ public class XmlTranslator extends Translator
   protected boolean m_writePreamble = false;
 
   @Override
-  public String translateTrace(EventTrace trace)
+  public String translateTrace()
   {
     StringBuffer out = new StringBuffer();
     String CRLF = System.getProperty("line.separator");
     if (m_writePreamble)
       out.append("<?xml version=\"1.0\" ?>").append(CRLF);
     out.append("<Trace>").append(CRLF).append(CRLF);
-    for (Event e : trace)
+    for (Event e : m_trace)
     {
       String contents = e.toString();
       out.append(contents);
@@ -67,9 +67,14 @@ public String translateFormula() {
 }
 
 @Override
-public String translateTrace() {
-	// TODO Auto-generated method stub
-	return null;
+public String translateTrace(EventTrace trace) {
+	setTrace(trace);
+	return translateTrace();
+}
+
+@Override
+public boolean requiresPropositional() {
+	return true;
 }
 
 }

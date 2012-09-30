@@ -8,24 +8,6 @@ import java.util.Vector;
 
 import ca.uqac.info.ltl.*;
 import ca.uqac.info.ltl.Operator.ParseException;
-/*import ca.uqac.info.ltl.Operator;
-
-import ca.uqac.info.ltl.BinaryOperator;
-import ca.uqac.info.ltl.Exists;
-import ca.uqac.info.ltl.ForAll;
-import ca.uqac.info.ltl.OperatorAnd;
-import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.OperatorEquiv;
-import ca.uqac.info.ltl.OperatorF;
-import ca.uqac.info.ltl.OperatorG;
-import ca.uqac.info.ltl.OperatorImplies;
-import ca.uqac.info.ltl.OperatorNot;
-import ca.uqac.info.ltl.OperatorOr;
-import ca.uqac.info.ltl.OperatorU;
-import ca.uqac.info.ltl.OperatorVisitor;
-import ca.uqac.info.ltl.OperatorX;
-import ca.uqac.info.ltl.UnaryOperator;
-import ca.uqac.info.ltl.XPathAtom;*/
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.trace.XmlTraceReader;
 import ca.uqac.info.util.Relation;
@@ -138,9 +120,10 @@ public class MaudeTranslator extends Translator {
 
 		@Override
 		public void visit(OperatorEquals o) {
-			m_pieces.pop(); // Pop right-hand side
-			m_pieces.pop(); // Pop left-hand side
-			StringBuffer out = new StringBuffer(toMaudeIdentifier(o));
+			 StringBuffer right = m_pieces.pop(); // Pop right-hand side
+			 StringBuffer left = m_pieces.pop(); // Pop left-hand side
+			 StringBuffer out = new StringBuffer();
+			 out.append(left).append(" = ").append(right);
 			m_pieces.push(out);
 		}
 
@@ -205,15 +188,12 @@ public class MaudeTranslator extends Translator {
 		@Override
 		public void visit(OperatorEquals o)
 		{
-			m_equalities.add(o);
+			// We only add equalities between an XPathAtom and something
+			// Other equalities are between constants
+			if (o.getLeft() instanceof XPathAtom || o.getRight() instanceof XPathAtom)
+				m_equalities.add(o);
 		}
 
-	}
-
-	protected static String toMaudeIdentifier(OperatorEquals o) {
-		String left = o.getLeft().toString();
-		String right = o.getRight().toString();
-		return new StringBuffer(left).append(" = ").append(right).toString();
 	}
 
 	@Override
@@ -283,7 +263,7 @@ public class MaudeTranslator extends Translator {
 		out_Trace.append("endfm \n ");
 		out_Trace.append("");
 		out_Trace.append("reduce").append(" ");
-		out_Trace.append(chaine);
+		out_Trace.append(chaine).append(".");
 		out_Trace.append("\n quit");
 		return out_Trace.toString();
 	}
@@ -292,21 +272,42 @@ public class MaudeTranslator extends Translator {
 	{
 		
 		MaudeTranslator md = new MaudeTranslator() ;
-		File f = new File("traces/trace2.xml");
+		File f = new File("traces/traces_0.txt");
 		XmlTraceReader reader = new XmlTraceReader();
 		EventTrace trace = reader.parseEventTrace(f);
-		String sop = "G (p0 = 4) ";
-		Operator op;
+		String sop = "F (∃i ∈ /p0 : (i=0))";
+		Operator o = null;
 		try {
-			op = Operator.parseFromString(sop);
-			System.out.println(md.translateFormula(op));
-			md.setFormula(op);
-			System.out.println(md.translateTrace(trace));
+			o = Operator.parseFromString(sop);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		PropositionalTranslator pt = new PropositionalTranslator();
+		pt.setFormula(o);
+		pt.setTrace(trace);
+		String s = pt.translateFormula();
+		//System.out.println(s);
+		try
+		{
+			o = Operator.parseFromString(s);
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		ConstantConverter cc = new ConstantConverter();
+		o.accept(cc);
+		o = cc.getFormula();
+		System.out.println(o);
+		md.setTrace(trace);
+		md.setFormula(o);
+		System.out.println(md.translateTrace(trace));
 		
+	}
+	
+	@Override
+	public boolean requiresPropositional() {
+		return true;
 	}
 
 }

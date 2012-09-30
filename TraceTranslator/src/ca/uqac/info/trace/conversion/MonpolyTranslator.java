@@ -32,16 +32,21 @@ import ca.uqac.info.util.Relation;
 public class MonpolyTranslator extends Translator {
 	
 	protected final String m_logname = "log";
-	 
+		 
 	  java.util.Random r=new java.util.Random( ) ;
 	  int b , a;
 	  Random m_random = new Random();
     
+  @Override
+   public String translateTrace( EventTrace m_trace ) {
+	  setTrace(m_trace);
+	  return translateTrace();
+ }
 	@Override
 	/**
 	 * 
 	 */
-	public String translateTrace(EventTrace m_trace)
+	public String translateTrace()
 	{
 		StringBuffer out = new StringBuffer();
 		int trace_length = m_trace.size();
@@ -177,16 +182,16 @@ public class MonpolyTranslator extends Translator {
 	/**
 	 * 
 	 */
-	public String translateFormula(Operator o) {
-		
-				StringBuffer out = new StringBuffer();
-				MonpolyFormulaTranslator mft = new MonpolyFormulaTranslator();
-				    o.accept(mft);
-				    out.append(mft.getFormula());
-			    return out.toString();
-			}
-			protected class MonpolyFormulaTranslator implements OperatorVisitor
-			  {
+	public String translateFormula() 
+	{
+		StringBuffer out = new StringBuffer();
+		MonpolyFormulaTranslator mft = new MonpolyFormulaTranslator();
+		m_formula.accept(mft);
+		out.append(mft.getFormula());
+		return out.toString();
+	}
+	protected class MonpolyFormulaTranslator implements OperatorVisitor
+	{
 			    Stack<StringBuffer> m_pieces;
 			    
 			    public MonpolyFormulaTranslator()
@@ -275,9 +280,10 @@ public class MonpolyTranslator extends Translator {
 			    @Override
 			    public void visit(OperatorEquals o)
 			    {
-			      m_pieces.pop(); // Pop right-hand side
-			      m_pieces.pop(); // Pop left-hand side
-			      StringBuffer out = new StringBuffer(toMonpolyIdentifier(o));
+			    	StringBuffer right =m_pieces.pop(); // Pop right-hand side
+			    	StringBuffer left =m_pieces.pop(); // Pop left-hand side
+			    	StringBuffer out = new StringBuffer();
+			    	out.append(left).append("( ").append(right).append(")");
 			      m_pieces.push(out);
 			    }
 
@@ -310,29 +316,38 @@ public class MonpolyTranslator extends Translator {
 				}
 
 				@Override
-        public void visit(Exists o)
-        {
-	        // TODO Auto-generated method stub
-	        
-        }
+                public void visit(Exists o)
+				{
+					StringBuffer operand = m_pieces.pop();
+					StringBuffer variable = m_pieces.pop();
+					StringBuffer var = m_pieces.peek();
+					StringBuffer out = new StringBuffer();
+					out.append("EXISTS ").append("?").append(var).append(". ").append("(").append(variable).append("(?").append(var).append(")")
+					                     .append(" AND ").append(variable).append(operand).append(")");
+					m_pieces.push(out);
+				}
 
 				@Override
-        public void visit(ForAll o)
-        {
-	        // TODO Auto-generated method stub
-	        
-        }
+				public void visit(ForAll o)
+		        {
+					StringBuffer operand = m_pieces.pop();
+					StringBuffer variable = m_pieces.pop();
+					StringBuffer out = new StringBuffer();
+					out.append("FORALL ").append("?").append(variable).append(". ").append("(").append(operand).append(")");
+					m_pieces.push(out);
+			       
+		        }
+        
 
 				@Override
 				public void visit(XPathAtom p)
-        {
+				{
 					// Not supposed to happen!
-					System.err.println("Error: XML Path found in MonPoly translator");
-			    assert false;	        
-        }
-
-				
-			  }
+					//System.err.println("Error: XML Path found in MonPoly translator");
+			    //assert false;
+					m_pieces.push(new StringBuffer(p.toString(false)));
+				}
+	}
 			  
 			  protected class MonpolyEqualityGetter implements OperatorVisitor
 			  {
@@ -407,36 +422,32 @@ public class MonpolyTranslator extends Translator {
 				}
 
 				@Override
-        public void visit(Exists o)
-        {
+				public void visit(Exists o)
+		        {
 
-        }
+		        }
+        
 
 				@Override
-        public void visit(ForAll o)
-        {
+				public void visit(ForAll o)
+		        {
 
-        }
+		        }
+        
 
 				@Override
 				public void visit(XPathAtom p)
-        {
-
-        }
+				{
+					
+				}
 
 			
 			  }
 			  
-			  protected static String toMonpolyIdentifier(OperatorEquals o)
-			  {
-			    String left = o.getLeft().toString();
-			    String right = o.getRight().toString();
-			    
-			    return new StringBuffer(left).append("( ").append(right).append(")").toString();
-			  }
-			@Override
-			public String getSignature(EventTrace m_trace) {
-				
+			
+			  @Override
+			  public String getSignature(EventTrace m_trace) {
+					
 				  StringBuffer out = new StringBuffer() ;
 				  Relation<String,String> param_domains = m_trace.getParameterDomain();
 				  Set<String> params = param_domains.keySet();
@@ -446,6 +457,7 @@ public class MonpolyTranslator extends Translator {
 			      out = this.toMonpolySignature(vectParams) ;
 				return out.toString();
 			}
+			
 
 	
 	/**
@@ -469,16 +481,17 @@ public class MonpolyTranslator extends Translator {
 	}
 
 	@Override
-	public String translateFormula() {
-		// TODO Auto-generated method stub
-		return null;
+	public String translateFormula(Operator o)
+	{
+		setFormula(o);
+		return translateFormula();
 	}
 
+
 	@Override
-	public String translateTrace() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public boolean requiresPropositional() {
+		return false;
+	}	
 }
 	
 

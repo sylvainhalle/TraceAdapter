@@ -69,6 +69,12 @@ public abstract class Translator
   }
   
   /**
+   * Determines if the translator requires a propositional input formula
+   * @return
+   */
+  public abstract boolean requiresPropositional();
+  
+  /**
    * get an input signature for Monpoly
    * @param t
    * @return a String representing the signature for Monpoly tool

@@ -17,13 +17,15 @@
  */
 package ca.uqac.info.ltl;
 
-public class OperatorFalse extends Atom
+public class Constant extends Atom
 {
-	static final String SYMBOL = "\u22A5";
-
-	public OperatorFalse()
+	public Constant()
 	{
 		super();
-		m_symbol = SYMBOL;
+	}
+	
+	public Constant(String s)
+	{
+		super(s);
 	}
 }

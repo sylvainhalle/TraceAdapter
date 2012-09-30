@@ -54,6 +54,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import ca.uqac.info.ltl.ConstantConverter;
 import ca.uqac.info.ltl.Operator;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.conversion.*;
@@ -75,9 +76,10 @@ public class IHM_TraceEvent extends JFrame {
 								    lblTitre1, lblTitre2,lblTitre3 ,
 								    lblTitreLTL, lblTitreTranslate;
 	private JButton     bClick, btnClear, btnClearLTL,
-								    btnConvertir, btnSave, btnSaveLTL ;
+					    btnConvertir, btnSave, btnSaveLTL, 
+					    btnOR, btnAND, btnNO, btnIMPL, btnForAll,btnExists;
 	
-	@SuppressWarnings("rawtypes")
+
 	private JComboBox   comboBox;
 	private JMenuBar     menuBar;
 	private JMenuItem    itemAbout , itemQuit;
@@ -168,7 +170,7 @@ public class IHM_TraceEvent extends JFrame {
 		
 		
 	}
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+
 	private void initComponents() {
 		// Trace translator
 		lblParametres = new javax.swing.JLabel();
@@ -203,7 +205,9 @@ public class IHM_TraceEvent extends JFrame {
 		menuHelp = new JMenu();
 		itemAbout = new JMenuItem();
 		separator = new JSeparator();
-
+		btnOR = new JButton() ; btnAND = new JButton(); 
+		btnNO = new JButton(); btnIMPL = new JButton();
+		btnForAll =new JButton(); btnExists = new JButton();
 		// Trace Generator
 		lblTitreGen = new JLabel();
 		lblNbTraces = new JLabel();
@@ -273,7 +277,7 @@ public class IHM_TraceEvent extends JFrame {
 
 	        lblTitre2.setText("3.  Select output format");
 
-	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "XML", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","PML","MAUDE"  }));
+	        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "BeepBeep", "SQL", "SMV", "MONPOLY", "XES", "MOP", "JSON","SPIN","MAUDE"  }));
 	        comboBox.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                comboBoxActionPerformed(evt);
@@ -337,99 +341,165 @@ public class IHM_TraceEvent extends JFrame {
 	        lblTitreTranslate.setFont(new java.awt.Font("Arial Black", 0, 14)); 
 	        lblTitreTranslate.setForeground(new java.awt.Color(0, 51, 102));
 	        lblTitreTranslate.setText("Log  translated");
+	        
+	        btnOR.setText("∨");  btnAND.setText("∧");  
+	        btnIMPL.setText("→");  btnNO.setText("¬");   
+	        btnForAll.setText("∀"); btnExists.setText("∃");
+	        
+			btnOR.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnSymboleActionPerformed(e);
+				}
+			});
+			btnAND.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnSymboleActionPerformed(e);
+				}
+			});
+			btnNO.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnSymboleActionPerformed(e);
+				}
+			});
+			btnIMPL.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnSymboleActionPerformed(e);
+				}
+			});
+			btnForAll.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnSymboleActionPerformed(e);
+				}
+			});
+			btnExists.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					btnSymboleActionPerformed(e);
+				}
+			});
 
-	        javax.swing.GroupLayout panTranslatorLayout = new javax.swing.GroupLayout(panTranslator);
-	        panTranslator.setLayout(panTranslatorLayout);
-	        panTranslatorLayout.setHorizontalGroup(
-	            panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addComponent(separator)
-	            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                .addGap(10, 10, 10)
-	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+			 javax.swing.GroupLayout panTranslatorLayout = new javax.swing.GroupLayout(panTranslator);
+	            panTranslator.setLayout(panTranslatorLayout);
+	            panTranslatorLayout.setHorizontalGroup(
+	                panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                .addComponent(separator)
+	                .addGroup(panTranslatorLayout.createSequentialGroup()
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                        .addGroup(panTranslatorLayout.createSequentialGroup()
-	                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-	                                .addComponent(lblTitre2)
+	                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                                .addGroup(panTranslatorLayout.createSequentialGroup()
-	                                    .addComponent(lblTitre3)
-	                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                    .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                            .addComponent(spTranslate))
+	                                    .addGap(10, 10, 10)
+	                                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                                                .addComponent(lblTitre2)
+	                                                .addGroup(panTranslatorLayout.createSequentialGroup()
+	                                                    .addComponent(lblTitre3)
+	                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                                    .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                                                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                                .addComponent(lblTitreTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                            .addComponent(spTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                                        .addComponent(lblTitre1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                                            .addComponent(bClick)
+	                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                            .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                                        .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                                            .addGap(184, 184, 184)
+	                                            .addComponent(LabTitre))
+	                                        .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                        .addComponent(lblInputLTL)))
+	                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
+	                                    .addContainerGap()
+	                                    .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                            .addGap(18, 18, 18)
+	                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
 	                        .addGroup(panTranslatorLayout.createSequentialGroup()
-	                            .addGap(136, 136, 136)
-	                            .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)))
-	                    .addComponent(lblTitre1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addGap(184, 184, 184)
-	                        .addComponent(LabTitre))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addContainerGap()
+	                            .addComponent(btnAND)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnOR)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnNO)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnIMPL)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnForAll)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnExists)
+	                            ))
+	                    .addContainerGap())
+	            );
+	            panTranslatorLayout.setVerticalGroup(
+	                panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                .addGroup(panTranslatorLayout.createSequentialGroup()
+	                    .addContainerGap()
+	                    .addComponent(LabTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addComponent(lblTitre1)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 	                        .addComponent(bClick)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                        .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                    .addGap(32, 32, 32)
 	                    .addComponent(lblInputLTL)
-	                    .addComponent(lblTitreTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                    .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addContainerGap())
-	        );
-	        panTranslatorLayout.setVerticalGroup(
-	            panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(panTranslatorLayout.createSequentialGroup()
-	                .addContainerGap()
-	                .addComponent(LabTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(lblTitre1)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(bClick)
-	                    .addComponent(textFiel_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addGap(32, 32, 32)
-	                .addComponent(lblInputLTL)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addGap(27, 27, 27)
-	                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addComponent(lblTitreTranslate)
-	                        .addGap(18, 18, 18)
-	                        .addComponent(lblTitre2)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGap(21, 21, 21)
-	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addComponent(lblTitre3)
-	                            .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
-	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
-	                        .addGap(0, 15, Short.MAX_VALUE)
-	                        .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addComponent(spTranslate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
-	                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-	                .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addGroup(panTranslatorLayout.createSequentialGroup()
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                        .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-	                .addContainerGap(36, Short.MAX_VALUE))
-	        ); 
+	                    .addGap(15, 15, 15)
+	                    .addComponent(textFiel_path_LTL, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+	                        .addComponent(btnAND)
+	                        .addComponent(btnOR)
+	                        .addComponent(btnNO)
+	                        .addComponent(btnIMPL)
+	                        .addComponent(btnForAll)
+	                        .addComponent(btnExists)
+	                        )
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addComponent(lblTitreTranslate)
+	                            .addGap(18, 18, 18)
+	                            .addComponent(lblTitre2)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addGap(21, 21, 21)
+	                            .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                                .addComponent(lblTitre3)
+	                                .addComponent(btnConvertir, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                            .addGap(0, 0, Short.MAX_VALUE))
+	                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
+	                            .addGap(0, 91, Short.MAX_VALUE)
+	                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                        .addComponent(spTranslate))
+	                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                    .addGroup(panTranslatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                        .addGroup(panTranslatorLayout.createSequentialGroup()
+	                            .addComponent(lblTitreLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(spTranslateLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panTranslatorLayout.createSequentialGroup()
+	                            .addComponent(btnSaveLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                            .addComponent(btnClearLTL, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addGap(8, 8, 8)))
+	                    .addGap(82, 82, 82))
+	            );
 		tabbedPane.addTab("Trace Translator", panTranslator);
 
 		panGenerator.setBackground(new java.awt.Color(255, 255, 204));
@@ -1049,13 +1119,14 @@ public class IHM_TraceEvent extends JFrame {
 		if (evt.getSource() == btnConvertir) 
 		{
 			int nbfiles = myFile.list().length;
-			if (output_format.equalsIgnoreCase("monpoly"))
+			if ((output_format.equalsIgnoreCase("monpoly"))||
+					(output_format.equalsIgnoreCase("beepbeep")))
 			{
 				btnSaveLTL.setEnabled(true);
 			}
-			if ((!textFiel_path_LTL.getText().isEmpty())) {
-				this.translateLTL();
-			}
+//			IF ((!TEXTFIEL_PATH_LTL.GETTEXT().ISEMPTY())) {
+//				THIS.TRANSLATELTL();
+//			}
 			if( nbfiles < 100)
 			{
 				this.translate();
@@ -1136,6 +1207,7 @@ public class IHM_TraceEvent extends JFrame {
 		String [] listNameFile = new String [listFile.length] ;
 		outTrace = new Vector<String>(); OutSigMonp = new Vector<String>();
 		String ficOutTrace = ""  ;numberFiles = new Vector<Integer>();
+		String strLTL, str_out = null;;
 		
 		for(int j =0 ; j< listFile.length ; j++)
 		{
@@ -1143,8 +1215,7 @@ public class IHM_TraceEvent extends JFrame {
 			String strFile = path_file +"/"+fic.getName();
 			listNameFile[j] = strFile;			
 		}
-		
-		int cpt = 0;
+	
 		for (int i = 0; i < listNameFile.length; i++) 
 		{
 			
@@ -1178,24 +1249,50 @@ public class IHM_TraceEvent extends JFrame {
 				numberFiles.add( getNumberFile(nm));
 				// Translate the trace into the output format
 				EventTrace trace = reader.parseEventTrace(in_f);
-				// Check if translator is Maude and send property
-				if (trans instanceof MaudeTranslator) {
-					trans = new MaudeTranslator(trace);
-					Operator o;
+			    strLTL = textFiel_path_LTL.getText();
+				
+				Operator o = null ;
+				String out_trace = "";
+				
+				try {
+					o = Operator.parseFromString(strLTL);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				// On vérifie si cette formule est du premier ordre (i.e. contient quantificateurs)
+				if (FirstOrderDetector.isFirstOrder(o) && trans.requiresPropositional())
+				{
+					// Si oui et qu'on veut l'envoyer dans un outil qui ne supporte
+					// pas les quantificateurs, on doit d'abord la réduire au cas
+					// propositionnel...
+					Translator bt = new PropositionalTranslator();
+					bt.setTrace(trace);
+					bt.setFormula(o);
+					str_out = bt.translateFormula();
+					System.out.println("Après propositinal: " + str_out);
 					try {
-						o = Operator.parseFromString(textFiel_path_LTL.getText());
-						//((MaudeTranslator) trans).getParamFormula(textFiel_path_LTL.getText());
-						trans.setFormula(o);
-						txtAreaLTL.setText("");
-						
-					} catch (ParseException e) {
+						o = Operator.parseFromString(str_out);
+					}
+					catch (ParseException e)
+					{
 						e.printStackTrace();
 					}
-					
-				}
+					// On convertit aussi les �galit�s entre des constantes produites par
+					// le translator en	bool�ens vrai ou faux (puisqu'on le sait d�j�)
+					if (output_format.equalsIgnoreCase("Maude")||output_format.equalsIgnoreCase("spin"))
+					{
+						ConstantConverter cc = new ConstantConverter();
+						o.accept(cc);
+						o = cc.getFormula();
+					}
+				} 
+				trans.setFormula(o);
 				trans.setTrace(trace);
-				String out_trace = trans.translateTrace();
+				out_trace = trans.translateTrace();
+				str_out = trans.translateFormula();
+				System.out.println("Après traduction: " + str_out);
 				outTrace.add(out_trace);
+		
 				//Add signature if the output is monpoly
 				if(output_format.equalsIgnoreCase("monpoly"))
 				{
@@ -1206,10 +1303,12 @@ public class IHM_TraceEvent extends JFrame {
 					out_trace = out_trace.concat(out_sig);
 				}
 				
+				
 				ficOutTrace = ficOutTrace.concat(out_trace).concat("\n");
 			}
-			cpt++;
 		}
+		if (str_out != null)
+			txtAreaLTL.setText(str_out);
 		// display the trace
 		if (status == JFileChooser.APPROVE_OPTION) {
 		
@@ -1233,18 +1332,31 @@ public class IHM_TraceEvent extends JFrame {
 	 * Can translate the input file in the choice of output file
 	 * and save  directly to the files when they're over 1000 files 
 	 */
+	
 	private void translateAndSave ()
 	{
 		//add filter extension file
 		FileFilter filter ;
 		String ext ="";
-		Boolean bMonopoly = (!output_format.equalsIgnoreCase("monpoly"));
-		String strLTL = "\n".concat(txtAreaLTL.getText());
+		Boolean bMonopoly = (!output_format.equalsIgnoreCase("monpoly")
+							&& !output_format.equalsIgnoreCase("maude")
+							&& !output_format.equalsIgnoreCase("beepbeep"));
+		String strLTL = null; 
 		// save the file MonPoly with extension .log
 		if(output_format.equalsIgnoreCase("monpoly"))
 		{
 			ext ="Save file (.log)";
 			filter = new FileNameExtensionFilter(ext, "log");
+		}
+		else if(output_format.equalsIgnoreCase("Spin"))
+		{
+			ext ="Save file (.pml)";
+			filter = new FileNameExtensionFilter(ext, "pml");
+		}else  if(output_format.equalsIgnoreCase("beepbeep"))
+		{
+			ext = "Save File (.xml )";
+			filter = new FileNameExtensionFilter(ext, "xml");
+			output_format = "xml";
 		}else{
 			ext = "Save file (."+output_format+" )";
 			filter = new FileNameExtensionFilter(ext, output_format);
@@ -1257,6 +1369,7 @@ public class IHM_TraceEvent extends JFrame {
 		int res = fc.showSaveDialog(this);
 		String repertoire, namefic, chaine="";
 		
+		
 		if(res == JFileChooser.APPROVE_OPTION)
 		{
 			String nameFile;
@@ -1264,7 +1377,15 @@ public class IHM_TraceEvent extends JFrame {
 			if(output_format.equalsIgnoreCase("monpoly"))
 			{
 				nameFile = fc.getSelectedFile().getAbsolutePath()+".log";
-			}else{
+			}
+			else if(output_format.equalsIgnoreCase("Spin"))
+			{
+				nameFile = fc.getSelectedFile().getAbsolutePath()+".pml";
+			} else if(output_format.equalsIgnoreCase("beepbeep"))
+			{
+				nameFile = fc.getSelectedFile().getAbsolutePath()+".xml";
+			}
+			else{
 				nameFile = fc.getSelectedFile().getAbsolutePath()+"."+output_format;
 			}
 			File file = new File(nameFile);
@@ -1297,14 +1418,21 @@ public class IHM_TraceEvent extends JFrame {
 							try {
 								FileOutputStream fos = new FileOutputStream(
 										new File(str));
+								
 								fos.write(resultat.get(0).getBytes());
 								if(bMonopoly)
 								{
+								 strLTL = "\n".concat(resultat.get(1)); ;
 							     fos.write(strLTL.getBytes());
-								}
+								} 
 								fos.close();
+								if(output_format.equalsIgnoreCase("monpoly") ||output_format.equalsIgnoreCase("beepbeep"))
+								{
+									strLTL = resultat.get(1);
+								}
 								if(output_format.equalsIgnoreCase("monpoly"))
 								{
+									
 									String nameSig = this.buildFile(namefic, number); 
 									String [] listString =  nameSig.split("\\.");
 									String strSig = repertoire.concat(listString[0]+".sig");
@@ -1312,7 +1440,7 @@ public class IHM_TraceEvent extends JFrame {
 									try {
 
 										fos = new FileOutputStream(new File(strSig));
-										fos.write(resultat.get(1).getBytes());
+										fos.write(resultat.get(2).getBytes());
 										fos.close();
 
 									} catch (Exception e) {
@@ -1324,7 +1452,9 @@ public class IHM_TraceEvent extends JFrame {
 
 							}
 						}						
-					}					
+					}	
+					if(strLTL !=null)
+						txtAreaLTL.setText(strLTL);
 					txtArea.setText(chaine);
 				}
 			}
@@ -1333,6 +1463,7 @@ public class IHM_TraceEvent extends JFrame {
 		}
 		
 	}
+	
 	/**
 	 * Allow to recover the number of input file
 	 * @param nameFile
@@ -1352,10 +1483,12 @@ public class IHM_TraceEvent extends JFrame {
 	
 		return res ;
 	}
+
 	private Vector<String> getTraceEvent( String path)
 	{
-		String out_trace = null;
+		String out_trace = null, str_out;
 		Vector<String> res = new Vector<String>();
+		
 
 		//String input_format = getExtension(path_file);
 		String input_format = getExtension(path);
@@ -1375,6 +1508,10 @@ public class IHM_TraceEvent extends JFrame {
 			}
 
 			// Determine which translator to initialize
+			if(output_format.equalsIgnoreCase("xml"))
+			{
+				output_format ="beepbeep";
+			}
 			Translator trans = initializeTranslator(output_format);
 			if (trans == null) {
 				System.err.println("ERROR: Unrecognized output format");
@@ -1384,28 +1521,53 @@ public class IHM_TraceEvent extends JFrame {
 
 			// Translate the trace into the output format
 			EventTrace trace = reader.parseEventTrace(in_f);
-			// Check if translator is Maude and send property
-			if (trans instanceof MaudeTranslator) {
-				trans = new MaudeTranslator(trace);
-				Operator o;
+			Operator o = null ;
+			String strLTL = textFiel_path_LTL.getText();
+			
+			try {
+				o = Operator.parseFromString(strLTL);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			// On vÃ©rifie si cette formule est du premier ordre (i.e. contient quantificateurs)
+			if (FirstOrderDetector.isFirstOrder(o) && trans.requiresPropositional())
+			{
+				// Si oui et qu'on veut l'envoyer dans un outil qui ne supporte
+				// pas les quantificateurs, on doit d'abord la rÃ©duire au cas
+				// propositionnel...
+				Translator bt = new PropositionalTranslator();
+				bt.setTrace(trace);
+				bt.setFormula(o);
+				str_out = bt.translateFormula();
 				try {
-					o = Operator.parseFromString(textFiel_path_LTL.getText());
-					trans.setFormula(o);
-					txtAreaLTL.setText("");
-					
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+					o = Operator.parseFromString(str_out);
+				}
+				catch (ParseException e)
+				{
 					e.printStackTrace();
+				}
+				// On convertit aussi les �galit�s entre des constantes produites par
+				// le translator en	bool�ens vrai ou faux (puisqu'on le sait d�j�)
+				if(output_format.equalsIgnoreCase("Maude")|| output_format.equalsIgnoreCase("Spin"))
+				{
+					ConstantConverter cc = new ConstantConverter();
+					o.accept(cc);
+					o = cc.getFormula();
 				}
 				
 			}
-			out_trace = trans.translateTrace(trace);
-			res.add(out_trace);
+			trans.setFormula(o);
+			trans.setTrace(trace);
+			out_trace = trans.translateTrace();
+			str_out = trans.translateFormula();
+			res.add(0,out_trace);
+			if(! output_format.equalsIgnoreCase("maude"))
+			res.add(1, str_out);
 			//Add signature if the output is monpoly
 			if(output_format.equalsIgnoreCase("monpoly"))
 			{	
 				String strTemp = trans.getSignature(trace);
-				res.add(strTemp);
+				res.add(2,strTemp);
 			}
 			
 		}
@@ -1414,39 +1576,7 @@ public class IHM_TraceEvent extends JFrame {
 	/**
 	 * Can translate the input LTL property to the choice of output
 	 */
-	private void translateLTL() 
-	{
-		String strLTL = textFiel_path_LTL.getText();
-		String str_out;
-		// Determine which translator to initialize
-		Translator tr = initializeTranslator(output_format);
-		if(!(tr instanceof MaudeTranslator))
-		{
-			if (tr != null) {
-				try {
-					Operator o = Operator.parseFromString(strLTL);
-	                
-					
-					str_out = tr.translateFormula(o);
-
-					if (str_out != null) {
-						txtAreaLTL.setText(str_out);
-					} else {
-						txtAreaLTL
-								.setText("This method does not implemented yet, come back later !!!");
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		if(output_format.equalsIgnoreCase("pml"))
-		{
-			btnSaveLTL.setEnabled(false);
-		}
-		
-	}
+	
 	/**
 	 * Allow to generate random traces more 1000
 	 */
@@ -1463,13 +1593,15 @@ public class IHM_TraceEvent extends JFrame {
 			tf = tf + 2;
 			k++;
 		}
+		CommandLine c_line = null;
 		// Determine which translator to initialize
 		t_gen = initializeGenerator(selectedMenu);
+		t_gen.initialize(c_line);
 
 		Options options = t_gen.getCommandLineOptions();
 		options.addOption("h", "help", false, "Show help");
 		CommandLineParser parser = new PosixParser();
-		CommandLine c_line = null;
+		
 		try {
 			// parse the command line arguments
 			c_line = parser.parse(options, args);
@@ -1561,9 +1693,6 @@ public class IHM_TraceEvent extends JFrame {
 			k++;
 		}
 		String chaine ="";
-		
-		
-
 		Options options = t_gen.getCommandLineOptions();
 		options.addOption("h", "help", false, "Show help");
 		CommandLineParser parser = new PosixParser();
@@ -1587,6 +1716,7 @@ public class IHM_TraceEvent extends JFrame {
 		int cpt = Integer.parseInt(tfNbTraces.getText());
 		// Determine which translator to initialize
 		t_gen = initializeGenerator(selectedMenu);
+		t_gen.initialize(c_line);
 		for(int i=0 ; i< cpt ; i++)
 		{
 			EventTrace trace = t_gen.generate();
@@ -1699,6 +1829,18 @@ public class IHM_TraceEvent extends JFrame {
 		{
 			strExt = "Save File (.log )";
 			filter = new FileNameExtensionFilter(strExt, "log");
+		
+		}
+		else if(output_format.equalsIgnoreCase("Spin"))
+		{
+			strExt = "Save File (.pml )";
+			filter = new FileNameExtensionFilter(strExt, "pml");
+		}
+			else if(output_format.equalsIgnoreCase("beepbeep"))
+		{
+			strExt = "Save File (.xml )";
+			filter = new FileNameExtensionFilter(strExt, "xml");
+			output_format = "xml";
 		}else
 		 {
 			strExt = "Save File (."+output_format+" )";
@@ -1720,6 +1862,8 @@ public class IHM_TraceEvent extends JFrame {
 				String nameFile;
 				if (output_format.equalsIgnoreCase("monpoly")) {
 					nameFile = fileSave.getSelectedFile().getPath() + ".log";
+				} else if (output_format.equalsIgnoreCase("spin")) {
+					nameFile = fileSave.getSelectedFile().getPath() + ".pml";
 				} else {
 					nameFile = fileSave.getSelectedFile().getPath() + "."
 							+ output_format;
@@ -1738,7 +1882,7 @@ public class IHM_TraceEvent extends JFrame {
 
 							this.saveTrace(file, type);
 							txtArea.setText("");
-							if ((!output_format.equalsIgnoreCase("monpoly"))
+							if ((!output_format.equalsIgnoreCase("monpoly"))&&(!output_format.equalsIgnoreCase("xml"))
 									&&(!output_format.equalsIgnoreCase("pml"))){
 								txtAreaLTL.setText("");
 							}
@@ -1797,14 +1941,10 @@ public class IHM_TraceEvent extends JFrame {
 					fo.close();
 					txtAreaLTL.setText("");
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 			}
-		
-		
-
 	}
 /**
  * Traces recorded in a directory
@@ -1816,7 +1956,8 @@ public class IHM_TraceEvent extends JFrame {
 				.replace("\\", "/"), true);
 		
 		Boolean bMonopoly = (type.equalsIgnoreCase("Translator") &&
-							(!output_format.equalsIgnoreCase("monpoly")));
+							(!output_format.equalsIgnoreCase("monpoly"))&&
+							(!output_format.equalsIgnoreCase("xml")) && (!output_format.equalsIgnoreCase("maude")));
 		String strLTL = "\n".concat(txtAreaLTL.getText());
 		
 		Vector<String> tempTrace = new Vector<String>();
@@ -1991,12 +2132,12 @@ public class IHM_TraceEvent extends JFrame {
 			trans = new SmvTranslator();
 		} else if (output_format.compareToIgnoreCase("sql") == 0) {
 			trans = new SqlTranslator();
-		} else if (output_format.compareToIgnoreCase("pml") == 0) {
+		} else if (output_format.compareToIgnoreCase("Spin") == 0) {
 			trans = new PromelaTranslator();
 		} else if (output_format.compareToIgnoreCase("json") == 0) {
 			trans = new JsonTranslator();
-		} else if (output_format.compareToIgnoreCase("xml") == 0) {
-			trans = new XmlTranslator();
+		} else if (output_format.compareToIgnoreCase("BeepBeep") == 0) {
+			trans = new BeepBeepTranslator();//XmlTranslator();
 		} else if (output_format.compareToIgnoreCase("monpoly") == 0) {
 			trans = new MonpolyTranslator();
 		} else if (output_format.compareToIgnoreCase("xes") == 0) {
@@ -2244,7 +2385,6 @@ public class IHM_TraceEvent extends JFrame {
 				try {
 					listThreads.get(j).join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -2258,7 +2398,7 @@ public class IHM_TraceEvent extends JFrame {
 				listData.add(j,result);
 			}
 			//Initialize vector content set of event number
-			Vector<Integer> ve  = this.eventNumbers(listTraces) ;
+			Vector<Integer> ve  = this.eventNumbers(listDirectory) ;
 
 			if (!listData.isEmpty()) {
 				int nbCol = listThreads.size() + 1;
@@ -2267,8 +2407,7 @@ public class IHM_TraceEvent extends JFrame {
 				for (int x = 0; x < nbCol; x++) {
 					if (x != 0) {
 						data = (ArrayList<int[]>) listData.get(x - 1);
-					}else
-					{
+					}else{
 						data = (ArrayList<int[]>) listData.get(x);
 					}
 					
@@ -2343,6 +2482,7 @@ public class IHM_TraceEvent extends JFrame {
 			if(tool.equalsIgnoreCase("Beepbeep"))
 			{
 				tool = "XML" ;
+				
 			}else if(tool.equalsIgnoreCase("NuSMV"))
 			{
 				tool = "smv" ;
@@ -2415,7 +2555,9 @@ public class IHM_TraceEvent extends JFrame {
 		if ((strTool.compareToIgnoreCase("XML") == 0)
 				&& (checkBeepBeep.isSelected())) {
 			ex = new Beepbeep();
-		} else if ((strTool.compareToIgnoreCase("Maude") == 0)
+	} 
+		
+	else if ((strTool.compareToIgnoreCase("Maude") == 0)
 				&& (checkMaude.isSelected())) {
 			ex = new Maude();
 		} else if ((strTool.compareToIgnoreCase("MYSQL") == 0)
@@ -2562,9 +2704,9 @@ public class IHM_TraceEvent extends JFrame {
 			 array.add(triList(listFile));
 			 
 		} else if ((ext.equalsIgnoreCase("XML"))||(ext.equalsIgnoreCase("Saxon"))
-				||(ext.equalsIgnoreCase("Spin"))) 
+			||(ext.equalsIgnoreCase("Spin"))) 
 		{
-			 
+		 			 
 			for (int j = 0; j < listFichiers.length; j++) {
 				File fic = new File(listFichiers[j]);
 				String strFile = chemin + "/" + fic.getName();
@@ -2663,7 +2805,7 @@ public class IHM_TraceEvent extends JFrame {
 	 * @param list
 	 * @return
 	 */
-	private Vector<Integer> eventNumbers( Vector<String> list )
+	/*private Vector<Integer> eventNumbers( Vector<String> list )
 	{
 		int res = 0 ;
 		Vector<Integer> tailles = new Vector<Integer>();
@@ -2694,6 +2836,77 @@ public class IHM_TraceEvent extends JFrame {
 		
 		return tailles;
 		
+	}*/
+	private Vector<Integer> eventNumbers( File [] folders )
+    {
+        int res = 0 ;
+        Vector<Integer> tailles = new Vector<Integer>();
+        Vector<File> resultat = new Vector<File>();
+        String strTool ="", chemin = null ;
+        //recover witness the folder
+        for (File fc : folders) {
+
+            chemin = this.getDirectory(fc.getAbsolutePath().replace(
+                    "\\", "/"), false);
+            String[] tab = chemin.split("/");
+            int taille = tab.length;
+            strTool = tab[taille - 1].split("_")[1];
+
+            if (strTool.equalsIgnoreCase("Saxon")) {
+               
+                System.out.println(("util" +strTool));
+                break;
+            }
+        }
+        File [] list = new File(chemin).listFiles();
+       
+        for (int j = 0; j < list.length; j++) {
+            for (int i = 0; i < list.length; i++) {
+               
+                String str = list[i].getName();
+               
+                int k = getNumberFile(str);
+                if (j == k) {
+                    resultat.add(list[i]);
+                    break;
+                }
+            }
+        }
+       
+        // Determine which trace reader to initialize
+        TraceReader reader = initializeReader("xml");
+        for (File in_f : resultat) {
+            // Translate the trace into the output format
+            EventTrace trace = reader.parseEventTrace(in_f);
+            res = trace.size();
+            System.out.println(trace.capacity());
+            tailles.add(res);
+        }
+       
+        return tailles;
+       
+    }
+	private void btnSymboleActionPerformed(java.awt.event.ActionEvent evt) {
+		//retrieve the string in textField
+		String chaine = textFiel_path_LTL.getText();
+		
+		if(evt.getSource() == btnAND )
+		{
+			textFiel_path_LTL.setText(chaine.concat("∧"));
+		}else if (evt.getSource() == btnOR )
+		{
+			textFiel_path_LTL.setText(chaine.concat("∨"));
+		}else if(evt.getSource() == btnNO )
+		{
+			textFiel_path_LTL.setText(chaine.concat("¬"));
+		}else if (evt.getSource() == btnIMPL ){
+			textFiel_path_LTL.setText(chaine.concat("→"));
+		}else if(evt.getSource() == btnForAll )
+		{
+			textFiel_path_LTL.setText(chaine.concat("∀"));
+		}else if (evt.getSource() == btnExists ){
+			textFiel_path_LTL.setText(chaine.concat("∃"));
+		}
 	}
     /**
      * @param args the command line arguments

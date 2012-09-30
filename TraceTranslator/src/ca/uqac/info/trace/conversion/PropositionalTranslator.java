@@ -242,22 +242,28 @@ public class PropositionalTranslator extends Translator
 		return domains;
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args)
 	{
 		Operator o = null;
 		try
 		{
-			o = Operator.parseFromString("F ([i /a] (F ([j /b] (i=j))))");
+			//o = Operator.parseFromString("F ([i /a] (F ([j /b] (i=j))))");
+			o = Operator.parseFromString("G (∀i ∈ /p1 : (F (∃j ∈ /p2 : (i=j))))");
 		}
 		catch (Operator.ParseException e)
 		{
 			System.out.println("Parse exception");
 		}
-		EventTrace t = new XmlTraceReader().parseEventTrace(new File("traces/trace1.xml"));
+		EventTrace t = new XmlTraceReader().parseEventTrace(new File("traces/trace2.xml"));
 		Translator bt = new PropositionalTranslator();
-		bt.setTrace(t);
+		String c = bt.translateTrace(t);
 		String f = bt.translateFormula(o);
 		System.out.println(f);
 	}
 
+	@Override
+	public boolean requiresPropositional() {
+		return false;
+	}
 }
