@@ -270,23 +270,30 @@ public class MaudeTranslator extends Translator {
 	
 	public static void main (String [] args)
 	{
+		// File to read and property to verify
+		String filename = "traces/traces_0.txt";
+		String formula = "F (∃i ∈ /p0 : (i=0))";
 		
-		MaudeTranslator md = new MaudeTranslator() ;
-		File f = new File("traces/traces_0.txt");
+		// Read trace
+		File f = new File(filename);
 		XmlTraceReader reader = new XmlTraceReader();
 		EventTrace trace = reader.parseEventTrace(f);
-		String sop = "F (∃i ∈ /p0 : (i=0))";
+		
+		// Parse property
 		Operator o = null;
 		try {
-			o = Operator.parseFromString(sop);
+			o = Operator.parseFromString(formula);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
+		// Convert to propositional LTL
 		PropositionalTranslator pt = new PropositionalTranslator();
 		pt.setFormula(o);
 		pt.setTrace(trace);
 		String s = pt.translateFormula();
-		//System.out.println(s);
+		
+		// Reparse and convert to atomic LTL
 		try
 		{
 			o = Operator.parseFromString(s);
@@ -298,9 +305,13 @@ public class MaudeTranslator extends Translator {
 		ConstantConverter cc = new ConstantConverter();
 		o.accept(cc);
 		o = cc.getFormula();
-		System.out.println(o);
+		
+		// Pass trace and property to Maude translator
+		MaudeTranslator md = new MaudeTranslator() ;
 		md.setTrace(trace);
 		md.setFormula(o);
+		
+		// Output Maude file
 		System.out.println(md.translateTrace(trace));
 		
 	}

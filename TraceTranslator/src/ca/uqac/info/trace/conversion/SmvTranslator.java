@@ -20,6 +20,8 @@ package ca.uqac.info.trace.conversion;
 import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.util.*;
+
+import java.io.File;
 import java.util.*;
 
 /**
@@ -323,5 +325,50 @@ public class SmvTranslator extends Translator
 	@Override
 	public boolean requiresPropositional() {
 		return true;
+	}
+	
+	public static void main(String[] args)
+	{
+		// Definition of trace and property
+		String filename = "traces/traces_0.txt";
+		String formula = "F (∃i ∈ /p0 : (i=0))";
+		
+		// Read trace
+		File fic = new File(filename);
+		XmlTraceReader xtr = new XmlTraceReader();
+		EventTrace t = xtr.parseEventTrace(fic);
+		
+		// Parse property
+		Operator o = null;
+		try
+		{
+			o = Operator.parseFromString(formula);
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		
+		// Convert to propositional LTL and reparse
+		PropositionalTranslator pt = new PropositionalTranslator();
+		pt.setFormula(o);
+		pt.setTrace(t);
+		String s = pt.translateFormula();
+		try
+		{
+			o = Operator.parseFromString(s);
+		}
+		catch (Operator.ParseException e)
+		{
+			System.out.println("Parse exception");
+		}
+		
+		// Convert property and trace to a NuSMV file
+		Translator bt = new SmvTranslator();
+		bt.setFormula(o);
+		bt.setTrace(t);
+		System.out.println(bt.translateTrace());
+		String f = bt.translateFormula();
+		System.out.println(f);
 	}
 }

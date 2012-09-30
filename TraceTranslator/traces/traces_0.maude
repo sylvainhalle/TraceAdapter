@@ -1,0 +1,13 @@
+in ltl.maude
+ 
+ 
+fmod MY-TRACE is
+
+ extending LTL .
+ops  e7 e9 e11 e0 e15 e1 e4 e13 e3 e10 e2 e14 e12 e8 e6 e5  : -> Atom .
+
+ 
+ 
+endfm 
+ reduce e7 , e9 , e11 , e0 , e15 , e1 , e4 , e13 , e3 , e10 , e2 , e14 , e12 , e8 , e6 , e5    |= <> (((((e3 \/ e12) /\ (false)) \/ ((e13 \/ e6 \/ e5) /\ (false))) \/ ((e0 \/ e15 \/ e11 \/ e9) /\ (false))) \/ ((e2 \/ e5) /\ (false))).
+ quit

@@ -1,0 +1,5 @@
+#! /usr/local/bin/babeltrace
+
+$1 -> B
+B -> C
+$2 -> C
