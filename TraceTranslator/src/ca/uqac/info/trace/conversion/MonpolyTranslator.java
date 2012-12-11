@@ -31,6 +31,8 @@ import ca.uqac.info.util.Relation;
 public class MonpolyTranslator extends Translator
 {
   protected Random m_random = new Random();
+  protected final int m_leftBound = 0;
+  protected int m_rightBound = 1000;
 
   @Override
   public String translateTrace(EventTrace m_trace)
@@ -194,6 +196,9 @@ public class MonpolyTranslator extends Translator
    */
   public String translateFormula()
   {
+    // Since MFOTL operators are bounded, we set the upper bound of the
+    // interval to the length of the trace
+    m_rightBound = m_trace.size();
     StringBuffer out = new StringBuffer();
     MonpolyFormulaTranslator mft = new MonpolyFormulaTranslator();
     m_formula.accept(mft);
@@ -262,10 +267,8 @@ public class MonpolyTranslator extends Translator
     public void visit(OperatorF o)
     {
       StringBuffer op = m_pieces.pop();
-      int b = m_random.nextInt(10);
-      int a = m_random.nextInt(10);
       StringBuffer out = new StringBuffer("EVENTUALLY [")
-          .append(Math.min(a, b)).append(",").append(Math.max(a, b))
+          .append(m_leftBound).append(",").append(m_rightBound)
           .append("] ( ").append(op).append(" )");
       m_pieces.push(out);
     }
@@ -274,11 +277,8 @@ public class MonpolyTranslator extends Translator
     public void visit(OperatorX o)
     {
       StringBuffer op = m_pieces.pop();
-      int b = m_random.nextInt(10);
-      int a = m_random.nextInt(10);
-      StringBuffer out = new StringBuffer("NEXT [").append(Math.min(a, b))
-          .append(",").append(Math.max(a, b)).append("] (").append(op)
-          .append(")");
+      StringBuffer out = new StringBuffer("NEXT [0,1] ( ")
+        .append(op).append(" )");
       m_pieces.push(out);
     }
 
@@ -286,12 +286,9 @@ public class MonpolyTranslator extends Translator
     public void visit(OperatorG o)
     {
       StringBuffer op = m_pieces.pop();
-      int b = m_random.nextInt(10);
-      int a = m_random.nextInt(10);
-      StringBuffer out = new StringBuffer("ALWAYS [").append(Math.min(a, b))
-          .append(",").append(Math.max(a, b)).append("] (").append(op)
-          .append(")");
-
+      StringBuffer out = new StringBuffer("ALWAYS [")
+      .append(m_leftBound).append(",").append(m_rightBound)
+      .append("] ( ").append(op).append(" )");
       m_pieces.push(out);
 
     }
@@ -320,20 +317,17 @@ public class MonpolyTranslator extends Translator
       StringBuffer out = new StringBuffer("(").append(left).append(") <-> (")
           .append(right).append(")");
       m_pieces.push(out);
-
     }
 
     @Override
     public void visit(OperatorU o)
     {
-      StringBuffer op = m_pieces.pop();
-      int b = m_random.nextInt(10);
-      int a = m_random.nextInt(10);
-      StringBuffer out = new StringBuffer("Until[").append(a).append(",")
-          .append(b).append("] (").append(op).append(")");
-
+      StringBuffer right = m_pieces.pop();  // Pop right-hand side
+      StringBuffer left = m_pieces.pop();  // Pop left-hand side
+      StringBuffer out = new StringBuffer("(").append(left).append(" UNTIL [")
+      .append(m_leftBound).append(",").append(m_rightBound)
+      .append("] ( ").append(right).append(" )");
       m_pieces.push(out);
-
     }
 
     @Override
@@ -498,12 +492,8 @@ public class MonpolyTranslator extends Translator
     StringBuffer out = new StringBuffer();
     for (String p : params)
     {
-      String p_name = p;
-      out.append("\n\t").append(p_name).append(" (").append("string")
-          .append(") ");
-
+      out.append(p).append(" (string)\n");
     }
-    System.out.println(out.toString());
     return out;
 
   }
@@ -550,5 +540,7 @@ public class MonpolyTranslator extends Translator
       System.out.println(bt.translateTrace());
       String f = bt.translateFormula();
       System.out.println(f);
+      String sig = bt.getSignature(t);
+      System.out.println(sig);
   }
 }

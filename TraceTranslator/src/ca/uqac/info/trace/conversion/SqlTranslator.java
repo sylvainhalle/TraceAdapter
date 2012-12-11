@@ -284,8 +284,8 @@ public class SqlTranslator extends Translator
 	}
 
 	@Override
-	public String translateFormula() {
-		// TODO Auto-generated method stub
+	public String translateFormula()
+	{
 		return translateFormula(m_formula, 0);
 	}
 
