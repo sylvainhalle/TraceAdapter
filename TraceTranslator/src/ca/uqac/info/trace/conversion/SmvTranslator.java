@@ -262,17 +262,38 @@ public class SmvTranslator extends Translator
 			m_pieces.push(new StringBuffer(toSmvToken(o.getSymbol())));
 		}
 
+        @Override
+        public void visit(OperatorFalse o)
+        {
+            m_pieces.push(new StringBuffer("FALSE"));
+        }
+        
+        @Override
+        public void visit(OperatorTrue o)
+        {
+            m_pieces.push(new StringBuffer("TRUE"));
+        }
+        
 		@Override
-		public void visit(OperatorEquiv o) {
-			// TODO Auto-generated method stub
-
+		public void visit(OperatorEquiv o)
+		{
+          StringBuffer o_right = m_pieces.pop(); // Pop right-hand side
+          StringBuffer o_left = m_pieces.pop(); // Pop left-hand side
+          StringBuffer out = new StringBuffer().append("(").append(o_left)
+              .append(") <-> (").append(o_right).append(")");
+          m_pieces.push(out);
 		}
 
 		@Override
-		public void visit(OperatorU o) {
-			// TODO Auto-generated method stub
-
-		}
+		public void visit(OperatorU o)
+		{
+          StringBuffer o_right = m_pieces.pop(); // Pop right-hand side
+          StringBuffer o_left = m_pieces.pop(); // Pop left-hand side
+          StringBuffer out = new StringBuffer().append("(").append(o_left)
+              .append(") U (").append(o_right).append(")");
+          m_pieces.push(out);	
+        }
+		
 		@Override
 		public void visit(Exists o)
 		{
@@ -322,6 +343,12 @@ public class SmvTranslator extends Translator
 		return translateTrace();
 	}
 	
+    @Override
+    public boolean requiresFlat()
+    {
+      return true;
+    }
+	
 	@Override
 	public boolean requiresPropositional() {
 		return true;
@@ -336,7 +363,17 @@ public class SmvTranslator extends Translator
 		// Read trace
 		File fic = new File(filename);
 		XmlTraceReader xtr = new XmlTraceReader();
-		EventTrace t = xtr.parseEventTrace(fic);
+		EventTrace t = null;
+        try
+        {
+          t = xtr.parseEventTrace(new java.io.FileInputStream(fic));  
+        }
+        catch (java.io.FileNotFoundException ex)
+        {
+          ex.printStackTrace();
+          System.exit(1);
+        }
+        assert t != null;
 		
 		// Parse property
 		Operator o = null;
@@ -371,4 +408,34 @@ public class SmvTranslator extends Translator
 		String f = bt.translateFormula();
 		System.out.println(f);
 	}
+	
+	@Override
+	public boolean requiresAtomic()
+	{
+	  return false;
+	}
+
+  @Override
+  public String getSignature()
+  {
+    return "";
+  }
+
+  @Override
+  public String getTraceFile()
+  {
+    return m_outTrace + "\n" + m_outFormula;
+  }
+
+  @Override
+  public String getFormulaFile()
+  {
+    return "";
+  }
+
+  @Override
+  public String getSignatureFile()
+  {
+    return "";
+  }
 }

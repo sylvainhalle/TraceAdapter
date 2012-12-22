@@ -77,7 +77,9 @@ public class XPathAtom extends Operator
 	 */
 	public Set<String> getValues(Node n)
 	{
-		return getValues(n, 0, true);
+	  if (n.getNodeName().compareTo(m_parts[0]) == 0)
+		return getValues(n, 1, true);
+	  return new HashSet<String>();
 	}
 	
 	public Set<String> getValues(Node n, boolean trim_whitespace)
@@ -203,5 +205,15 @@ public class XPathAtom extends Operator
 	public int hashCode()
 	{
 		return m_parts[m_parts.length - 1].hashCode();
+	}
+	
+	/**
+	 * Gets the "flattened" name of the XPath atom --that is,
+	 * the last part of the path.
+	 * @return The flat name
+	 */
+	public String getFlatName()
+	{
+	  return m_parts[m_parts.length - 1];
 	}
 }

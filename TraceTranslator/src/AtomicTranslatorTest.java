@@ -43,7 +43,17 @@ public class AtomicTranslatorTest
 		{
 			System.exit(1);
 		}
-		EventTrace t = xtr.parseEventTrace(f);
+	    EventTrace t = null;
+	    try
+	    {
+	      t = xtr.parseEventTrace(new FileInputStream(f));  
+	    }
+	    catch (FileNotFoundException ex)
+	    {
+	      ex.printStackTrace();
+	      System.exit(1);
+	    }
+	    assert t != null;
 		AtomicTranslator at = new AtomicTranslator();
 		Vector<String> params = new Vector<String>();
 		params.add("p4"); //params.add("b");

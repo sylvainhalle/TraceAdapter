@@ -29,15 +29,15 @@ import java.util.Stack;
  */
 public class GenericOperatorVisitor implements OperatorVisitor
 {
-	
-	protected Stack<Operator> m_pieces;
-	
-	public GenericOperatorVisitor()
-	{
-		m_pieces = new Stack<Operator>();
-	}
 
-	@Override
+  protected Stack<Operator> m_pieces;
+
+  public GenericOperatorVisitor()
+  {
+    m_pieces = new Stack<Operator>();
+  }
+
+  @Override
   public void visit(OperatorAnd o)
   {
     Operator right = m_pieces.pop();
@@ -48,7 +48,7 @@ public class GenericOperatorVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorOr o)
   {
     Operator right = m_pieces.pop();
@@ -59,43 +59,43 @@ public class GenericOperatorVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorNot o)
   {
-		Operator op  = m_pieces.pop();
+    Operator op  = m_pieces.pop();
     OperatorNot out = new OperatorNot();
     out.setOperand(op);
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorF o)
   {
-		Operator op  = m_pieces.pop();
+    Operator op  = m_pieces.pop();
     OperatorF out = new OperatorF();
     out.setOperand(op);
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorX o)
   {
-		Operator op  = m_pieces.pop();
+    Operator op  = m_pieces.pop();
     OperatorX out = new OperatorX();
     out.setOperand(op);
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorG o)
   {
-		Operator op  = m_pieces.pop();
+    Operator op  = m_pieces.pop();
     OperatorG out = new OperatorG();
     out.setOperand(op);
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorEquals o)
   {
     Operator right = m_pieces.pop();
@@ -106,7 +106,7 @@ public class GenericOperatorVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorImplies o)
   {
     Operator right = m_pieces.pop();
@@ -117,7 +117,7 @@ public class GenericOperatorVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorEquiv o)
   {
     Operator right = m_pieces.pop();
@@ -128,7 +128,7 @@ public class GenericOperatorVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorU o)
   {
     Operator right = m_pieces.pop();
@@ -139,52 +139,64 @@ public class GenericOperatorVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(Exists o)
   {
-		Operator operand = m_pieces.pop();
-		Operator path = m_pieces.pop();
-		Operator variable = m_pieces.pop();
-		
-		// These two assertions must hold or the formula is incorrectly parsed!
-		assert variable instanceof Atom;
-		assert path instanceof XPathAtom;
-		
-		Exists out = new Exists();
-		out.setOperand(operand);
-		out.setVariable((Atom) variable);
-		out.setPath((XPathAtom) path);
+    Operator operand = m_pieces.pop();
+    Operator path = m_pieces.pop();
+    Operator variable = m_pieces.pop();
+
+    // These two assertions must hold or the formula is incorrectly parsed!
+    assert variable instanceof Atom;
+    assert path instanceof XPathAtom;
+
+    Exists out = new Exists();
+    out.setOperand(operand);
+    out.setVariable((Atom) variable);
+    out.setPath((XPathAtom) path);
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(ForAll o)
   {
-		Operator operand = m_pieces.pop();
-		Operator path = m_pieces.pop();
-		Operator variable = m_pieces.pop();
-		
-		// These two assertions must hold or the formula is incorrectly parsed!
-		assert variable instanceof Atom;
-		assert path instanceof XPathAtom;
-		
-		ForAll out = new ForAll();
-		out.setOperand(operand);
-		out.setVariable((Atom) variable);
-		out.setPath((XPathAtom) path);
+    Operator operand = m_pieces.pop();
+    Operator path = m_pieces.pop();
+    Operator variable = m_pieces.pop();
+
+    // These two assertions must hold or the formula is incorrectly parsed!
+    assert variable instanceof Atom;
+    assert path instanceof XPathAtom;
+
+    ForAll out = new ForAll();
+    out.setOperand(operand);
+    out.setVariable((Atom) variable);
+    out.setPath((XPathAtom) path);
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(Atom o)
   {
     m_pieces.push(o);
   }
 
-	@Override
+  @Override
+  public void visit(OperatorTrue o)
+  {
+    m_pieces.push(o);
+  }
+
+  @Override
+  public void visit(OperatorFalse o)
+  {
+    m_pieces.push(o);
+  }
+
+  @Override
   public void visit(XPathAtom xPathAtom)
   {
     m_pieces.push(xPathAtom);
   }
-	
+
 }

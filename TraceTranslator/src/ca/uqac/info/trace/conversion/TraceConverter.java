@@ -138,7 +138,17 @@ public class TraceConverter
     }
 
     // Translate the trace into the output format
-    EventTrace trace = reader.parseEventTrace(in_f);
+    EventTrace trace = null;
+    try
+    {
+      trace = reader.parseEventTrace(new FileInputStream(in_f));  
+    }
+    catch (FileNotFoundException ex)
+    {
+      ex.printStackTrace();
+      System.exit(1);
+    }
+    assert trace != null;
     String out_trace = trans.translateTrace(trace);
     if (output_filename.isEmpty())
       System.out.println(out_trace);
@@ -246,11 +256,11 @@ public class TraceConverter
     /*else if (output_format.compareToIgnoreCase("javamop") == 0)
     {
         trans = new JavaMopTranslator();
-    }*/
+    }
     else if (output_format.compareToIgnoreCase("json") == 0)
     {
         trans = new JsonTranslator();
-    }
+    }*/
     else if (output_format.compareToIgnoreCase("xml") == 0)
     {
         trans = new XmlTranslator();
@@ -279,10 +289,10 @@ public class TraceConverter
     {
         tf = new XmlTraceReader();
     }
-    else if (input_format.compareToIgnoreCase("sql") == 0)
+    /*else if (input_format.compareToIgnoreCase("sql") == 0)
     {
         tf = new SqlTraceReader();
-    }
+    }*/
     else if (input_format.compareToIgnoreCase("csv") == 0)
     {
         tf = new CsvTraceReader();

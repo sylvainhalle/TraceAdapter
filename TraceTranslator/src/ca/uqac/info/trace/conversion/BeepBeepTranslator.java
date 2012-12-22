@@ -166,7 +166,10 @@ public class BeepBeepTranslator extends Translator
     @Override
     public void visit(Atom o)
     {
-    	StringBuffer out = new StringBuffer();
+      StringBuffer out = new StringBuffer();
+      if (o instanceof Constant)
+    	out.append("{").append(o.toString()).append("}");
+      else
     	out.append(o.toString());
       m_pieces.push(out);
     }
@@ -207,7 +210,20 @@ public class BeepBeepTranslator extends Translator
 	@Override
   public void visit(XPathAtom p)
   {
-		m_pieces.push(new StringBuffer(p.toString(false)));
+		m_pieces.push(new StringBuffer(p.toString(true)));
+  }
+
+  @Override
+  public void visit(OperatorTrue o)
+  {
+    m_pieces.push(new StringBuffer("TRUE"));
+    
+  }
+
+  @Override
+  public void visit(OperatorFalse o)
+  {
+    m_pieces.push(new StringBuffer("FALSE"));
   }
 
   }
@@ -226,10 +242,26 @@ public class BeepBeepTranslator extends Translator
 			System.out.println("Parse exception");
 		}
 		BeepBeepTranslator bt = new BeepBeepTranslator();
-		EventTrace t = xtr.parseEventTrace(fic);
+	    EventTrace t = null;
+	    try
+	    {
+	      t = xtr.parseEventTrace(new java.io.FileInputStream(fic));  
+	    }
+	    catch (java.io.FileNotFoundException ex)
+	    {
+	      ex.printStackTrace();
+	      System.exit(1);
+	    }
+	    assert t != null;
 		String f = bt.translateFormula(o);
 		System.out.println(f);
 		System.out.println(bt.translateTrace(t));
+  }
+  
+  @Override
+  public boolean requiresFlat()
+  {
+    return false;
   }
   
 	@Override
@@ -237,4 +269,15 @@ public class BeepBeepTranslator extends Translator
 		return false;
 	}
 
+  @Override
+  public boolean requiresAtomic()
+  {
+    return false;
+  }
+  
+  @Override
+  public String getSignature()
+  {
+    return "";
+  }
 }

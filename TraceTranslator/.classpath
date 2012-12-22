@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="ca/uqac/info/trace/conversion/JavaMopTranslator.java" kind="src" path="src"/>
+	<classpathentry excluding="ca/uqac/info/trace/conversion/JavaMopTranslator.java|ca/uqac/info/trace/conversion/JsonTranslator.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/TraceGenerators/lib/LTKJava_with_dep_0_1_0-SNAPSHOT.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TraceLogic"/>
 	<classpathentry kind="lib" path="/TraceLogic/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>

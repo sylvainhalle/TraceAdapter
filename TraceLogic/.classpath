@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="ca/uqac/info/trace/XpathTraceReader.java" kind="src" path="src"/>
+	<classpathentry excluding="ca/uqac/info/trace/XpathTraceReader.java|ca/uqac/info/trace/SqlTraceReader.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2/commons-cli-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>

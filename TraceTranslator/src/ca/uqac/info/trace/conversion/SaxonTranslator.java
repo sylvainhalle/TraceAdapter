@@ -18,11 +18,55 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
+import ca.uqac.info.ltl.XPathAtom;
+
 /**
- * Exactly like BeepBeepTranslator; this class is just an alias
+ * The translation for BeepBeep's Saxon-based monitor if slightly different
+ * from BeepBeep's syntax. This translator only codes the differences with
+ * respect to the {@link BeepBeepTranslator}.
  * @author sylvain
  *
  */
 public class SaxonTranslator extends BeepBeepTranslator
 {
+  /**
+   * Saxon overrides BeepBeep's translation by adding a root element
+   * to the trace.
+   */
+  @Override
+  public String translateTrace()
+  {
+    StringBuilder out = new StringBuilder();
+    out.append("<Trace>\n");
+    out.append(super.translateTrace());
+    out.append("</Trace>\n");
+    return out.toString();
+  }
+  
+  protected class SaxonFormulaTranslator extends BeepBeepFormulaTranslator
+  {
+    /**
+     * Saxon overrides BeepBeep's notation for paths: we remove the
+     * prepending "/message/..." to the expressions
+     */
+    @Override
+    public void visit(XPathAtom p)
+    {
+      String s = p.toString();
+      String[] parts = s.split("/");
+      StringBuffer s_out = new StringBuffer();
+      for (int i = 2; i < parts.length; i++)
+        // We start at i=2, since s has a leading slash
+        s_out.append("/").append(parts[i]);
+      m_pieces.push(s_out);
+    }
+  }
+  
+  @Override
+  public String translateFormula()
+  {
+    SaxonFormulaTranslator sft = new SaxonFormulaTranslator();
+    m_formula.accept(sft);
+    return sft.getFormula();
+  }
 }

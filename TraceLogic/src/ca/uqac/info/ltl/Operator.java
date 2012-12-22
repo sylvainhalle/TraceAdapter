@@ -17,6 +17,7 @@
  */
 package ca.uqac.info.ltl;
 
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 /**
@@ -39,9 +40,16 @@ public abstract class Operator
 	
 	public abstract void accept(OperatorVisitor v);
 	
+	/**
+	 * Character used to comment operators. A line starting with
+	 * this symbol will be ignored by the parser.
+	 */
+	public static final String m_commentChar = "#";
+	
 	public static Operator parseFromString(String s) throws ParseException
 	{
 		Set<Atom> bound_variables = new HashSet<Atom>();
+		s = trimComments(s);
 		return parseFromString(s, bound_variables);
 	}
 	
@@ -89,7 +97,7 @@ public abstract class Operator
 			// Unary operator
 			s = s.substring(1).trim();
 			s = trimSurroundingPars(s);
-			Operator in = parseFromString(s);
+			Operator in = parseFromString(s, bound_variables);
 			UnaryOperator uo = null;
 			if (c.compareTo("F") == 0)
 				uo = new OperatorF();
@@ -116,8 +124,8 @@ public abstract class Operator
 			int pars_right = s.length() - s.lastIndexOf(right) - right.length();
 			assert pars_left >= 0 && pars_right >= 0;
 			String op = getOperator(s, left.length() + pars_left * 2, right.length() + pars_right * 2);
-			Operator o_left = parseFromString(left);
-			Operator o_right = parseFromString(right);
+			Operator o_left = parseFromString(left, bound_variables);
+			Operator o_right = parseFromString(right, bound_variables);
 			if (o_left == null || o_right == null)
 				throw new ParseException();
 			BinaryOperator bo = null;
@@ -162,6 +170,21 @@ public abstract class Operator
 			}
 		}
 		return out;
+	}
+	
+	private static String trimComments(String s)
+	{
+	  StringBuilder out = new StringBuilder();
+      Scanner scanner = new Scanner(new ByteArrayInputStream(s.getBytes()));
+      while (scanner.hasNextLine())
+      {
+        String line = scanner.nextLine();
+        line = line.trim();
+        if (line.isEmpty() || line.startsWith(m_commentChar))
+          continue;
+        out.append(line).append(" ");
+      }
+      return out.toString();
 	}
 	
 	private static String trimSurroundingPars(String s)

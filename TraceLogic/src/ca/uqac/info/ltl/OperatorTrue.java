@@ -26,4 +26,10 @@ public class OperatorTrue extends Atom
 		super();
 		m_symbol = SYMBOL;
 	}
+	
+	@Override
+	public void accept(OperatorVisitor v)
+	{
+	  v.visit(this);
+	}
 }

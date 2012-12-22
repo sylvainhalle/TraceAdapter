@@ -26,7 +26,17 @@ public class FirstOrderTest
 			e.printStackTrace();
 		}
 		// On lit une trace
-		EventTrace t = new XmlTraceReader().parseEventTrace(new File("traces/trace2.xml"));
+        EventTrace t = null;
+        try
+        {
+          t = new XmlTraceReader().parseEventTrace(new java.io.FileInputStream(new File("traces/trace2.xml")));  
+        }
+        catch (java.io.FileNotFoundException ex)
+        {
+          ex.printStackTrace();
+          System.exit(1);
+        }
+        assert t != null;
 		
 		// On vérifie si cette formule est du premier ordre (i.e. contient quantificateurs)
 		if (FirstOrderDetector.isFirstOrder(o))

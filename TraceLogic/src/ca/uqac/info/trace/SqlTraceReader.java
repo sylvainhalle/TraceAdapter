@@ -18,7 +18,7 @@
  ******************************************************************************/
 package ca.uqac.info.trace;
 
-import java.io.File;
+import java.io.InputStream;
 
 public class SqlTraceReader extends TraceReader
 {
@@ -28,7 +28,7 @@ public class SqlTraceReader extends TraceReader
   }
 
   @Override
-  public EventTrace parseEventTrace(File f)
+  public EventTrace parseEventTrace(InputStream f)
   {
     // TODO Auto-generated method stub
     return null;

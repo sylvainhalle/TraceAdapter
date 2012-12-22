@@ -29,15 +29,15 @@ import java.util.Stack;
  */
 public class GenericVisitor implements OperatorVisitor
 {
-	protected Stack<StringBuffer> m_pieces;
+  protected Stack<StringBuffer> m_pieces;
 
   public GenericVisitor()
   {
     super();
     m_pieces = new Stack<StringBuffer>();
   }
-	
-	@Override
+
+  @Override
   public void visit(OperatorAnd o)
   {
     StringBuffer right = m_pieces.pop();
@@ -46,7 +46,7 @@ public class GenericVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorOr o)
   {
     StringBuffer right = m_pieces.pop();
@@ -87,7 +87,7 @@ public class GenericVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorEquals o)
   {
     StringBuffer right = m_pieces.pop();
@@ -96,7 +96,7 @@ public class GenericVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorImplies o)
   {
     StringBuffer right = m_pieces.pop();
@@ -105,7 +105,7 @@ public class GenericVisitor implements OperatorVisitor
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(OperatorEquiv o)
   {
     StringBuffer right = m_pieces.pop();
@@ -113,8 +113,8 @@ public class GenericVisitor implements OperatorVisitor
     StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorEquiv.SYMBOL).append(" (").append(right).append(")");
     m_pieces.push(out);
   }
-	
-	@Override
+
+  @Override
   public void visit(OperatorU o)
   {
     StringBuffer right = m_pieces.pop();
@@ -122,38 +122,50 @@ public class GenericVisitor implements OperatorVisitor
     StringBuffer out = new StringBuffer("(").append(left).append(") ").append(OperatorU.SYMBOL).append(" (").append(right).append(")");
     m_pieces.push(out);
   }
-	
-	@Override
+
+  @Override
   public void visit(ForAll o)
   {
-		StringBuffer operand = m_pieces.pop();
-		StringBuffer path = m_pieces.pop();
-		StringBuffer var = m_pieces.pop();
+    StringBuffer operand = m_pieces.pop();
+    StringBuffer path = m_pieces.pop();
+    StringBuffer var = m_pieces.pop();
     StringBuffer out = new StringBuffer(ForAll.SYMBOL).append(var).append(" ").append(Quantifier.ELEMENT_SYMBOL).append(" ").append(path).append(" : (").append(operand).append(")");
     m_pieces.push(out);
   }
-	
-	@Override
+
+  @Override
   public void visit(Exists o)
   {
-		StringBuffer operand = m_pieces.pop();
-		StringBuffer path = m_pieces.pop();
-		StringBuffer var = m_pieces.pop();
+    StringBuffer operand = m_pieces.pop();
+    StringBuffer path = m_pieces.pop();
+    StringBuffer var = m_pieces.pop();
     StringBuffer out = new StringBuffer(Exists.SYMBOL).append(var).append(" ").append(Quantifier.ELEMENT_SYMBOL).append(" ").append(path).append(" : (").append(operand).append(")");
     m_pieces.push(out);
   }
 
-	@Override
+  @Override
   public void visit(Atom o)
   {
     m_pieces.push(new StringBuffer(o.toString()));
-    
+
   }
 
-	@Override
+  @Override
+  public void visit(OperatorTrue o)
+  {
+    m_pieces.push(new StringBuffer(o.toString()));
+  }
+
+  @Override
+  public void visit(OperatorFalse o)
+  {
+    m_pieces.push(new StringBuffer(o.toString()));
+  }
+
+  @Override
   public void visit(XPathAtom p)
   {
-		m_pieces.push(new StringBuffer(p.toString()));
-	  
+    m_pieces.push(new StringBuffer(p.toString()));
+
   }
 }

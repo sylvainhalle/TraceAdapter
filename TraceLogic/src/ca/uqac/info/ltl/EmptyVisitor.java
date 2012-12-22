@@ -29,88 +29,100 @@ package ca.uqac.info.ltl;
 public class EmptyVisitor implements OperatorVisitor
 {
 
-	@Override
+  @Override
   public void visit(OperatorAnd o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorOr o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorNot o)
   {
-	  
+
   }
 
-	@Override
+  @Override
+  public void visit(OperatorTrue o)
+  {
+
+  }
+
+  @Override
+  public void visit(OperatorFalse o)
+  {
+
+  }
+
+  @Override
   public void visit(OperatorF o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorX o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorG o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorEquals o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorImplies o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorEquiv o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(OperatorU o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(Exists o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(ForAll o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(Atom o)
   {
-	  
+
   }
 
-	@Override
+  @Override
   public void visit(XPathAtom p)
   {
-	  
+
   }
 
 }

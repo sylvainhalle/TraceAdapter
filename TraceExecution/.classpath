@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="ca/uqac/info/trace/execution/GlueInterpreter.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TraceLogic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TraceTranslator"/>
+	<classpathentry kind="lib" path="/TraceLogic/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

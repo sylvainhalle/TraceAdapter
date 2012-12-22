@@ -27,6 +27,10 @@ public abstract class Translator
 	
 	protected EventTrace m_trace = null;
 	
+	protected String m_outTrace = "";
+	protected String m_outFormula = "";
+	protected String m_outSignature = "";
+	
   /**
    * Translate an input trace into the output format
    * @return A String representing the trace, into the target
@@ -56,7 +60,27 @@ public abstract class Translator
    */
   public abstract String translateFormula();
   
+  public final void translateAll()
+  {
+    m_outTrace = translateTrace();
+    m_outFormula = translateFormula();
+    m_outSignature = getSignature();
+  }
   
+  public String getTraceFile()
+  {
+    return m_outTrace;
+  }
+
+  public String getFormulaFile()
+  {
+    return m_outFormula;
+  }
+
+  public String getSignatureFile()
+  {
+    return m_outSignature;
+  }
   
   public void setTrace(EventTrace t)
   {
@@ -69,10 +93,22 @@ public abstract class Translator
   }
   
   /**
+   * Determines if the translator requires a flat message structure
+   * @return
+   */
+  public abstract boolean requiresFlat();
+  
+  /**
    * Determines if the translator requires a propositional input formula
    * @return
    */
   public abstract boolean requiresPropositional();
+  
+  /**
+   * Determines if the translator requires an atomic input formula
+   * @return
+   */
+  public abstract boolean requiresAtomic();
   
   /**
    * get an input signature for Monpoly
@@ -80,4 +116,6 @@ public abstract class Translator
    * @return a String representing the signature for Monpoly tool
    */
   public abstract String getSignature(EventTrace t);
+  
+  public abstract String getSignature();
 }

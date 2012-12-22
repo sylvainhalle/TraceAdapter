@@ -45,6 +45,10 @@ public interface OperatorVisitor
   public void visit(ForAll o);
   
   public void visit(Atom o);
+  
+  public void visit(OperatorTrue o);
+  
+  public void visit(OperatorFalse o);
 
   public void visit(XPathAtom xPathAtom);
 }

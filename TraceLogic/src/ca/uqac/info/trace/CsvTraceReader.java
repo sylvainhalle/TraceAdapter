@@ -91,9 +91,8 @@ public class CsvTraceReader extends TraceReader
   {
     m_separator = separator;
   }
-
-  @Override
-  public EventTrace parseEventTrace(File f)
+  
+  public EventTrace parseEventTrace(InputStream f)
   {
     Scanner scanner = null;
     Vector<String> param_names = new Vector<String>();;
@@ -104,7 +103,7 @@ public class CsvTraceReader extends TraceReader
     int num_line = 0;
     try
     {
-      scanner = new Scanner(new FileInputStream(f));
+      scanner = new Scanner(f);
       while (scanner.hasNextLine())
       {
         num_line++;
@@ -128,16 +127,12 @@ public class CsvTraceReader extends TraceReader
         trace.add(e);
       }
     }
-    catch (FileNotFoundException e)
-    {
-      e.printStackTrace(System.err);
-    }
     finally
     {
       if (scanner != null)
         scanner.close();
     }
-    return trace;
+    return trace;    
   }
   
   /**

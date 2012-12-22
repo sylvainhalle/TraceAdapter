@@ -18,7 +18,7 @@
  ******************************************************************************/
 package ca.uqac.info.trace;
 
-import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -78,7 +78,7 @@ public class XmlTraceReader extends TraceReader
   }
 
   @Override
-  public EventTrace parseEventTrace(File f)
+  public EventTrace parseEventTrace(InputStream f)
   {
     Document doc = null;
     try

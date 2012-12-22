@@ -17,7 +17,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ******************************************************************************/
 package ca.uqac.info.trace;
-import java.io.File;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,11 +34,11 @@ import org.w3c.dom.Document;
 public abstract class TraceReader
 { 
   /**
-   * Produces a trace from an input file
-   * @param f The file to read from
+   * Produces a trace from an input stream
+   * @param f The input stream to read from
    * @return The EventTrace
    */
-  public abstract EventTrace parseEventTrace(File f);
+  public abstract EventTrace parseEventTrace(InputStream f);
   
   /**
    * Produces an instance of a DOM Document that child factories can use

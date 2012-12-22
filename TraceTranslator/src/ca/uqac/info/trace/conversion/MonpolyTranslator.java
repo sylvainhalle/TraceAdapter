@@ -292,6 +292,19 @@ public class MonpolyTranslator extends Translator
       m_pieces.push(out);
 
     }
+    
+    @Override
+    public void visit(OperatorTrue o)
+    {
+      m_pieces.push(new StringBuffer("TRUE"));
+      
+    }
+
+    @Override
+    public void visit(OperatorFalse o)
+    {
+      m_pieces.push(new StringBuffer("FALSE"));
+    }
 
     @Override
     public void visit(OperatorEquals o)
@@ -299,14 +312,27 @@ public class MonpolyTranslator extends Translator
       StringBuffer right = m_pieces.pop(); // Pop right-hand side
       StringBuffer left = m_pieces.pop(); // Pop left-hand side
       StringBuffer out = new StringBuffer();
-      out.append(left).append("( ").append(right).append(")");
+      Operator o_left = o.getLeft();
+      if (o_left instanceof XPathAtom)
+      {
+        // If we equal a path to a term, we must write it as a predicate
+        out.append(left).append("(").append(right).append(")");
+      }
+      else
+      {
+        // Otherwise, we write the equality as an equality
+        out.append("(").append(left).append(" = ").append(right).append(")");
+      }
       m_pieces.push(out);
     }
 
     @Override
     public void visit(Atom o)
     {
-      m_pieces.push(new StringBuffer(o.getSymbol()));
+      if (o instanceof Constant)
+        m_pieces.push(new StringBuffer("\"").append(o.getSymbol()).append("\""));
+      else
+        m_pieces.push(new StringBuffer("?").append(o.getSymbol()));
     }
 
     @Override
@@ -337,9 +363,9 @@ public class MonpolyTranslator extends Translator
       StringBuffer variable = m_pieces.pop();
       StringBuffer var = m_pieces.peek();
       StringBuffer out = new StringBuffer();
-      out.append("EXISTS ").append("?").append(var).append(". ").append("(")
-          .append(variable).append("(?").append(var).append(")")
-          .append(" AND ").append(variable).append(operand).append(")");
+      out.append("EXISTS ").append(var).append(". ").append("(")
+          .append(variable).append("(").append(var).append(")")
+          .append(" AND ").append(operand).append(")");
       m_pieces.push(out);
     }
 
@@ -348,11 +374,12 @@ public class MonpolyTranslator extends Translator
     {
       StringBuffer operand = m_pieces.pop();
       StringBuffer variable = m_pieces.pop();
+      StringBuffer var = m_pieces.peek();
       StringBuffer out = new StringBuffer();
-      out.append("FORALL ").append("?").append(variable).append(". ")
-          .append("(").append(operand).append(")");
+      out.append("FORALL ").append(var).append(". ").append("(")
+          .append(variable).append("(").append(var).append(")")
+          .append(" AND ").append(operand).append(")");
       m_pieces.push(out);
-
     }
 
     @Override
@@ -379,6 +406,18 @@ public class MonpolyTranslator extends Translator
     public Set<OperatorEquals> getEqualities()
     {
       return m_equalities;
+    }
+    
+    @Override
+    public void visit(OperatorTrue o)
+    {
+      // Nothing to be done here
+    }
+
+    @Override
+    public void visit(OperatorFalse o)
+    {
+      // Nothing to be done here
     }
 
     @Override
@@ -466,13 +505,18 @@ public class MonpolyTranslator extends Translator
     }
 
   }
+  
+  @Override
+  public String getSignature()
+  {
+    return getSignature(m_trace);
+  }
 
   @Override
-  public String getSignature(EventTrace m_trace)
+  public String getSignature(EventTrace trace)
   {
-
     StringBuffer out = new StringBuffer();
-    Relation<String, String> param_domains = m_trace.getParameterDomain();
+    Relation<String, String> param_domains = trace.getParameterDomain();
     Set<String> params = param_domains.keySet();
     Vector<String> vectParams = new Vector<String>();
     vectParams.addAll(params);
@@ -520,7 +564,17 @@ public class MonpolyTranslator extends Translator
       // Read trace
       File fic = new File(filename);
       XmlTraceReader xtr = new XmlTraceReader();
-      EventTrace t = xtr.parseEventTrace(fic);
+      EventTrace t = null;
+      try
+      {
+        t = xtr.parseEventTrace(new java.io.FileInputStream(fic));  
+      }
+      catch (java.io.FileNotFoundException ex)
+      {
+        ex.printStackTrace();
+        System.exit(1);
+      }
+      assert t != null;
       
       // Parse property
       Operator o = null;
@@ -542,5 +596,17 @@ public class MonpolyTranslator extends Translator
       System.out.println(f);
       String sig = bt.getSignature(t);
       System.out.println(sig);
+  }
+  
+  @Override
+  public boolean requiresFlat()
+  {
+    return true;
+  }
+  
+  @Override
+  public boolean requiresAtomic()
+  {
+    return false;
   }
 }
