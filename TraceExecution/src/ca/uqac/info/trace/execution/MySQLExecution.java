@@ -32,14 +32,23 @@ public class MySQLExecution extends Execution
   @Override
   protected String[] getCommandLines()
   {
-    String[] cl = new String[1];
+    String[] cl = new String[2];
     // Specifying a password on the command line is considered
     // insecure. Only do this in isolated environments!
-    StringBuilder out = new StringBuilder();
-    out.append(m_commandLocation).append(" --user=")
-    .append(m_userName).append(" --password=")
-    .append(m_password).append(" < ").append(conditionalQuote(m_trace));
-    cl[0] = out.toString();
+    {
+      StringBuilder out = new StringBuilder();
+      out.append(m_commandLocation).append(" --user=")
+      .append(m_userName).append(" --password=")
+      .append(m_password).append(" < ").append(conditionalQuote(m_signature));
+      cl[0] = out.toString();
+    }
+    {
+      StringBuilder out = new StringBuilder();
+      out.append(m_commandLocation).append(" --user=")
+      .append(m_userName).append(" --password=")
+      .append(m_password).append(" < ").append(conditionalQuote(m_trace));
+      cl[1] = out.toString();
+    }
     return cl;
   }
 
@@ -73,5 +82,11 @@ public class MySQLExecution extends Execution
   public String getTraceExtension()
   {
     return "sql";
+  }
+  
+  @Override
+  public String getSignatureExtension()
+  {
+    return "sig.sql";
   }
 }

@@ -36,7 +36,7 @@ public class BabelTrace
   /**
    * Build string
    */
-  public static final String BUILD_STRING = "20121223";
+  public static final String BUILD_STRING = "20121228";
   
   /**
    * Return codes
@@ -300,9 +300,13 @@ public class BabelTrace
       if (ex_retval == ReturnCode.ERROR)
       {
         System.err.println("Error while executing " + tool_name);
-        System.err.println("Command line: " + ex.getCommandLines());
+        System.err.println("Command line(s):");
+        for (String cl : ex.getCommandLines())
+        {
+          System.err.println(cl);
+        }
         System.err.println("Below is the string returned by the tool\n");
-        System.err.println(ex.getReturnString());
+        System.err.println(ex.getErrorString());
         System.exit(ERR_TOOL_EXECUTION);
       }
     }
@@ -358,7 +362,7 @@ public class BabelTrace
     else if (type.compareToIgnoreCase("beepbeep") == 0)
       tr = new BeepBeepTranslator();
     else if (type.compareToIgnoreCase("mysql") == 0)
-      tr = new SqlTranslator();
+      tr = new MySQLTranslator();
     else if (type.compareToIgnoreCase("nusmv") == 0)
       tr = new SmvTranslator(); 
     else if (type.compareToIgnoreCase("saxon") == 0)

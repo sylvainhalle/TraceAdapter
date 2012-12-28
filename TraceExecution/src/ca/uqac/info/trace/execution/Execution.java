@@ -68,6 +68,11 @@ public abstract class Execution
    * Return string of the tool
    */
   private String m_returnString = "";
+  
+  /**
+   * Error string of the tool (if any)
+   */
+  private String m_errorString = "";
 
   /**
    * Property contents
@@ -237,6 +242,7 @@ public abstract class Execution
         // Return value
         String stReponse = strReponse.toString();
         String stErr = strErr.toString();
+        m_errorString = stErr;
         if (!stReponse.toString().isEmpty())
           m_returnValue = parseReturnValue(stReponse);
         else
@@ -290,5 +296,10 @@ public abstract class Execution
     if (s.contains(" "))
       return "\"" + s + "\"";
     return s;
+  }
+  
+  public String getErrorString()
+  {
+    return m_errorString;
   }
 }
