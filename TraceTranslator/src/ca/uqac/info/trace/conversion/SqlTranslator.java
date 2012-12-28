@@ -303,7 +303,7 @@ public class SqlTranslator extends Translator
     StringBuilder out = new StringBuilder();
     out.append("SELECT ").append(m_eventId).append(" FROM (");
     out.append(translateFormula(m_formula, 0));
-    out.append(") WHERE `").append(m_eventId).append("` = 0;");
+    out.append(") AS ").append(m_tableName).append("final WHERE `").append(m_eventId).append("` = 0;");
     return out.toString();
   }
 

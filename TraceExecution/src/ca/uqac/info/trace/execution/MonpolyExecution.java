@@ -38,10 +38,10 @@ public class MonpolyExecution extends Execution
   }
 
   @Override
-  /* package */ ReturnCode parseReturnValue(String strValue)
+  /* package */ ReturnVerdict parseReturnString(String strValue)
   {
     String s_val = "";
-    ReturnCode val = ReturnCode.ERROR;
+    ReturnVerdict val = ReturnVerdict.ERROR;
     String[] lines = strValue.split(CRLF);
     for (String line : lines)
     {
@@ -59,11 +59,11 @@ public class MonpolyExecution extends Execution
         }
         if (!s_val.isEmpty() && s_val.contains("true"))
         {
-          val = ReturnCode.TRUE;
+          val = ReturnVerdict.TRUE;
         }
         else
         {
-          val = ReturnCode.FALSE;
+          val = ReturnVerdict.FALSE;
         }
         break;
       }

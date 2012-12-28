@@ -47,7 +47,7 @@ public abstract class Execution
   /**
    * Tools return values
    */
-  public static enum ReturnCode {TRUE, FALSE, INCONCLUSIVE, ERROR};
+  public static enum ReturnVerdict {TRUE, FALSE, INCONCLUSIVE, ERROR};
 
   /**
    * Time consumed by the tool
@@ -62,7 +62,12 @@ public abstract class Execution
   /**
    * Return value of the execution
    */
-  private ReturnCode m_returnValue = ReturnCode.ERROR;
+  private ReturnVerdict m_returnValue = ReturnVerdict.ERROR;
+  
+  /**
+   * Return code of the executable
+   */
+  private int m_returnCode = 0;
   
   /**
    * Return string of the tool
@@ -131,21 +136,47 @@ public abstract class Execution
    */
   public abstract boolean isReady();
 
+  /**
+   * Get the time taken by the tool to run
+   * @return The running time (in nanoseconds)
+   */
   public final long getTime()
   {
     return m_time;
   }
 
+  /**
+   * Get the memory consumed by the tool
+   * @return The memory consumed, in bytes
+   */
   public final long getMemory()
   {
     return m_memory;
   }
 
-  public final ReturnCode getReturnValue()
+  /**
+   * Get the verdict deduced from the tool's return string
+   * (i.e. whether the trace fulfills the property, or not)
+   * @return
+   */
+  public final ReturnVerdict getReturnVerdict()
   {
     return m_returnValue;
   }
   
+  /**
+   * Get the return code of the executable launched
+   * @return The return code
+   */
+  public final int getReturnCode()
+  {
+    return m_returnCode;
+  }
+  
+  /**
+   * Get the string returned by the tool when run
+   * @return The return string
+   */
   public final String getReturnString()
   {
     return m_returnString;
@@ -200,36 +231,36 @@ public abstract class Execution
     for (int i = 0; i < command_list.length; i++)
     {
       String[] command_to_run = {"bash", "-c", command_list[i]};
-      StringBuilder strReponse = new StringBuilder();
-      StringBuilder strErr = new StringBuilder();
       Runtime rt = Runtime.getRuntime();
       try
       {
         if (i != command_list.length - 1) // Not the last command to run
         {
           // Just run it and move on to the next
-          rt.exec(command_to_run, null, cwd);
+          Process p = rt.exec(command_to_run, null, cwd);
+          m_returnCode = p.waitFor(); // Must wait till command is finished
+          if (m_returnCode != 0)
+          {
+            // We *may* want to do something in case the command does not
+            // exit with return code 0 (for the moment we do nothing)
+          }
           continue;
         }
         // Last command: compute running time and process its output
         start_time = System.nanoTime();
-        Process process = rt.exec(command_to_run, null, cwd);
-        /*BufferedWriter stdIn = new BufferedWriter(new
-            OutputStreamWriter(process.getOutputStream()));*/
-        BufferedReader stdOut = new BufferedReader(new
-            InputStreamReader(process.getInputStream()));
-        BufferedReader stdErr = new BufferedReader(new
-            InputStreamReader(process.getErrorStream()));
-        // Read data from stdout, line by line
-        String in_line = "", err_line = "";
-        while (((in_line = stdOut.readLine()) != null)
-            || ((err_line = stdErr.readLine()) != null)) 
-        {
-          if (in_line != null)
-            strReponse.append(in_line).append(CRLF);
-          if (err_line != null)
-            strErr.append(err_line).append(CRLF);
-        }
+        Process p = rt.exec(command_to_run, null, cwd);
+        StreamGobbler errorGobbler = new 
+            StreamGobbler(p.getErrorStream());            
+        // any output?
+        StreamGobbler outputGobbler = new 
+            StreamGobbler(p.getInputStream());
+        // kick them off
+        errorGobbler.start();
+        outputGobbler.start();
+        // any error???
+        m_returnCode = p.waitFor();
+        // Stop gobblers
+        //errorGobbler.
         end_time = System.nanoTime();
 
         //Execution time
@@ -240,19 +271,16 @@ public abstract class Execution
         m_memory = rt.totalMemory() - rt.freeMemory();
 
         // Return value
-        String stReponse = strReponse.toString();
-        String stErr = strErr.toString();
-        m_errorString = stErr;
-        if (!stReponse.toString().isEmpty())
-          m_returnValue = parseReturnValue(stReponse);
+        m_returnString = outputGobbler.getString();
+        m_errorString = errorGobbler.getString();
+        if (!m_returnString.isEmpty())
+          m_returnValue = parseReturnString(m_returnString);
         else
-          m_returnValue = parseReturnValue(stErr);
+          m_returnValue = parseReturnString(m_errorString);
         // For debugging: System.err.println("Response:\n" + strReponse);
 
         // close
-        process.destroy();
-        stdOut.close();
-        stdErr.close();
+        p.destroy();
       }
       catch (Exception e)
       {
@@ -283,7 +311,7 @@ public abstract class Execution
    *     carriage returns if any)
    * @return The outcome
    */
-  /* package */ abstract ReturnCode parseReturnValue(String strValue) ;
+  /* package */ abstract ReturnVerdict parseReturnString(String strValue) ;
 
   /**
    * Surrounds a filename by double quotes
@@ -301,5 +329,43 @@ public abstract class Execution
   public String getErrorString()
   {
     return m_errorString;
+  }
+  
+  /*
+   * Taken (and adapted) from:
+   * http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html?page=4
+   */
+  protected class StreamGobbler extends Thread
+  {
+      InputStream is;
+      StringBuilder m_contents = new StringBuilder();
+      
+      StreamGobbler(InputStream is)
+      {
+          this.is = is;
+      }
+      
+      public void run()
+      {
+        try
+        {
+          InputStreamReader isr = new InputStreamReader(is);
+          BufferedReader br = new BufferedReader(isr);
+          String line=null;
+          while ( (line = br.readLine()) != null)
+          {
+            m_contents.append(line).append("\n");
+          }
+        }
+        catch (IOException ioe)
+        {
+          ioe.printStackTrace();  
+        }
+      }
+      
+      public String getString()
+      {
+        return m_contents.toString();
+      }
   }
 }

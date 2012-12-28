@@ -34,19 +34,19 @@ public class BeepBeepExecution extends Execution
   }
 
   @Override
-  /* package */ ReturnCode parseReturnValue(String strValue)
+  /* package */ ReturnVerdict parseReturnString(String strValue)
   {
     String[] lines = strValue.split(CRLF);
     for (String line : lines)
     {
       if (line.contains("INCONCLUSIVE"))
-        return ReturnCode.INCONCLUSIVE;
+        return ReturnVerdict.INCONCLUSIVE;
       if (line.contains("TRUE"))
-        return ReturnCode.TRUE;
+        return ReturnVerdict.TRUE;
       if (line.contains("FALSE"))
-        return ReturnCode.FALSE;
+        return ReturnVerdict.FALSE;
     }
-    return ReturnCode.ERROR;
+    return ReturnVerdict.ERROR;
   }
 
   @Override
