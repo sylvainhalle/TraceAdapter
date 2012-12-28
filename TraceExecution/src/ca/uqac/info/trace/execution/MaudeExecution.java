@@ -38,13 +38,13 @@ public class MaudeExecution extends Execution
   }
 
   @Override
-  /* package */ ReturnCode parseReturnValue(String strValue)
+  /* package */ ReturnVerdict parseReturnString(String strValue)
   {
     if (strValue.contains("(true).Bool"))
-      return ReturnCode.TRUE;
+      return ReturnVerdict.TRUE;
     if (strValue.contains("(false).Bool"))
-      return ReturnCode.FALSE;
-    return ReturnCode.ERROR;
+      return ReturnVerdict.FALSE;
+    return ReturnVerdict.ERROR;
   }
 
   @Override

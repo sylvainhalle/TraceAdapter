@@ -59,17 +59,17 @@ public class MySQLExecution extends Execution
   }
 
   @Override
-  /* package */ ReturnCode parseReturnValue(String strValue)
+  /* package */ ReturnVerdict parseReturnString(String strValue)
   {
     String[] lines = strValue.split(CRLF);
     for (String line : lines)
     {
       if (line.contains("Usage:") || line.contains("ERROR"))
-        return ReturnCode.ERROR;
+        return ReturnVerdict.ERROR;
       if (line.compareTo("0") == 0)
-        return ReturnCode.TRUE;
+        return ReturnVerdict.TRUE;
     }
-    return ReturnCode.FALSE;
+    return ReturnVerdict.FALSE;
   }
 
   @Override

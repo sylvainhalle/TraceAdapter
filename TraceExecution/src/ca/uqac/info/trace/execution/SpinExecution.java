@@ -71,16 +71,16 @@ public class SpinExecution extends Execution
   }
 
   @Override
-  /* package */ ReturnCode parseReturnValue(String strValue)
+  /* package */ ReturnVerdict parseReturnString(String strValue)
   {
     // Unreached final state for never claim: negation of
     // the property is true, hence property is false
     if (strValue.contains("unreached in claim"))
-      return ReturnCode.FALSE;
+      return ReturnVerdict.FALSE;
     // File not found, meaning Spin could not compile it
     if (strValue.contains("no such"))
-      return ReturnCode.ERROR;
-    return ReturnCode.TRUE;
+      return ReturnVerdict.ERROR;
+    return ReturnVerdict.TRUE;
   }
 
   @Override

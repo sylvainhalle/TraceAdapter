@@ -26,7 +26,7 @@ import ca.uqac.info.ltl.*;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.trace.conversion.*;
-import ca.uqac.info.trace.execution.Execution.ReturnCode;
+import ca.uqac.info.trace.execution.Execution.ReturnVerdict;
 import ca.uqac.info.util.FileReadWrite;
 
 import org.apache.commons.cli.*;
@@ -291,13 +291,13 @@ public class BabelTrace
       ex.run();
       
       // Print results
-      ReturnCode ex_retval = ex.getReturnValue();
+      ReturnVerdict ex_retval = ex.getReturnVerdict();
       float ex_time = (float) ex.getTime() / (float) 1000000000; // We show seconds, not µs
       float ex_memory = (float) ex.getMemory() / (float) 1024; // We show megabytes, not bytes
       System.out.printf("%s,%.2f,%.2f\n", ex_retval, ex_time, ex_memory);
       
       // If an error occurred, dump it
-      if (ex_retval == ReturnCode.ERROR)
+      if (ex_retval == ReturnVerdict.ERROR)
       {
         System.err.println("Error while executing " + tool_name);
         System.err.println("Command line(s):");
