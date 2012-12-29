@@ -25,7 +25,7 @@ import java.util.*;
  * The class Operator and its descendants implement only the bare
  * minimum to <em>represent</em> temporal logic formul&aelig;, but
  * do not perform any kind of computation on them. 
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public abstract class Operator

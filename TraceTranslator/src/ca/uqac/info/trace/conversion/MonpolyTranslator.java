@@ -18,7 +18,6 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
-import java.io.File;
 import java.util.*;
 
 import org.w3c.dom.Node;
@@ -28,9 +27,26 @@ import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.util.Relation;
 
+/**
+ * Translates an input trace and a formula into the MFOTL language
+ * for the Monpoly tool.  Monpoly is a monitoring tool that checks
+ * compliance of log files with respect to policies. Policies are
+ * specified by formulas in metric first-order temporal logic. 
+ * <p>
+ * For more information about Monpoly, please refer to its
+ * <a href="https://projects.developer.nokia.com/MonPoly">web site</a>
+ * or the following paper:
+ * <ul>
+ * <li>Felix Klaedtke, David Basin, Matus Harvan, Eugen Zalinescu.
+ * (2012). <cite>MONPOLY: Monitoring Usage-control Policies.</cite>
+ * 2nd International Conference on Runtime Verification (RV 2011).
+ * Springer: Lecture Notes in Computer Science 7186, 360-364.</li> 
+ * </ul>
+ * @author Aouatef Mrad
+ *
+ */
 public class MonpolyTranslator extends Translator
 {
-  protected Random m_random = new Random();
   protected final int m_leftBound = 0;
   protected int m_rightBound = 1000;
 
@@ -41,13 +57,10 @@ public class MonpolyTranslator extends Translator
     return translateTrace();
   }
 
-  /**
-   * 
-   */
   @Override
   public String translateTrace()
   {
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
     int trace_length = m_trace.size();
     for (int i = 0; i < trace_length; i++)
     {
@@ -155,9 +168,9 @@ public class MonpolyTranslator extends Translator
     return out.toString();
   }
 
-  private StringBuffer toMonpoly(Node n, String indent)
+  private StringBuilder toMonpoly(Node n, String indent)
   {
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
     NodeList children = n.getChildNodes();
     int num_children = children.getLength();
     if (num_children == 1 && children.item(0).getNodeType() == Node.TEXT_NODE)
@@ -167,7 +180,7 @@ public class MonpolyTranslator extends Translator
       val = val.trim();
       if (val.isEmpty())
       {
-        out = new StringBuffer();
+        out = new StringBuilder();
         return out;
       }
       out.append("\n\t").append(indent).append(n.getNodeName()).append(" ( ")
@@ -199,7 +212,7 @@ public class MonpolyTranslator extends Translator
     // Since MFOTL operators are bounded, we set the upper bound of the
     // interval to the length of the trace
     m_rightBound = m_trace.size();
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
     MonpolyFormulaTranslator mft = new MonpolyFormulaTranslator();
     m_formula.accept(mft);
     out.append(mft.getFormula());
@@ -208,26 +221,26 @@ public class MonpolyTranslator extends Translator
 
   protected class MonpolyFormulaTranslator implements OperatorVisitor
   {
-    Stack<StringBuffer> m_pieces;
+    Stack<StringBuilder> m_pieces;
 
     public MonpolyFormulaTranslator()
     {
       super();
-      m_pieces = new Stack<StringBuffer>();
+      m_pieces = new Stack<StringBuilder>();
     }
 
     public String getFormula()
     {
-      StringBuffer out = m_pieces.peek();
+      StringBuilder out = m_pieces.peek();
       return out.toString();
     }
 
     @Override
     public void visit(OperatorAnd o)
     {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left).append(") AND (")
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder out = new StringBuilder("(").append(left).append(") AND (")
           .append(right).append(")");
       m_pieces.push(out);
     }
@@ -235,9 +248,9 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorOr o)
     {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left).append(") OR (")
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder out = new StringBuilder("(").append(left).append(") OR (")
           .append(right).append(")");
       m_pieces.push(out);
     }
@@ -245,11 +258,11 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorImplies o)
     {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer op = m_pieces.pop();
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder op = m_pieces.pop();
 
-      StringBuffer out = new StringBuffer("(").append(left).append(") IMPLIES")
+      StringBuilder out = new StringBuilder("(").append(left).append(") IMPLIES")
           .append("(").append(right).append(op).append(")");
       m_pieces.push(out);
 
@@ -258,16 +271,16 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorNot o)
     {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("NOT (").append(op).append(")");
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("NOT (").append(op).append(")");
       m_pieces.push(out);
     }
 
     @Override
     public void visit(OperatorF o)
     {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("EVENTUALLY [")
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("EVENTUALLY [")
           .append(m_leftBound).append(",").append(m_rightBound)
           .append("] ( ").append(op).append(" )");
       m_pieces.push(out);
@@ -276,8 +289,8 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorX o)
     {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("NEXT [0,1] ( ")
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("NEXT [0,1] ( ")
         .append(op).append(" )");
       m_pieces.push(out);
     }
@@ -285,8 +298,8 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorG o)
     {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("ALWAYS [")
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("ALWAYS [")
       .append(m_leftBound).append(",").append(m_rightBound)
       .append("] ( ").append(op).append(" )");
       m_pieces.push(out);
@@ -296,22 +309,22 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorTrue o)
     {
-      m_pieces.push(new StringBuffer("TRUE"));
+      m_pieces.push(new StringBuilder("TRUE"));
       
     }
 
     @Override
     public void visit(OperatorFalse o)
     {
-      m_pieces.push(new StringBuffer("FALSE"));
+      m_pieces.push(new StringBuilder("FALSE"));
     }
 
     @Override
     public void visit(OperatorEquals o)
     {
-      StringBuffer right = m_pieces.pop(); // Pop right-hand side
-      StringBuffer left = m_pieces.pop(); // Pop left-hand side
-      StringBuffer out = new StringBuffer();
+      StringBuilder right = m_pieces.pop(); // Pop right-hand side
+      StringBuilder left = m_pieces.pop(); // Pop left-hand side
+      StringBuilder out = new StringBuilder();
       Operator o_left = o.getLeft();
       if (o_left instanceof XPathAtom)
       {
@@ -330,17 +343,17 @@ public class MonpolyTranslator extends Translator
     public void visit(Atom o)
     {
       if (o instanceof Constant)
-        m_pieces.push(new StringBuffer("\"").append(o.getSymbol()).append("\""));
+        m_pieces.push(new StringBuilder("\"").append(o.getSymbol()).append("\""));
       else
-        m_pieces.push(new StringBuffer("?").append(o.getSymbol()));
+        m_pieces.push(new StringBuilder("?").append(o.getSymbol()));
     }
 
     @Override
     public void visit(OperatorEquiv o)
     {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left).append(") <-> (")
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder out = new StringBuilder("(").append(left).append(") <-> (")
           .append(right).append(")");
       m_pieces.push(out);
     }
@@ -348,9 +361,9 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(OperatorU o)
     {
-      StringBuffer right = m_pieces.pop();  // Pop right-hand side
-      StringBuffer left = m_pieces.pop();  // Pop left-hand side
-      StringBuffer out = new StringBuffer("(").append(left).append(" UNTIL [")
+      StringBuilder right = m_pieces.pop();  // Pop right-hand side
+      StringBuilder left = m_pieces.pop();  // Pop left-hand side
+      StringBuilder out = new StringBuilder("(").append(left).append(" UNTIL [")
       .append(m_leftBound).append(",").append(m_rightBound)
       .append("] ( ").append(right).append(" )");
       m_pieces.push(out);
@@ -359,10 +372,10 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(Exists o)
     {
-      StringBuffer operand = m_pieces.pop();
-      StringBuffer variable = m_pieces.pop();
-      StringBuffer var = m_pieces.peek();
-      StringBuffer out = new StringBuffer();
+      StringBuilder operand = m_pieces.pop();
+      StringBuilder variable = m_pieces.pop();
+      StringBuilder var = m_pieces.peek();
+      StringBuilder out = new StringBuilder();
       out.append("EXISTS ").append(var).append(". ").append("(")
           .append(variable).append("(").append(var).append(")")
           .append(" AND ").append(operand).append(")");
@@ -372,10 +385,10 @@ public class MonpolyTranslator extends Translator
     @Override
     public void visit(ForAll o)
     {
-      StringBuffer operand = m_pieces.pop();
-      StringBuffer variable = m_pieces.pop();
-      StringBuffer var = m_pieces.peek();
-      StringBuffer out = new StringBuffer();
+      StringBuilder operand = m_pieces.pop();
+      StringBuilder variable = m_pieces.pop();
+      StringBuilder var = m_pieces.peek();
+      StringBuilder out = new StringBuilder();
       out.append("FORALL ").append(var).append(". ").append("(")
           .append(variable).append("(").append(var).append(")")
           .append(" AND ").append(operand).append(")");
@@ -388,7 +401,7 @@ public class MonpolyTranslator extends Translator
       // Not supposed to happen!
       // System.err.println("Error: XML Path found in MonPoly translator");
       // assert false;
-      m_pieces.push(new StringBuffer(p.toString(false)));
+      m_pieces.push(new StringBuilder(p.toString(false)));
     }
   }
 
@@ -512,10 +525,10 @@ public class MonpolyTranslator extends Translator
     return getSignature(m_trace);
   }
 
-  @Override
+
   public String getSignature(EventTrace trace)
   {
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
     Relation<String, String> param_domains = trace.getParameterDomain();
     Set<String> params = param_domains.keySet();
     Vector<String> vectParams = new Vector<String>();
@@ -531,9 +544,9 @@ public class MonpolyTranslator extends Translator
    * @return
    */
 
-  private StringBuffer toMonpolySignature(Vector<String> params)
+  private StringBuilder toMonpolySignature(Vector<String> params)
   {
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
     for (String p : params)
     {
       out.append(p).append(" (string)\n");
@@ -562,7 +575,7 @@ public class MonpolyTranslator extends Translator
       String formula = "F (∃i ∈ /p0 : (i=0))";
       
       // Read trace
-      File fic = new File(filename);
+      java.io.File fic = new java.io.File(filename);
       XmlTraceReader xtr = new XmlTraceReader();
       EventTrace t = null;
       try
@@ -594,7 +607,7 @@ public class MonpolyTranslator extends Translator
       System.out.println(bt.translateTrace());
       String f = bt.translateFormula();
       System.out.println(f);
-      String sig = bt.getSignature(t);
+      String sig = bt.getSignature();
       System.out.println(sig);
   }
   

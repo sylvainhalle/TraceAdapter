@@ -292,16 +292,11 @@ public class SqlTranslator extends Translator
   }
 
   @Override
-  public String getSignature(EventTrace t)
-  {
-    return getSignature();
-  }
-
-  @Override
   public String translateFormula()
   {
     StringBuilder out = new StringBuilder();
-    out.append("SELECT ").append(m_eventId).append(" FROM (");
+    // We disable caching since we are performing a benchmark
+    out.append("SELECT NO_SQL_CACHE ").append(m_eventId).append(" FROM (");
     out.append(translateFormula(m_formula, 0));
     out.append(") AS ").append(m_tableName).append("final WHERE `").append(m_eventId).append("` = 0;");
     return out.toString();

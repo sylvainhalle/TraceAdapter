@@ -25,7 +25,7 @@ import ca.uqac.info.trace.*;
 
 /**
  * A test for the AtomicTranslator. (May eventually be deleted.)
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class AtomicTranslatorTest

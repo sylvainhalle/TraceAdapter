@@ -22,7 +22,7 @@ package ca.uqac.info.ltl;
  * It is intended as a helper class, when one wants
  * to create a Visitor that only overrides a couple of signatures and
  * have no behaviour for the rest.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 

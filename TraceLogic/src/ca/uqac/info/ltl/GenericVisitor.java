@@ -24,7 +24,7 @@ import java.util.Stack;
  * formula as input. It is intended as a helper class, when one wants
  * to create a Visitor that only overrides a couple of signatures and
  * have some default behaviour for the rest.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class GenericVisitor implements OperatorVisitor

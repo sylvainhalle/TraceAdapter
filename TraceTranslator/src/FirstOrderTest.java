@@ -46,7 +46,8 @@ public class FirstOrderTest
 			// propositionnel...
 			Translator bt = new PropositionalTranslator();
 			bt.setTrace(t);
-			formula = bt.translateFormula(o);
+			bt.setFormula(o);
+			formula = bt.translateFormula();
 		}
 		// Ensuite on fait le traitement normal
 		Operator prop_formula = null;

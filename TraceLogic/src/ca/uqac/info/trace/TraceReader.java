@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
 /**
  * A TraceFactory takes a file as input and produces an EventTrace as
  * output.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public abstract class TraceReader

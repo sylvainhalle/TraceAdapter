@@ -18,34 +18,51 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import ca.uqac.info.ltl.*;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.trace.XmlTraceReader;
-import ca.uqac.info.util.Relation;
 
+/**
+ * Translates an input trace and a formula for the Maude rewriting engine. The
+ * translation follows the syntax described in the following paper:
+ * <ul>
+ * <li>Klaus Havelund, Grigore Ro&scedil;u. (2001). <cite>Monitoring Programs
+ * using Rewriting.</cite> Automated Software Engineering 2001 (ASE'01).</li>
+ * </ul>
+ * 
+ * @author Aouatef Mrad
+ * 
+ */
+public class MaudeTranslator extends Translator
+{
 
-public class MaudeTranslator extends Translator {
-
+  // TODO: probably no longer necessary as the class receives
+  // a trace already translated into atomic symbols
   protected AtomicTranslator m_atomicTranslator;
+
+  /**
+   * Whether to use the "alternate" method described in the paper
+   */
+  protected boolean m_useAlternateMethod = true;
 
   /**
    * Constructor
    */
-  public MaudeTranslator() {
+  public MaudeTranslator()
+  {
     super();
     m_atomicTranslator = new AtomicTranslator();
   }
 
-  public MaudeTranslator(EventTrace t) {
+  public MaudeTranslator(boolean alternate)
+  {
     this();
-    m_trace = t;
+    m_useAlternateMethod = alternate;
   }
 
   @Override
@@ -55,112 +72,125 @@ public class MaudeTranslator extends Translator {
     return translateTrace();
   }
 
-  public String translateFormula(Operator o) {
-
-    StringBuffer out = new StringBuffer();
+  @Override
+  public String translateFormula(Operator o)
+  {
+    StringBuilder out = new StringBuilder();
     MaudeFormulaTranslator mft = new MaudeFormulaTranslator();
     o.accept(mft);
     out.append(mft.getFormula());
-
     return out.toString();
   }
 
   protected class MaudeFormulaTranslator implements OperatorVisitor
   {
-    Stack<StringBuffer> m_pieces;
+    Stack<StringBuilder> m_pieces;
 
-    public MaudeFormulaTranslator() {
+    public MaudeFormulaTranslator()
+    {
       super();
-      m_pieces = new Stack<StringBuffer>();
+      m_pieces = new Stack<StringBuilder>();
     }
 
-    public String getFormula() {
-      StringBuffer out = m_pieces.peek();
+    public String getFormula()
+    {
+      StringBuilder out = m_pieces.peek();
       return out.toString();
     }
 
     @Override
-    public void visit(OperatorAnd o) {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left).append(") ")
+    public void visit(OperatorAnd o)
+    {
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder out = new StringBuilder("(").append(left).append(") ")
           .append("/\\").append(" (").append(right).append(")");
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(OperatorOr o) {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left).append(") ")
+    public void visit(OperatorOr o)
+    {
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder out = new StringBuilder("(").append(left).append(") ")
           .append("\\/").append(" (").append(right).append(")");
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(OperatorImplies o) {
-      StringBuffer right = m_pieces.pop();
-      StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left)
-          .append(") -> (").append(right).append(")");
+    public void visit(OperatorImplies o)
+    {
+      StringBuilder right = m_pieces.pop();
+      StringBuilder left = m_pieces.pop();
+      StringBuilder out = new StringBuilder("(").append(left).append(") -> (")
+          .append(right).append(")");
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(OperatorNot o) {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("~(").append(op).append(")");
+    public void visit(OperatorNot o)
+    {
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("~(").append(op).append(")");
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(OperatorF o) {
-      StringBuffer op = m_pieces.pop();
+    public void visit(OperatorF o)
+    {
+      StringBuilder op = m_pieces.pop();
 
-      StringBuffer out = new StringBuffer("<> (").append(op).append(")");
+      StringBuilder out = new StringBuilder("<> (").append(op).append(")");
       m_pieces.push(out);
 
     }
 
     @Override
-    public void visit(OperatorX o) {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("o (").append(op).append(")");
+    public void visit(OperatorX o)
+    {
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("o (").append(op).append(")");
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(OperatorG o) {
-      StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("[] (").append(op).append(")");
+    public void visit(OperatorG o)
+    {
+      StringBuilder op = m_pieces.pop();
+      StringBuilder out = new StringBuilder("[] (").append(op).append(")");
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(OperatorEquals o) {
-      StringBuffer right = m_pieces.pop(); // Pop right-hand side
-      StringBuffer left = m_pieces.pop(); // Pop left-hand side
-      StringBuffer out = new StringBuffer();
+    public void visit(OperatorEquals o)
+    {
+      StringBuilder right = m_pieces.pop(); // Pop right-hand side
+      StringBuilder left = m_pieces.pop(); // Pop left-hand side
+      StringBuilder out = new StringBuilder();
       out.append(left).append(" = ").append(right);
       m_pieces.push(out);
     }
 
     @Override
-    public void visit(Atom o) {
+    public void visit(Atom o)
+    {
       if (o instanceof OperatorFalse)
-        m_pieces.push(new StringBuffer("false"));
+        m_pieces.push(new StringBuilder("false"));
       else if (o instanceof OperatorTrue)
-        m_pieces.push(new StringBuffer("true"));
+        m_pieces.push(new StringBuilder("true"));
       else
-        m_pieces.push(new StringBuffer(o.getSymbol()));
+        m_pieces.push(new StringBuilder(o.getSymbol()));
     }
 
     @Override
-    public void visit(OperatorEquiv o) {
+    public void visit(OperatorEquiv o)
+    {
     }
 
     @Override
-    public void visit(OperatorU o) {
+    public void visit(OperatorU o)
+    {
     }
 
     @Override
@@ -183,25 +213,26 @@ public class MaudeTranslator extends Translator {
     public void visit(XPathAtom p)
     {
       // false because no leading slash
-      m_pieces.push(new StringBuffer(p.toString(false)));
+      m_pieces.push(new StringBuilder(p.toString(false)));
     }
 
     @Override
     public void visit(OperatorTrue o)
     {
-      m_pieces.push(new StringBuffer("true"));
+      m_pieces.push(new StringBuilder("true"));
     }
 
     @Override
     public void visit(OperatorFalse o)
     {
-      m_pieces.push(new StringBuffer("false"));
-      
+      m_pieces.push(new StringBuilder("false"));
+
     }
 
   }
 
-  protected class MaudeEqualityGetter extends EmptyVisitor {
+  protected class MaudeEqualityGetter extends EmptyVisitor
+  {
 
     Set<OperatorEquals> m_equalities;
 
@@ -228,19 +259,6 @@ public class MaudeTranslator extends Translator {
   }
 
   @Override
-  public String getSignature(EventTrace m_trace) {
-    Relation<String, String> param_domains = m_trace.getParameterDomain();
-    Set<String> params = param_domains.keySet();
-    Vector<String> vectParams = new Vector<String>();
-    vectParams.addAll(params);
-
-    String strTemp = vectParams.toString().replaceAll(",", " ");
-    strTemp = strTemp.replace("[", " ");
-    strTemp = strTemp.replace("]", " ");
-    return strTemp;
-  }
-
-  @Override
   public String translateFormula()
   {
     // We assume translateTrace has been called first!
@@ -249,8 +267,7 @@ public class MaudeTranslator extends Translator {
     try
     {
       op = Operator.parseFromString(prop);
-    }
-    catch (ParseException e)
+    } catch (ParseException e)
     {
       System.err.println("Parse error in MaudeTranslator");
       return "";
@@ -264,9 +281,11 @@ public class MaudeTranslator extends Translator {
   public String translateTrace()
   {
     String sat_operator = " |= ";
-    StringBuffer out_Trace = new StringBuffer();
+    if (m_useAlternateMethod)
+      sat_operator = " |- ";
+    StringBuilder out_Trace = new StringBuilder();
     Set<String> listParm = new HashSet<String>();
-    StringBuffer maude_trace = new StringBuffer();
+    StringBuilder maude_trace = new StringBuilder();
     String atomic_trace = m_atomicTranslator.translateTrace(m_trace);
     boolean first = true;
     for (String c : atomic_trace.split(" "))
@@ -277,17 +296,16 @@ public class MaudeTranslator extends Translator {
       listParm.add(c);
       first = false;
     }
-    StringBuffer operandes = new StringBuffer();
+    StringBuilder operandes = new StringBuilder();
     for (String c : listParm)
       operandes.append(c).append(" ");
     String prop = translateFormula();
     maude_trace = maude_trace.append(sat_operator).append(prop);
-    // Start writing the Java program
     out_Trace.append("in ltl.maude\n");
     out_Trace.append("fmod MY-TRACE is").append("\n");
     out_Trace.append("  extending LTL .").append("\n");
     out_Trace.append("  ops  ").append(operandes).append(" : -> Atom .")
-    .append("\n");
+        .append("\n");
     out_Trace.append("endfm\n");
     out_Trace.append("reduce").append(" ");
     out_Trace.append(maude_trace).append(".");
@@ -295,21 +313,20 @@ public class MaudeTranslator extends Translator {
     return out_Trace.toString();
   }
 
-  public static void main (String [] args)
+  public static void main(String[] args)
   {
     // File to read and property to verify
     String filename = "traces/traces_0.txt";
     String formula = "F (∃i ∈ /p0 : (i=0))";
 
     // Read trace
-    File f = new File(filename);
+    java.io.File f = new java.io.File(filename);
     XmlTraceReader reader = new XmlTraceReader();
     EventTrace trace = null;
     try
     {
-      trace = reader.parseEventTrace(new java.io.FileInputStream(f));  
-    }
-    catch (java.io.FileNotFoundException ex)
+      trace = reader.parseEventTrace(new java.io.FileInputStream(f));
+    } catch (java.io.FileNotFoundException ex)
     {
       ex.printStackTrace();
       System.exit(1);
@@ -318,9 +335,11 @@ public class MaudeTranslator extends Translator {
 
     // Parse property
     Operator o = null;
-    try {
+    try
+    {
       o = Operator.parseFromString(formula);
-    } catch (ParseException e) {
+    } catch (ParseException e)
+    {
       e.printStackTrace();
     }
 
@@ -334,8 +353,7 @@ public class MaudeTranslator extends Translator {
     try
     {
       o = Operator.parseFromString(s);
-    }
-    catch (Operator.ParseException e)
+    } catch (Operator.ParseException e)
     {
       System.out.println("Parse exception");
     }
@@ -344,7 +362,7 @@ public class MaudeTranslator extends Translator {
     o = cc.getFormula();
 
     // Pass trace and property to Maude translator
-    MaudeTranslator md = new MaudeTranslator() ;
+    MaudeTranslator md = new MaudeTranslator();
     md.setTrace(trace);
     md.setFormula(o);
 
@@ -360,7 +378,8 @@ public class MaudeTranslator extends Translator {
   }
 
   @Override
-  public boolean requiresPropositional() {
+  public boolean requiresPropositional()
+  {
     return true;
   }
 
@@ -373,6 +392,16 @@ public class MaudeTranslator extends Translator {
   @Override
   public String getSignature()
   {
+    /*
+     * NOTE: what is this code doing here? Relation<String, String>
+     * param_domains = m_trace.getParameterDomain(); Set<String> params =
+     * param_domains.keySet(); Vector<String> vectParams = new Vector<String>();
+     * vectParams.addAll(params);
+     * 
+     * String strTemp = vectParams.toString().replaceAll(",", " "); strTemp =
+     * strTemp.replace("[", " "); strTemp = strTemp.replace("]", " "); return
+     * strTemp;
+     */
     return "";
   }
 

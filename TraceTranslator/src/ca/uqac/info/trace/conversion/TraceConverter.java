@@ -149,7 +149,8 @@ public class TraceConverter
       System.exit(1);
     }
     assert trace != null;
-    String out_trace = trans.translateTrace(trace);
+    trans.setTrace(trace);
+    String out_trace = trans.translateTrace();
     if (output_filename.isEmpty())
       System.out.println(out_trace);
     else
@@ -162,7 +163,8 @@ public class TraceConverter
       try
       {
         Operator o = Operator.parseFromString(formula);
-        System.out.println(trans.translateFormula(o));
+        trans.setFormula(o);
+        System.out.println(trans.translateFormula());
       }
       catch (Operator.ParseException e)
       {

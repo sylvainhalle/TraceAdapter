@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * where each <tt>Event</tt> element itself nests elements that are
  * taken as the parameters for that event. The parser uses Java's
  * own DOM parser and hence should accept any well-formed XML file.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class XmlTraceReader extends TraceReader

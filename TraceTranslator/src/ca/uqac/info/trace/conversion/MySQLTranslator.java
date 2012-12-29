@@ -31,7 +31,7 @@ import ca.uqac.info.ltl.OperatorNot;
  * constructs (self-join in the case of intersection, and selection using
  * <tt>NOT IN</tt> for set difference). This class only overrides the translation
  * methods relevant to these two operators.
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class MySQLTranslator extends SqlTranslator
 {

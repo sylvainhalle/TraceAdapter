@@ -23,22 +23,35 @@ import ca.uqac.info.ltl.*;
 /**
  * Helper class that simply checks whether a given formula is first-order
  * or not. This is to be used to determine if an input formula needs to
- * be passed into the PropositionalTranslator before sending to a
+ * be passed into the {@link PropositionalTranslator} before sending to a
  * given tool.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class FirstOrderDetector
-{	
+{
+  /**
+   * Checks if a formula is first-order. A formula is considered
+   * first-order as soon as it contains a quantifier &forall; or
+   * &exist;.
+   * @param o The formula to check
+   * @return True if the formula is first-order, false otherwise
+   */
 	public static boolean isFirstOrder(Operator o)
 	{
 		if (o == null)
 			return false;
 		FirstOrderVisitor fov = new FirstOrderVisitor();
 		o.accept(fov);
-		return fov.m_quantifierFound;
+		return fov.isQuantifierFound();
 	}
 	
+	/**
+	 * Visitor that simply updates a boolean flag when a
+	 * first-order quantifier is encountered.
+	 * @author Sylvain Hallé
+	 *
+	 */
 	protected static class FirstOrderVisitor extends EmptyVisitor
 	{
 		protected boolean m_quantifierFound;
@@ -59,6 +72,11 @@ public class FirstOrderDetector
 		public void visit(ForAll o)
 		{
 			m_quantifierFound = true;
+		}
+		
+		public boolean isQuantifierFound()
+		{
+		  return m_quantifierFound;
 		}
 	}	
 

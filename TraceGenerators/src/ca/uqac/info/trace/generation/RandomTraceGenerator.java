@@ -39,7 +39,7 @@ import ca.uqac.info.trace.EventTrace;
  * Calls to {@link generate} produce message traces where values
  * for each parameter are randomly chosen from a uniform distribution
  * in the interval provided.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class RandomTraceGenerator extends TraceGenerator

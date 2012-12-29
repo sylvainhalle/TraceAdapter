@@ -34,7 +34,7 @@ import java.io.*;
  * <li>Collect the outcome, time and memory consumed using
  * {@link getReturnValue}, {@link getTime}, {@link getMemory}</li>
  * </ol>
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public abstract class Execution

@@ -30,19 +30,11 @@ import ca.uqac.info.trace.XmlTraceReader;
  * Translator for BeepBeep. This translator does essentially "nothing":
  * it simply re-outputs the formula in BB's syntax and re-outputs the
  * trace as is.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class BeepBeepTranslator extends Translator
 {
-
-	@Override
-	public String getSignature(EventTrace t)
-	{
-		// No signature necessary for BeepBeep
-		return "";
-	}
-
 	@Override
 	public String translateFormula(Operator o)
 	{

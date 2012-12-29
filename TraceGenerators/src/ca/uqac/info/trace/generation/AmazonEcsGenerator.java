@@ -36,7 +36,7 @@ import org.w3c.dom.*;
  * <cite>4th International Workshop on
  * Principles of Engineering Service-Oriented Systems (PESOS 2012)</cite>.
  * </blockquote>
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class AmazonEcsGenerator extends TraceGenerator
@@ -81,7 +81,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 	
 	/**
 	 * Actions one can take on the cart
-	 * @author sylvain
+	 * @author Sylvain Hallé
 	 *
 	 */
 	protected enum Action {ITEM_SEARCH, CART_CREATE, CART_CLEAR,
@@ -489,7 +489,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 	
 	/**
 	 * Basic implementation of an Amazon shopping cart
-	 * @author sylvain
+	 * @author Sylvain Hallé
 	 *
 	 */
 	private class Cart extends HashMap<Item,Integer>
@@ -568,7 +568,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 	
 	/**
 	 * Basic implementation of a cart item
-	 * @author sylvain
+	 * @author Sylvain Hallé
 	 *
 	 */
 	private class Item

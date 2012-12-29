@@ -56,12 +56,6 @@ public class XmlTranslator extends Translator
   }
 
   @Override
-  public String getSignature(EventTrace t)
-  {
-    return "";
-  }
-
-  @Override
   public String translateFormula()
   {
     return m_formula.toString();

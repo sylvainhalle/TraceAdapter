@@ -31,7 +31,7 @@ import org.apache.commons.cli.*;
  * event traces of various kinds. It also provides functionality to
  * read command-line arguments, produce an output trace and initialize
  * a random number generator.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public abstract class TraceGenerator
@@ -208,7 +208,8 @@ public abstract class TraceGenerator
 		t_gen.initialize(c_line);
 		EventTrace trace = t_gen.generate();
 		Translator trans = new XmlTranslator();
-		System.out.println(trans.translateTrace(trace));
+		trans.setTrace(trace);
+		System.out.println(trans.translateTrace());
 	}
 	
 	/**

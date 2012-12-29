@@ -35,7 +35,7 @@ import org.w3c.dom.*;
  * lines give comma-separated list of values for each parameter.
  * The parser is robust, in that it ignores lines made of whitespace only,
  * and accepts the "#" character for comment lines
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class CsvTraceReader extends TraceReader

@@ -33,7 +33,7 @@ import ca.uqac.info.util.Relation;
  * trace is a simple extension of a {@link java.util.Vector},
  * providing additional methods to query properties of the
  * events it contains.
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class EventTrace extends Vector<Event>
 {

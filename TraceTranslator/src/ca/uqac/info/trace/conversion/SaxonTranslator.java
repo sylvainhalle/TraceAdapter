@@ -24,7 +24,7 @@ import ca.uqac.info.ltl.XPathAtom;
  * The translation for BeepBeep's Saxon-based monitor if slightly different
  * from BeepBeep's syntax. This translator only codes the differences with
  * respect to the {@link BeepBeepTranslator}.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class SaxonTranslator extends BeepBeepTranslator

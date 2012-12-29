@@ -19,7 +19,7 @@ package ca.uqac.info.ltl;
 
 /**
  * Implementation of the equality
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class OperatorEquals extends BinaryOperator
