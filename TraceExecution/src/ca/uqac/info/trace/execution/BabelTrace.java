@@ -36,7 +36,7 @@ public class BabelTrace
   /**
    * Build string
    */
-  public static final String BUILD_STRING = "20121228";
+  public static final String BUILD_STRING = "20121229";
   
   /**
    * Return codes
@@ -344,6 +344,7 @@ public class BabelTrace
    * tools are supported:
    * <ul>
    * <li>BeepBeep</li>
+   * <li>Filter</li>
    * <li>Maude</li>
    * <li>Monpoly</li>
    * <li>MySQL</li>
@@ -361,6 +362,8 @@ public class BabelTrace
       tr = new MaudeTranslator();
     else if (type.compareToIgnoreCase("beepbeep") == 0)
       tr = new BeepBeepTranslator();
+    else if (type.compareToIgnoreCase("filter") == 0)
+      tr = new FilterTranslator();
     else if (type.compareToIgnoreCase("mysql") == 0)
       tr = new MySQLTranslator();
     else if (type.compareToIgnoreCase("nusmv") == 0)
@@ -380,6 +383,7 @@ public class BabelTrace
    * tools are supported:
    * <ul>
    * <li>BeepBeep</li>
+   * <li>Filter</li>
    * <li>Maude</li>
    * <li>Monpoly</li>
    * <li>MySQL</li>
@@ -397,6 +401,8 @@ public class BabelTrace
       tr = new MaudeExecution();
     else if (type.compareToIgnoreCase("beepbeep") == 0)
       tr = new BeepBeepExecution();
+    else if (type.compareToIgnoreCase("filter") == 0)
+      tr = new FilterExecution();
     else if (type.compareToIgnoreCase("mysql") == 0)
       tr = new MySQLExecution();
     else if (type.compareToIgnoreCase("nusmv") == 0)
