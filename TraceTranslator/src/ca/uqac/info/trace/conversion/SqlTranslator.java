@@ -296,7 +296,7 @@ public class SqlTranslator extends Translator
   {
     StringBuilder out = new StringBuilder();
     // We disable caching since we are performing a benchmark
-    out.append("SELECT NO_SQL_CACHE ").append(m_eventId).append(" FROM (");
+    out.append("SELECT SQL_NO_CACHE ").append(m_eventId).append(" FROM (");
     out.append(translateFormula(m_formula, 0));
     out.append(") AS ").append(m_tableName).append("final WHERE `").append(m_eventId).append("` = 0;");
     return out.toString();
