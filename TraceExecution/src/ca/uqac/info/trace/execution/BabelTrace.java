@@ -364,6 +364,8 @@ public class BabelTrace
       tr = new BeepBeepTranslator();
     else if (type.compareToIgnoreCase("filter") == 0)
       tr = new FilterTranslator();
+    else if (type.compareToIgnoreCase("mysql-opt") == 0)
+      tr = new MySQLTranslatorOptimized();
     else if (type.compareToIgnoreCase("mysql") == 0)
       tr = new MySQLTranslator();
     else if (type.compareToIgnoreCase("nusmv") == 0)
@@ -404,6 +406,8 @@ public class BabelTrace
     else if (type.compareToIgnoreCase("filter") == 0)
       tr = new FilterExecution();
     else if (type.compareToIgnoreCase("mysql") == 0)
+      tr = new MySQLExecution();
+    else if (type.compareToIgnoreCase("mysql-opt") == 0)
       tr = new MySQLExecution();
     else if (type.compareToIgnoreCase("nusmv") == 0)
       tr = new NuSmvExecution(); 
