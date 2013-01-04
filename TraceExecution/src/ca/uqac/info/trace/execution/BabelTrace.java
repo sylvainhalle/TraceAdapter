@@ -159,9 +159,10 @@ public class BabelTrace
     Execution ex = getExecution(tool_name);
     
     // Get filenames for each part
-    String trace_filename = output_dir + "/" + FileReadWrite.baseName(trace_in) + "." + ex.getTraceExtension();
-    String formula_filename = output_dir + "/" + FileReadWrite.baseName(formula_in) + "." + ex.getFormulaExtension();
-    String signature_filename = output_dir + "/" + FileReadWrite.baseName(trace_in) + "." + ex.getSignatureExtension();
+    String base_filename = FileReadWrite.baseName(trace_in) + "." + FileReadWrite.baseName(formula_in);
+    String trace_filename = output_dir + "/" + base_filename + "." + ex.getTraceExtension();
+    String formula_filename = output_dir + "/" + base_filename + "." + ex.getFormulaExtension();
+    String signature_filename = output_dir + "/" + base_filename + "." + ex.getSignatureExtension();
     
     // Setup execution environment
     ex.setProperty(formula_filename);
