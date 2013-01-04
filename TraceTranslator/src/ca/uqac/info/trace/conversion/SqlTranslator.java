@@ -50,7 +50,22 @@ public class SqlTranslator extends Translator
    * for loading the trace into the database (this will change
    * to what file the trace data will be sent)
    */
-  protected boolean m_queryOnly = true;
+  protected boolean m_queryOnly = false;
+  
+  /**
+   * Engine to use when processing queries. Acceptable values are
+   * "InnoDB", "MyISAM", "MEMORY"
+   */
+  protected String m_engine = "MyISAM";
+  
+  /**
+   * Sets the storage engine to use in this database translation
+   * @param s The name of the storage engine
+   */
+  public void setEngine(String s)
+  {
+	  m_engine = s;
+  }
   
   @Override
   public String translateTrace(EventTrace t)
@@ -409,10 +424,11 @@ public class SqlTranslator extends Translator
     out.append("CREATE TABLE ").append(m_tableName).append(" (\n");
     for (String p : params)
     {
-      out.append("  `").append(p).append("` tinytext DEFAULT null,\n");
+      out.append("  `").append(p).append("` VARCHAR(255) DEFAULT null,\n");
     }
     out.append("  msgno int(11) NOT NULL,\n");
-    out.append("  PRIMARY KEY (`").append(m_eventId).append("`)\n) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;\n\n");
+    out.append("  PRIMARY KEY (`").append(m_eventId).append("`)\n) ENGINE=");
+    out.append(m_engine).append(" DEFAULT CHARSET=utf8;\n\n");
     return out.toString();
   }
 
