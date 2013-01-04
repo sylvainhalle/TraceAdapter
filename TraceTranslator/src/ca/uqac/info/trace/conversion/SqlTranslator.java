@@ -150,6 +150,8 @@ public class SqlTranslator extends Translator
       return translateFormula((OperatorAnd) o, level);
     else if (o instanceof OperatorOr)
       return translateFormula((OperatorOr) o, level);
+    else if (o instanceof OperatorImplies)
+        return translateFormula((OperatorImplies) o, level);
     else if (o instanceof OperatorNot)
       return translateFormula((OperatorNot) o, level);
     else if (o instanceof OperatorEquals)
@@ -204,6 +206,17 @@ public class SqlTranslator extends Translator
     out.append(" UNION ");
     out.append("(").append(translateFormula(o.getRight(), level + 1)).append(")");
     return out;
+  }
+  
+  protected StringBuilder translateFormula(OperatorImplies o, int level)
+  {
+	// Translated using the identity p -> q == !p | q
+    OperatorNot on = new OperatorNot();
+    on.setOperand(o.getLeft());
+    OperatorOr oo = new OperatorOr();
+    oo.setLeft(on);
+    oo.setRight(o.getRight());
+    return translateFormula(oo, level);
   }
 
   protected StringBuilder translateFormula(OperatorNot o, int level)

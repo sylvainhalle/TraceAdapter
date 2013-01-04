@@ -13,11 +13,11 @@ public class MySQLTranslatorOptimized extends MySQLTranslator
   protected StringBuilder translateFormula(OperatorAnd o, int level)
   {
     StringBuilder out = new StringBuilder();
-    out.append("SELECT ").append(m_eventId).append(" FROM ").append(m_tableName);
-    out.append("WHERE (").append(m_eventId).append(" IN (")
+    out.append("select ").append(m_eventId).append(" FROM ").append(m_tableName);
+    out.append(" WHERE (").append(m_eventId).append(" IN (")
       .append(translateFormula(o.getLeft(), level + 1)).append(") AND ")
       .append(m_eventId).append(" IN ");
-    out.append("(").append(translateFormula(o.getRight(), level + 1)).append(")");
+    out.append("(").append(translateFormula(o.getRight(), level + 1)).append("))");
     return out;
   }
   
@@ -25,11 +25,11 @@ public class MySQLTranslatorOptimized extends MySQLTranslator
   protected StringBuilder translateFormula(OperatorOr o, int level)
   {
     StringBuilder out = new StringBuilder();
-    out.append("SELECT ").append(m_eventId).append(" FROM ").append(m_tableName);
-    out.append("WHERE (").append(m_eventId).append(" IN (")
+    out.append("select ").append(m_eventId).append(" FROM ").append(m_tableName);
+    out.append(" WHERE (").append(m_eventId).append(" IN (")
       .append(translateFormula(o.getLeft(), level + 1)).append(") OR ")
       .append(m_eventId).append(" IN ");
-    out.append("(").append(translateFormula(o.getRight(), level + 1)).append(")");
+    out.append("(").append(translateFormula(o.getRight(), level + 1)).append("))");
     return out;
   }
   
@@ -37,7 +37,7 @@ public class MySQLTranslatorOptimized extends MySQLTranslator
   protected StringBuilder translateFormula(OperatorF o, int level)
   {
     StringBuilder out = new StringBuilder();
-    out.append("SELECT ").append(m_eventId);
+    out.append("select ").append(m_eventId);
     out.append(" FROM ").append(m_tableName).append(" WHERE ").append(m_eventId).append(" <= ");
     out.append("(SELECT MAX(").append(m_eventId).append(") FROM (").append(translateFormula(o.getOperand(), level + 1)).append(")");
     out.append(" AS ").append(m_tableName).append(level).append(")");
