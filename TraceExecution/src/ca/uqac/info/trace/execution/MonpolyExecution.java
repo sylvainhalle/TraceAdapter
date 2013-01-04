@@ -21,9 +21,7 @@ package ca.uqac.info.trace.execution;
 public class MonpolyExecution extends Execution
 {
   private final String m_command = "monpoly";
-  private final String m_key = "@";
-  private final String m_sep = ":";
-
+  
   @Override
   protected String[] getCommandLines()
   {
@@ -40,35 +38,13 @@ public class MonpolyExecution extends Execution
   @Override
   /* package */ ReturnVerdict parseReturnString(String strValue)
   {
-    String s_val = "";
-    ReturnVerdict val = ReturnVerdict.ERROR;
-    String[] lines = strValue.split(CRLF);
-    for (String line : lines)
-    {
-      if (line.contains(m_key))
-      {
-        String[] tab2 = line.split(m_sep);
-
-        if (tab2.length == 1)
-        {
-          s_val = tab2[0].trim();
-        }
-        else
-        {
-          s_val = tab2[1].trim();
-        }
-        if (!s_val.isEmpty() && s_val.contains("true"))
-        {
-          val = ReturnVerdict.TRUE;
-        }
-        else
-        {
-          val = ReturnVerdict.FALSE;
-        }
-        break;
-      }
-    }
-    return val;
+    if (strValue.contains("@0"))
+    	return ReturnVerdict.TRUE;
+    if (strValue.contains("error"))
+    	return ReturnVerdict.ERROR;
+    if (strValue.contains("not monitorable"))
+    	return ReturnVerdict.INCONCLUSIVE;
+    return ReturnVerdict.FALSE;
   }
 
   @Override
