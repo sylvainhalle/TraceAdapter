@@ -260,10 +260,9 @@ public class MonpolyTranslator extends Translator
     {
       StringBuilder right = m_pieces.pop();
       StringBuilder left = m_pieces.pop();
-      StringBuilder op = m_pieces.pop();
 
-      StringBuilder out = new StringBuilder("(").append(left).append(") IMPLIES")
-          .append("(").append(right).append(op).append(")");
+      StringBuilder out = new StringBuilder("(").append(left).append(") IMPLIES ")
+          .append("(").append(right).append(")");
       m_pieces.push(out);
 
     }
