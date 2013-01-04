@@ -36,7 +36,7 @@ public class BabelTrace
   /**
    * Build string
    */
-  public static final String BUILD_STRING = "20121230";
+  public static final String BUILD_STRING = "20120104";
   
   /**
    * Return codes
@@ -72,7 +72,7 @@ public class BabelTrace
     if (c_line.hasOption("version"))
     {
       System.out.println("\nBabelTrace build " + BUILD_STRING);
-      System.out.println("(C) 2012 Sylvain Hallé et al., Université du Québec à Chicoutimi");
+      System.out.println("(C) 2012-2013 Sylvain Hallé et al., Université du Québec à Chicoutimi");
       System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
       System.out.println("This is free software, and you are welcome to redistribute it");
       System.out.println("under certain conditions. See the file COPYING for details.\n");
@@ -129,29 +129,7 @@ public class BabelTrace
       show_command = false;
     }
     
-    // Initialize the translator
-    Translator tt = getTraceTranslator(tool_name);
-    if (tt == null)
-    {
-      System.err.println("Error: unrecognized conversion format \"" + tool_name + "\"");
-      System.exit(ERR_NO_SUCH_TOOL);
-    }
-    tt.setTrace(trace);
-    
-    // Get the trace
-    trace_in = new File(trace_in_filename);
-    TraceReader t_read = getTraceReader(trace_type);
-    try
-    {
-      trace = t_read.parseEventTrace(new FileInputStream(trace_in));
-    }
-    catch (FileNotFoundException ex)
-    {
-      ex.printStackTrace();
-      System.exit(ERR_IO);
-    }
-    
-    // Get the formula as an operator
+    // Read input formula
     formula_in = new File(formula_in_filename);
     if (!formula_in.exists())
     {
@@ -173,6 +151,57 @@ public class BabelTrace
       e.printStackTrace();
       System.exit(ERR_IO);
     }
+    
+    // Get trace file
+    trace_in = new File(trace_in_filename);
+    
+    // Get execution
+    Execution ex = getExecution(tool_name);
+    
+    // Get filenames for each part
+    String trace_filename = output_dir + "/" + FileReadWrite.baseName(trace_in) + "." + ex.getTraceExtension();
+    String formula_filename = output_dir + "/" + FileReadWrite.baseName(formula_in) + "." + ex.getFormulaExtension();
+    String signature_filename = output_dir + "/" + FileReadWrite.baseName(trace_in) + "." + ex.getSignatureExtension();
+    
+    // Setup execution environment
+    ex.setProperty(formula_filename);
+    ex.setSignature(signature_filename);
+    ex.setTrace(trace_filename);
+    
+    // Show command lines and leave
+    if (show_command)
+    {
+      String[] cl = ex.getCommandLines();
+      for (String c : cl)
+      {
+    	  System.out.print(c);
+    	  System.out.print("\n");
+      }
+      System.exit(ERR_OK);
+    }
+    
+    // Initialize the translator
+    Translator tt = getTraceTranslator(tool_name);
+    if (tt == null)
+    {
+      System.err.println("Error: unrecognized conversion format \"" + tool_name + "\"");
+      System.exit(ERR_NO_SUCH_TOOL);
+    }
+    tt.setTrace(trace);
+    
+    // Parse the trace
+    TraceReader t_read = getTraceReader(trace_type);
+    try
+    {
+      trace = t_read.parseEventTrace(new FileInputStream(trace_in));
+    }
+    catch (FileNotFoundException e)
+    {
+      e.printStackTrace();
+      System.exit(ERR_IO);
+    }
+    
+    // Get the formula as an operator
     try
     {
       op = Operator.parseFromString(out_formula);
@@ -243,14 +272,8 @@ public class BabelTrace
     out_trace = tt.getTraceFile();
     out_formula = tt.getFormulaFile();
     out_signature = tt.getSignatureFile();
-    
-    // Get execution
-    Execution ex = getExecution(tool_name);
-    
+        
     // Save conversions to files
-    String trace_filename = output_dir + "/" + FileReadWrite.baseName(trace_in) + "." + ex.getTraceExtension();
-    String formula_filename = output_dir + "/" + FileReadWrite.baseName(formula_in) + "." + ex.getFormulaExtension();
-    String signature_filename = output_dir + "/" + FileReadWrite.baseName(trace_in) + "." + ex.getSignatureExtension();
     try
     {
       if (!out_trace.isEmpty())
@@ -271,18 +294,6 @@ public class BabelTrace
       System.err.println("Error writing to file");
       System.err.println(e.getMessage());
       System.exit(ERR_IO);
-    }
-    
-    // Setup execution environment
-    ex.setProperty(formula_filename);
-    ex.setSignature(signature_filename);
-    ex.setTrace(trace_filename);
-    
-    // Show command line and leave
-    if (show_command)
-    {
-      System.out.println(ex.getCommandLines());
-      System.exit(ERR_OK);
     }
     
     // Now that all conversions have been made, run the tool
@@ -368,6 +379,18 @@ public class BabelTrace
       tr = new MySQLTranslatorOptimized();
     else if (type.compareToIgnoreCase("mysql") == 0)
       tr = new MySQLTranslator();
+    else if (type.compareToIgnoreCase("mysql-innodb") == 0)
+    {
+        MySQLTranslator mtr = new MySQLTranslator();
+        mtr.setEngine("InnoDB");
+        tr = mtr;
+    }
+    else if (type.compareToIgnoreCase("mysql-memory") == 0)
+    {
+        MySQLTranslator mtr = new MySQLTranslator();
+        mtr.setEngine("MEMORY");
+        tr = mtr;
+    }
     else if (type.compareToIgnoreCase("nusmv") == 0)
       tr = new SmvTranslator(); 
     else if (type.compareToIgnoreCase("saxon") == 0)
@@ -407,6 +430,10 @@ public class BabelTrace
       tr = new FilterExecution();
     else if (type.compareToIgnoreCase("mysql") == 0)
       tr = new MySQLExecution();
+    else if (type.compareToIgnoreCase("mysql-innodb") == 0)
+        tr = new MySQLExecution();
+    else if (type.compareToIgnoreCase("mysql-memory") == 0)
+        tr = new MySQLExecution();
     else if (type.compareToIgnoreCase("mysql-opt") == 0)
       tr = new MySQLExecution();
     else if (type.compareToIgnoreCase("nusmv") == 0)
