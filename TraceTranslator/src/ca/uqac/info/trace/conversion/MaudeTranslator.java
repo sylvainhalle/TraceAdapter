@@ -303,7 +303,10 @@ public class MaudeTranslator extends Translator
     maude_trace = maude_trace.append(sat_operator).append(prop);
     out_Trace.append("in ltl.maude\n");
     out_Trace.append("fmod MY-TRACE is").append("\n");
-    out_Trace.append("  extending LTL .").append("\n");
+    if (m_useAlternateMethod)
+    	out_Trace.append("  extending LTL-REVISED .").append("\n");
+    else
+    	out_Trace.append("  extending LTL .").append("\n");
     out_Trace.append("  ops  ").append(operandes).append(" : -> Atom .")
         .append("\n");
     out_Trace.append("endfm\n");
