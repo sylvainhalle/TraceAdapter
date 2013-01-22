@@ -183,8 +183,8 @@ public class MonpolyTranslator extends Translator
         out = new StringBuilder();
         return out;
       }
-      out.append("\n\t").append(indent).append(n.getNodeName()).append(" ( ")
-          .append(val).append(" ) ");
+      out.append("\n\t").append(indent).append(n.getNodeName()).append("(\"")
+          .append(val).append("\")");
       return out;
     }
     for (int i = 0; i < num_children; i++)
