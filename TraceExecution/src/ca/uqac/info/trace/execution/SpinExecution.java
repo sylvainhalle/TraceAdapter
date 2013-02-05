@@ -104,6 +104,6 @@ public class SpinExecution extends Execution
   @Override
   public String getFormulaExtension()
   {
-    return "pml";
+    return "formula.pml";
   }
 }
