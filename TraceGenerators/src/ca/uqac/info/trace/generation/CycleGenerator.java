@@ -50,7 +50,7 @@ public class CycleGenerator extends TraceGenerator{
 	 */
 	public CycleGenerator(){
 		m_random = new Random();
-		
+		t_maxTags=3;
 		
 	}
 	/**
@@ -125,7 +125,7 @@ public class CycleGenerator extends TraceGenerator{
 			Node event = trace.getNode();
 			Node n_items = trace.createElement("Date");
 			
-			// create a java calendar instance
+			 //create a java calendar instance
 			Calendar calendar = Calendar.getInstance();
 
 			// get a java.util.Date from the calendar instance.

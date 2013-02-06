@@ -157,17 +157,11 @@ public class SmvTranslator extends Translator
 	private static String toSmvToken(String s)
 	{
 		String out = new String(s);
-		out = out.replace(" ", "_p");
-		out = out.replace("_", "__");
-		out = out.replace(".", "_d");
-		out = out.replace(",", "_c");
-		out = out.replace(";", "_l");
-		out = out.replace(":", "_s");
-		out = out.replace("-", "_h");
-		if (!out.matches("^[A-I].*$"))
-		{
-			out = "s" + out;
-		}
+		out.replace("_", "__");
+		out.replace(".", "_d");
+		out.replace(",", "_c");
+		out.replace(";", "_l");
+		out.replace(":", "_s");
 		return out;
 	}
 

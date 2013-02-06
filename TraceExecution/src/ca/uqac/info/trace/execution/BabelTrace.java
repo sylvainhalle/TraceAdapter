@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 import ca.uqac.info.ltl.*; 
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.*;
@@ -35,7 +36,8 @@ public class BabelTrace
   /**
    * Build string
    */
-  public static final String BUILD_STRING = "20120110";
+ // public static final String BUILD_STRING = "20120110";
+	 public static final String BUILD_STRING = "20120122";
   
   /**
    * Return codes

@@ -46,6 +46,7 @@ public class PetriNetGenerator extends TraceGenerator
 	 * The list of places in the Petri net
 	 */
 	protected List<Place> m_places;
+
 	
 	/**
 	 * The list of transitions in the Petri net
@@ -69,19 +70,27 @@ public class PetriNetGenerator extends TraceGenerator
 		if (super.m_clockAsSeed)
 			setSeed(System.currentTimeMillis());
 		EventTrace trace = new EventTrace();
+
 		RandomPicker<Transition> transition_picker = new RandomPicker<Transition>(super.m_random);
+	
     // We choose the number of messages to produce
     int n_messages = super.m_random.nextInt(super.m_maxMessages + 1 - super.m_minMessages) + super.m_minMessages;
     for (int i = 0; i < n_messages; i++)
 		{
 			if (super.m_verboseLevel > 0)
 				System.out.println("Generating message " + i);
-  		// Get enabled transitions
+		  		// Get enabled transitions
 			Vector<Transition> enabled_trans = new Vector<Transition>();
+ 
 			for (Transition trans : m_transitions)
 			{
+			
 				if (trans.isEnabled())
+				{
+
 					enabled_trans.add(trans);
+				}
+
 			}
     	if (enabled_trans.isEmpty())
     	{
@@ -91,10 +100,14 @@ public class PetriNetGenerator extends TraceGenerator
 			// Pick one such transition
 			Transition t = transition_picker.pick(enabled_trans);
 			// Emit event
-    	Node n = trace.getNode();
-    	n.appendChild(trace.createTextNode(t.m_label));
-    	Event e = new Event(n);
-    	trace.add(e);
+			Node n = trace.getNode();
+			Node n2 = trace.createElement("name");
+			Node n3 = trace.createTextNode(t.m_label);
+			n2.appendChild(n3);
+			n.appendChild(n2);
+			
+			Event e = new Event(n);
+			trace.add(e);
 			// Fire transition
 			t.fire();
 		}
@@ -147,8 +160,10 @@ public class PetriNetGenerator extends TraceGenerator
 		int i = m_places.lastIndexOf(p);
 		if (i == -1)
 			m_places.add(p);
+
 		else
 			p = m_places.get(i);
+
 		return p;
 	}
 	
@@ -265,6 +280,7 @@ public class PetriNetGenerator extends TraceGenerator
 		protected Set<Transition> m_outgoing;
 		protected int m_marking = 0;
 		protected String m_label;
+
 		
 		public Place()
 		{

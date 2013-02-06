@@ -1,5 +1,6 @@
 package ca.uqac.info.trace.conversion;
 
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -29,6 +30,7 @@ import ca.uqac.info.ltl.OperatorVisitor;
 import ca.uqac.info.ltl.OperatorX;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
+
 import ca.uqac.info.util.Relation;
 
 public class PromelaTranslator extends Translator {
@@ -489,6 +491,7 @@ public class PromelaTranslator extends Translator {
     return "";
   }
 
+ 
 }
 
 

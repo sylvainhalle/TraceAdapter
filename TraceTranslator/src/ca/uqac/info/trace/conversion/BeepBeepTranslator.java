@@ -36,7 +36,7 @@ import ca.uqac.info.trace.XmlTraceReader;
 public class BeepBeepTranslator extends Translator
 {
 	@Override
-	public String translateFormula(Operator o)
+	public String translateFormula(Operator o)                                                                                                                                                                        
 	{
 		setFormula(o);
 		return translateFormula();
