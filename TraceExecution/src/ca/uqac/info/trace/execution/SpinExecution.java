@@ -44,14 +44,16 @@ public class SpinExecution extends Execution
     String[] cl = new String[5];
     { // cat trace.pml > /tmp/temp.pml
       StringBuilder out = new StringBuilder();
-      out.append("cat ").append(conditionalQuote(m_trace)).append(" > ").append(tmpfn).append("; ");
+      out.append("cat ").append("Benchmark-20130104/").append(conditionalQuote(m_trace)).append(" > ").append(tmpfn).append("; ");
       cl[i++] = out.toString();
     }
+
     { // spin -F property.pml >> /tmp/temp.pml
       StringBuilder out = new StringBuilder();
-      out.append(m_commandLocation).append(" -F ").append(conditionalQuote(m_property)).append(" >> ").append(tmpfn).append("; ");
+      out.append(m_commandLocation).append(" -F ").append("Benchmark-20130104/").append(conditionalQuote(m_property)).append(" >> ").append(tmpfn).append("; ");
       cl[i++] = out.toString();
     }
+  
     { // spin -a /tmp/temp.pml
       StringBuilder out = new StringBuilder();
       out.append(m_commandLocation).append(" -a ").append(tmpfn).append("; ");
@@ -59,12 +61,14 @@ public class SpinExecution extends Execution
     }
     { // gcc /tmp/pan.c
       StringBuilder out = new StringBuilder();
-      out.append(m_compilerName).append(" ").append(m_tempDir).append("pan.c");
+      //out.append(m_compilerName).append(" ").append(m_tempDir).append("pan.c");
+      out.append(m_compilerName).append(" ").append("pan.c").append(";");
       cl[i++] = out.toString();
     }
     { // /tmp/a.out
       StringBuilder out = new StringBuilder();
-      out.append(m_tempDir).append("a.out");
+      //out.append(m_tempDir).append("a.out");
+      out.append("./a.out").append(";");
       cl[i++] = conditionalQuote(out.toString());
     }
     return cl;
@@ -101,9 +105,10 @@ public class SpinExecution extends Execution
     return "pml";
   }
   
-  @Override
-  public String getFormulaExtension()
-  {
-    return "pml";
+ @Override
+ public String getFormulaExtension()
+ {
+   // return "pml";
+    return  "formula.pml";
   }
 }
