@@ -21,8 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
-import ca.uqac.info.ltl.*;
+import ca.uqac.info.ltl.*; 
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.trace.conversion.*;
