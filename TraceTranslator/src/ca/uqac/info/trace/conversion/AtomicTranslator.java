@@ -92,7 +92,7 @@ import ca.uqac.info.util.Relation;
  * One can see how a problem on a trace/formula with parameters has been
  * converted into a situation where both the trace and the formula contain
  * only atomic events.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class AtomicTranslator extends Translator
@@ -148,7 +148,7 @@ public class AtomicTranslator extends Translator
    * as one occurrence of the parameter contains the value
    * (hence the equality is implicitly existentially quantified)</li>
    * </ul>
-   * @author sylvain
+   * @author Sylvain Hallé
    *
    */
   protected class AtomicFormulaTranslator extends GenericVisitor
@@ -313,7 +313,7 @@ public class AtomicTranslator extends Translator
   /**
    * The TokenGenerator simply produces a list of event tokens,
    * each of the form e0, e1, e2, ...
-   * @author sylvain
+   * @author Sylvain Hallé
    */
   protected class TokenGenerator implements Iterator<String>
   {
@@ -340,14 +340,6 @@ public class AtomicTranslator extends Translator
       // We do nothing
     }
 
-  }
-
-
-  @Override
-  public String getSignature(EventTrace t)
-  {
-    // No signature
-    return "";
   }
 
   @Override

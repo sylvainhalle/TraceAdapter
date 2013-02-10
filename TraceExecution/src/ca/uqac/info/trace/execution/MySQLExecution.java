@@ -21,7 +21,7 @@ package ca.uqac.info.trace.execution;
 /**
  * Manages the execution of the trace validator using the
  * MySQL database engine
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class MySQLExecution extends Execution
 {

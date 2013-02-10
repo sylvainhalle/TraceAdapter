@@ -24,7 +24,7 @@ import java.util.*;
  * Implementation of the mathematical concept of a relation, that is,
  * a map <i>K</i> &rarr; 2<sup>V</sup> from the set
  * of pre-image values <i>P</i> to a set of values of type <i>V</i>
- * @author sylvain
+ * @author Sylvain Hallé
  *
  * @param <K> The domain type
  * @param <V> The image type

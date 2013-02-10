@@ -21,6 +21,12 @@ package ca.uqac.info.trace.conversion;
 import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.EventTrace;
 
+/**
+ * Translates input traces and properties into various languages
+ * and notations.
+ * @author Sylvain Hallé
+ *
+ */
 public abstract class Translator
 {  
 	protected Operator m_formula = null;
@@ -33,6 +39,11 @@ public abstract class Translator
 	
   /**
    * Translate an input trace into the output format
+   * @deprecated This method shall be phased out, as many
+   * translators need to process the trace and property at the
+   * same time; please use {@link setTrace} followed by
+   * {@link translateTrace} to have a similar effect.
+   * @param t The event trace to translate
    * @return A String representing the trace, into the target
    * format 
    */
@@ -48,6 +59,10 @@ public abstract class Translator
   /**
    * Translates an LTL formula into an equivalent expression of the
    * target language.
+   * @deprecated This method shall be phased out, as many
+   * translators need to process the trace and property at the
+   * same time; please use {@link setFormula} followed by
+   * {@link translateFormula} to have a similar effect.
    * @param o The LTL formula
    * @return A String rendition of the target formula
    */
@@ -82,11 +97,19 @@ public abstract class Translator
     return m_outSignature;
   }
   
+  /**
+   * Sets the trace to be processed by the translator.
+   * @param t The event trace
+   */
   public void setTrace(EventTrace t)
   {
 	  m_trace = t;
   }
   
+  /**
+   * Sets the formula to be processed by the translator
+   * @param o The LTL formula
+   */
   public void setFormula(Operator o)
   {
 	  m_formula = o;
@@ -110,12 +133,6 @@ public abstract class Translator
    */
   public abstract boolean requiresAtomic();
   
-  /**
-   * get an input signature for Monpoly
-   * @param t
-   * @return a String representing the signature for Monpoly tool
-   */
-  public abstract String getSignature(EventTrace t);
   
   public abstract String getSignature();
 }

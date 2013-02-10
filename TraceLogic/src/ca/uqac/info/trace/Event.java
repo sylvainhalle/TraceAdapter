@@ -38,7 +38,7 @@ import ca.uqac.info.util.Relation;
  * matter of fact, internally an event simply contains a DOM
  * {@link org.w3c.xml.Node}, and serves as an interface between that node's
  * content and the outside world.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class Event

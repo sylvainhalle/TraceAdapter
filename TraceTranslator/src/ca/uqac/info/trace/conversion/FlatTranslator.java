@@ -27,7 +27,7 @@ import ca.uqac.info.util.Relation;
 /**
  * Translates a multi-valued trace and formula into a single-valued
  * one.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class FlatTranslator extends Translator
@@ -126,12 +126,6 @@ public class FlatTranslator extends Translator
   public boolean requiresAtomic()
   {
     return false;
-  }
-
-  @Override
-  public String getSignature(EventTrace t)
-  {
-    return "";
   }
 
   @Override

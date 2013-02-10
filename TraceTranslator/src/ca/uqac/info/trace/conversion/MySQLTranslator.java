@@ -21,17 +21,28 @@ package ca.uqac.info.trace.conversion;
 import ca.uqac.info.ltl.OperatorAnd;
 import ca.uqac.info.ltl.OperatorEquals;
 import ca.uqac.info.ltl.OperatorNot;
+import ca.uqac.info.ltl.OperatorOr;
 
 /**
  * Translates traces and events to a set of SQL queries for processing
  * by a relational database engine. The MySQLTranslator is almost identical
- * to the {@link SQLTranslator}; the only difference is that the <tt>MINUS</tt>
- * and <tt>INTERSECTION</tt> operators, defined in the SQL standard, are not
- * supported by MySQL. Therefore they must be simulated using other
- * constructs (self-join in the case of intersection, and selection using
- * <tt>NOT IN</tt> for set difference). This class only overrides the translation
- * methods relevant to these two operators.
- * @author sylvain
+ * to the {@link SQLTranslator}; the only differences are that
+ * <ol>
+ * <li>The <tt>MINUS</tt> and <tt>INTERSECTION</tt> operators, defined
+ * in the SQL standard, are not supported by MySQL. Therefore they must
+ * be simulated using other constructs (self-join in the case of
+ * intersection, and selection using
+ * <tt>NOT IN</tt> for set difference).</li>
+ * <li>The <tt>UNION</tt> operator, although supported, creates a syntax
+ * error if surrounded by extraneous sets of parentheses (as per this
+ * <a href="http://stackoverflow.com/questions/5728947/mysql-query-with-union-is-failing">post</a>).
+ * To avoid the problem (since the translation recursively surrounds nested
+ * expressions by parentheses), an extra <tt>SELECT</tt> statement is
+ * added around the union.</li>
+ * </ol>
+ * This class only overrides the translation
+ * methods relevant to these operators.
+ * @author Sylvain Hallé
  */
 public class MySQLTranslator extends SqlTranslator
 {
@@ -48,6 +59,18 @@ public class MySQLTranslator extends SqlTranslator
     out.append("(").append(translateFormula(o.getRight(), level + 1)).append(") AS ").append(table_right);
     out.append(" ON ").append(table_left).append(".msgno = ").append(table_right).append(".msgno");
     out.append(")");
+    return out;
+  }
+  
+  @Override
+  protected StringBuilder translateFormula(OperatorOr o, int level)
+  {
+    StringBuilder out = new StringBuilder();
+    out.append("SELECT ").append(m_eventId).append(" FROM (");
+    out.append("(").append(translateFormula(o.getLeft(), level + 1)).append(")");
+    out.append(" UNION ");
+    out.append("(").append(translateFormula(o.getRight(), level + 1)).append(")");
+    out.append(") AS ").append(m_tableName).append(level);
     return out;
   }
   

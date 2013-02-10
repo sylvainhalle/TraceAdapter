@@ -134,14 +134,6 @@ public class XesTranslator extends Translator
     return translateFormula();
   }
 
-
-  @Override
-  public String getSignature(EventTrace t)
-  {
-    return "";
-  }
-
-
   @Override
   public String translateFormula()
   {

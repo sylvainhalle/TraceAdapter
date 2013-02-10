@@ -29,18 +29,11 @@ import ca.uqac.info.util.Relation;
 /**
  * Converts an arbitrary trace and formula to a propositional
  * problem. This will only change the formula, not the trace.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class PropositionalTranslator extends Translator
 {
-
-  @Override
-  public String getSignature(EventTrace t)
-  {
-    // No signature for this translator
-    return "";
-  }
 
   @Override
   public String translateFormula(Operator o)
@@ -185,7 +178,7 @@ public class PropositionalTranslator extends Translator
   /**
    * Visitor that fetches the set of all paths appearing in
    * the quantifier of the visited formula.
-   * @author sylvain
+   * @author Sylvain Hallé
    *
    */
   protected class PathVisitor extends EmptyVisitor
@@ -267,8 +260,10 @@ public class PropositionalTranslator extends Translator
     }
     assert t != null;
     Translator bt = new PropositionalTranslator();
-    String c = bt.translateTrace(t);
-    String f = bt.translateFormula(o);
+    bt.setTrace(t);
+    bt.setFormula(o);
+    String c = bt.translateTrace();
+    String f = bt.translateFormula();
     System.out.println(f);
   }
   

@@ -27,13 +27,11 @@ import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.trace.XmlTraceReader;
 
 /**
- * Translator for BeepBeep. This translator does essentially "nothing":
- * it simply re-outputs the formula in BB's syntax and re-outputs the
- * trace as is.
+ * Translator for LTL expressions into an appropriate filter piping.
  * @author Sylvain Hallé
  *
  */
-public class BeepBeepTranslator extends Translator
+public class FilterTranslator extends Translator
 {
 	@Override
 	public String translateFormula(Operator o)
@@ -45,9 +43,9 @@ public class BeepBeepTranslator extends Translator
 	@Override
 	public String translateFormula()
 	{
-    BeepBeepFormulaTranslator sft = new BeepBeepFormulaTranslator();
-    m_formula.accept(sft);
-    return sft.getFormula();
+	  FilterFormulaTranslator sft = new FilterFormulaTranslator();
+	  m_formula.accept(sft);
+	  return sft.getFormula();
 	}
 
 	@Override
@@ -57,25 +55,24 @@ public class BeepBeepTranslator extends Translator
 		return translateTrace();
 	}
 
-	/**
-	 * Note: BeepBeep assumes there is not root element in the trace
-	 */
 	@Override
 	public String translateTrace()
 	{
 		StringBuilder out = new StringBuilder();
+		out.append("<trace>\n");
 		for (Event e : m_trace)
 		{
 			out.append(e.toString()).append("\n");
 		}
+		out.append("</trace>");
 		return out.toString();
 	}
 	
-  protected class BeepBeepFormulaTranslator implements OperatorVisitor
+  protected class FilterFormulaTranslator implements OperatorVisitor
   {
     Stack<StringBuffer> m_pieces;
     
-    public BeepBeepFormulaTranslator()
+    public FilterFormulaTranslator()
     {
       super();
       m_pieces = new Stack<StringBuffer>();
@@ -110,7 +107,7 @@ public class BeepBeepTranslator extends Translator
     {
       StringBuffer right = m_pieces.pop();
       StringBuffer left = m_pieces.pop();
-      StringBuffer out = new StringBuffer("(").append(left).append(") -> (").append(right).append(")");
+      StringBuffer out = new StringBuffer("(! (").append(left).append(")) | (").append(right).append(")");
       m_pieces.push(out);
     }
 
@@ -126,7 +123,7 @@ public class BeepBeepTranslator extends Translator
     public void visit(OperatorF o)
     {
       StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("F (").append(op).append(")");
+      StringBuffer out = new StringBuffer("(1 \\ (").append(op).append(")) : 1");
       m_pieces.push(out);
     }
 
@@ -134,7 +131,7 @@ public class BeepBeepTranslator extends Translator
     public void visit(OperatorX o)
     {
       StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("X (").append(op).append(")");
+      StringBuffer out = new StringBuffer("(2 \\ 1) : (").append(op).append(")");
       m_pieces.push(out);
     }
 
@@ -142,7 +139,7 @@ public class BeepBeepTranslator extends Translator
     public void visit(OperatorG o)
     {
       StringBuffer op = m_pieces.pop();
-      StringBuffer out = new StringBuffer("G (").append(op).append(")");
+      StringBuffer out = new StringBuffer("(1 \\ (!(").append(op).append("))) : 0");
       m_pieces.push(out);
     }
 
@@ -151,7 +148,7 @@ public class BeepBeepTranslator extends Translator
     {
       StringBuffer o_right = m_pieces.pop(); // Pop right-hand side
       StringBuffer o_left = m_pieces.pop(); // Pop left-hand side
-      StringBuffer out = new StringBuffer("(").append(o_left).append(") = (").append(o_right).append(")");
+      StringBuffer out = new StringBuffer("").append(o_left).append(" = ").append(o_right).append("");
       m_pieces.push(out);
     }
 
@@ -160,7 +157,7 @@ public class BeepBeepTranslator extends Translator
     {
       StringBuffer out = new StringBuffer();
       if (o instanceof Constant)
-    	out.append("{").append(o.toString()).append("}");
+    	out.append("\"").append(o.toString()).append("\"");
       else
     	out.append(o.toString());
       m_pieces.push(out);
@@ -180,23 +177,13 @@ public class BeepBeepTranslator extends Translator
 	@Override
   public void visit(Exists o)
   {
-		StringBuffer operand = m_pieces.pop();
-		StringBuffer path = m_pieces.pop();
-		StringBuffer variable = m_pieces.pop();
-		StringBuffer out = new StringBuffer();
-		out.append("<").append(variable).append(" /").append(path).append("> (").append(operand).append(")");
-		m_pieces.push(out);
+		// Not supported for now
   }
 
 	@Override
   public void visit(ForAll o)
   {
-		StringBuffer operand = m_pieces.pop();
-		StringBuffer path = m_pieces.pop();
-		StringBuffer variable = m_pieces.pop();
-		StringBuffer out = new StringBuffer();
-		out.append("[").append(variable).append(" /").append(path).append("] (").append(operand).append(")");
-		m_pieces.push(out);
+	// Not supported for now
   }
 
 	@Override
@@ -208,14 +195,14 @@ public class BeepBeepTranslator extends Translator
   @Override
   public void visit(OperatorTrue o)
   {
-    m_pieces.push(new StringBuffer("TRUE"));
+    m_pieces.push(new StringBuffer("1"));
     
   }
 
   @Override
   public void visit(OperatorFalse o)
   {
-    m_pieces.push(new StringBuffer("FALSE"));
+    m_pieces.push(new StringBuffer("0"));
   }
 
   }

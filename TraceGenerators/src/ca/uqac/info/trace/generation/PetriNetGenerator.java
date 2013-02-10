@@ -37,7 +37,7 @@ import ca.uqac.info.util.RandomPicker;
  * <p>
  * See {@link parseFromString} for a precise definition of the
  * input format to specify the Petri net.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class PetriNetGenerator extends TraceGenerator
@@ -256,7 +256,7 @@ public class PetriNetGenerator extends TraceGenerator
 	 * A place in a Petri net is a graph node that can contain zero or more
 	 * <em>tokens</em>. It is linked via incoming and outgoing arrows to
 	 * transitions.
-	 * @author sylvain
+	 * @author Sylvain Hallé
 	 *
 	 */
 	protected class Place
@@ -341,7 +341,7 @@ public class PetriNetGenerator extends TraceGenerator
 	 * A transition of a Petri net may <em>fire</em> whenever there are sufficient
 	 * tokens in the places from all incoming arcs; when it fires, it consumes
 	 * these tokens, and places tokens at the end of all output arcs.
-	 * @author sylvain
+	 * @author Sylvain Hallé
 	 *
 	 */
 	protected class Transition

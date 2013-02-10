@@ -50,7 +50,22 @@ public class SqlTranslator extends Translator
    * for loading the trace into the database (this will change
    * to what file the trace data will be sent)
    */
-  protected boolean m_queryOnly = true;
+  protected boolean m_queryOnly = false;
+  
+  /**
+   * Engine to use when processing queries. Acceptable values are
+   * "InnoDB", "MyISAM", "MEMORY"
+   */
+  protected String m_engine = "MyISAM";
+  
+  /**
+   * Sets the storage engine to use in this database translation
+   * @param s The name of the storage engine
+   */
+  public void setEngine(String s)
+  {
+	  m_engine = s;
+  }
   
   @Override
   public String translateTrace(EventTrace t)
@@ -135,6 +150,8 @@ public class SqlTranslator extends Translator
       return translateFormula((OperatorAnd) o, level);
     else if (o instanceof OperatorOr)
       return translateFormula((OperatorOr) o, level);
+    else if (o instanceof OperatorImplies)
+        return translateFormula((OperatorImplies) o, level);
     else if (o instanceof OperatorNot)
       return translateFormula((OperatorNot) o, level);
     else if (o instanceof OperatorEquals)
@@ -189,6 +206,17 @@ public class SqlTranslator extends Translator
     out.append(" UNION ");
     out.append("(").append(translateFormula(o.getRight(), level + 1)).append(")");
     return out;
+  }
+  
+  protected StringBuilder translateFormula(OperatorImplies o, int level)
+  {
+	// Translated using the identity p -> q == !p | q
+    OperatorNot on = new OperatorNot();
+    on.setOperand(o.getLeft());
+    OperatorOr oo = new OperatorOr();
+    oo.setLeft(on);
+    oo.setRight(o.getRight());
+    return translateFormula(oo, level);
   }
 
   protected StringBuilder translateFormula(OperatorNot o, int level)
@@ -292,16 +320,11 @@ public class SqlTranslator extends Translator
   }
 
   @Override
-  public String getSignature(EventTrace t)
-  {
-    return getSignature();
-  }
-
-  @Override
   public String translateFormula()
   {
     StringBuilder out = new StringBuilder();
-    out.append("SELECT ").append(m_eventId).append(" FROM (");
+    // We disable caching since we are performing a benchmark
+    out.append("SELECT SQL_NO_CACHE ").append(m_eventId).append(" FROM (");
     out.append(translateFormula(m_formula, 0));
     out.append(") AS ").append(m_tableName).append("final WHERE `").append(m_eventId).append("` = 0;");
     return out.toString();
@@ -414,10 +437,11 @@ public class SqlTranslator extends Translator
     out.append("CREATE TABLE ").append(m_tableName).append(" (\n");
     for (String p : params)
     {
-      out.append("  `").append(p).append("` tinytext DEFAULT null,\n");
+      out.append("  `").append(p).append("` VARCHAR(255) DEFAULT null,\n");
     }
     out.append("  msgno int(11) NOT NULL,\n");
-    out.append("  PRIMARY KEY (`").append(m_eventId).append("`)\n) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;\n\n");
+    out.append("  PRIMARY KEY (`").append(m_eventId).append("`)\n) ENGINE=");
+    out.append(m_engine).append(" DEFAULT CHARSET=utf8;\n\n");
     return out.toString();
   }
 

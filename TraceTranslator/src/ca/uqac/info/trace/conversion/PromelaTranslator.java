@@ -436,12 +436,6 @@ public class PromelaTranslator extends Translator {
   }
 
   @Override
-  public String getSignature(EventTrace m_trace)
-  {
-    return null;
-  }
-
-  @Override
   public String translateFormula(Operator o)
   {
     setFormula(o);

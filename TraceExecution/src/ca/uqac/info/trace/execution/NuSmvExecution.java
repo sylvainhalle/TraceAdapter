@@ -21,7 +21,7 @@ package ca.uqac.info.trace.execution;
 /**
  * Manages the execution of the trace validator using the
  * NuSMV model checker
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class NuSmvExecution extends Execution
 {

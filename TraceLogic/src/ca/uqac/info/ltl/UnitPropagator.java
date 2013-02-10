@@ -23,7 +23,7 @@ import java.util.Stack;
 /**
  * The UnitPropagator propagates upwards any constants that can be
  * used to simplify the formula.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class UnitPropagator extends GenericOperatorVisitor

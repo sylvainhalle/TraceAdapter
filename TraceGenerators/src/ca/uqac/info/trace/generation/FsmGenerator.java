@@ -34,7 +34,7 @@ import ca.uqac.info.util.Relation;
 /**
  * Generates a trace of events based on the definition
  * of a finite-state machine.
- * @author sylvain
+ * @author Sylvain Hallé
  *
  */
 public class FsmGenerator extends TraceGenerator
@@ -160,7 +160,7 @@ public class FsmGenerator extends TraceGenerator
 	 * <li>The destination state label</li>
 	 * </ol>
 	 * A set of such triplets defines a finite-state machine.
-	 * @author sylvain
+	 * @author Sylvain Hallé
 	 *
 	 */
 	protected class FsmTriplet

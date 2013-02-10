@@ -20,7 +20,7 @@ package ca.uqac.info.trace.execution;
 
 /**
  * Manages the execution of the trace validator using Maude
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class MaudeExecution extends Execution
 {

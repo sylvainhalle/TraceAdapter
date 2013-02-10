@@ -20,7 +20,7 @@ package ca.uqac.info.trace.execution;
 
 /**
  * Manages the execution of the XQuery validator using Saxon
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class SaxonExecution extends Execution
 {

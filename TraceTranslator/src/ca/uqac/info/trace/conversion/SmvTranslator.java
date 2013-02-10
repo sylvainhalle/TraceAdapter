@@ -26,7 +26,7 @@ import java.util.*;
 
 /**
  * Translates an event trace into a NuSMV finite-state machine.
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class SmvTranslator extends Translator
 {
@@ -157,11 +157,17 @@ public class SmvTranslator extends Translator
 	private static String toSmvToken(String s)
 	{
 		String out = new String(s);
-		out.replace("_", "__");
-		out.replace(".", "_d");
-		out.replace(",", "_c");
-		out.replace(";", "_l");
-		out.replace(":", "_s");
+		out = out.replace(" ", "_p");
+		out = out.replace("_", "__");
+		out = out.replace(".", "_d");
+		out = out.replace(",", "_c");
+		out = out.replace(";", "_l");
+		out = out.replace(":", "_s");
+		out = out.replace("-", "_h");
+		if (!out.matches("^[A-I].*$"))
+		{
+			out = "s" + out;
+		}
 		return out;
 	}
 
@@ -317,13 +323,6 @@ public class SmvTranslator extends Translator
 			m_pieces.push(new StringBuffer(toSmvToken(p.toString(false))));
 		}
 
-	}
-
-	@Override
-	public String getSignature(EventTrace t)
-	{
-		// No signature in NuSMV
-		return "";
 	}
 
 	@Override

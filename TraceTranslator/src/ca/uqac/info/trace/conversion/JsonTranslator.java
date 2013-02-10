@@ -25,7 +25,7 @@ import ca.uqac.info.trace.EventTrace;
 
 /**
  * Translates an event trace into JSON notation.
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class JsonTranslator extends Translator
 {

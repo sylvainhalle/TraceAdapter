@@ -21,7 +21,7 @@ package ca.uqac.info.trace.execution;
 /**
  * Manages the execution of the trace validator using the
  * Spin model checker
- * @author sylvain
+ * @author Sylvain Hallé
  */
 public class SpinExecution extends Execution
 {
@@ -104,6 +104,6 @@ public class SpinExecution extends Execution
   @Override
   public String getFormulaExtension()
   {
-    return "pml";
+    return "formula.pml";
   }
 }
