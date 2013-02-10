@@ -10,6 +10,19 @@ provides a large set of transducers which, when piped into an appropriate chain,
 can transform a trace and a formal specification into a suitable input problem
 for a variety of available tools.
 
+## Supported Tools
+
+Currently BabelTrace supports translations from LTL-FO+ and XML to the
+following software:
+
+- [BeepBeep](http://beepbeep.sourceforge.net/)
+- A trace analyzer based on filter logic (to be published)
+- [MonPoly](https://projects.developer.nokia.com/MonPoly/wiki)
+- [MySQL](http://www.mysql.com/)
+- [NuSMV](http://nusmv.fbk.eu/)
+- [Saxon](http://saxonica.com/welcome/welcome.xml)
+- [Spin](http://www.spinroot.com/)
+
 ## References
 
 For more information about BabelTrace, please refer to the following
