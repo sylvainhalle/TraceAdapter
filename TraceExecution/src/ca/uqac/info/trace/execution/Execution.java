@@ -218,7 +218,7 @@ public abstract class Execution
    * Run the tool with the parameters passed, and count the time
    * and memory consumed.
    */
-  public final void run()
+  public final void run() throws CommandLineException
   {
     long start_time = 0, end_time = 0;
     String[] command_list = getCommandLines();
@@ -241,8 +241,9 @@ public abstract class Execution
           m_returnCode = p.waitFor(); // Must wait till command is finished
           if (m_returnCode != 0)
           {
-            // We *may* want to do something in case the command does not
-            // exit with return code 0 (for the moment we do nothing)
+            // Throw an exception in case the command does not
+            // exit with return code 0 (indicating an error)
+          	throw new CommandLineException(m_returnCode, command_list[i]);
           }
           continue;
         }
@@ -367,5 +368,18 @@ public abstract class Execution
       {
         return m_contents.toString();
       }
+  }
+  
+  public class CommandLineException extends Exception
+  {
+    private static final long serialVersionUID = 1L;
+		protected int m_returnCode = 0;
+  	protected String m_commandLine = "";
+  	
+  	public CommandLineException(int returnCode, String commandLine)
+  	{
+  		m_returnCode = returnCode;
+  		m_commandLine = commandLine;
+  	}
   }
 }
