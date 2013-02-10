@@ -94,6 +94,12 @@ public abstract class Execution
    */
   protected String m_trace = "";
   
+  /**
+   * Whether or not to compute running time only on the
+   * last command called, in case there are many commands to call
+   * in sequence
+   */
+  protected boolean m_timeOnlyLastCommand = false;
 
   /**
    * Set the signature used for the tool. Depending on the
@@ -228,6 +234,11 @@ public abstract class Execution
     {
       cwd = new File(s_cwd);
     }
+    if (!m_timeOnlyLastCommand)
+    {
+    	// Start stopwatch here if we count running time for all commands
+    	start_time = System.nanoTime();
+    }
     for (int i = 0; i < command_list.length; i++)
     {
       String[] command_to_run = {"bash", "-c", command_list[i]};
@@ -247,8 +258,12 @@ public abstract class Execution
           }
           continue;
         }
-        // Last command: compute running time and process its output
-        start_time = System.nanoTime();
+        // Last command
+        if (m_timeOnlyLastCommand)
+        {
+        	// Start stopwatch here if we count running time for last command only
+        	start_time = System.nanoTime();
+        }
         Process p = rt.exec(command_to_run, null, cwd);
         StreamGobbler errorGobbler = new 
             StreamGobbler(p.getErrorStream());            
@@ -294,7 +309,8 @@ public abstract class Execution
    * Get the command line(s) to run the tool. Each command will be
    * executed in sequence; if more than one
    * command is given, only the <em>last</em> will be checked for
-   * stdin/stdout and measured for elapsed time.
+   * stdin/stdout (and possibly measured for elapsed time; see
+   * the {@link Execution#m_timeOnlyLastCommand} field).
    */
   protected abstract String[] getCommandLines();
 
