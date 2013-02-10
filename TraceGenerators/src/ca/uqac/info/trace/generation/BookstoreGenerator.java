@@ -18,19 +18,9 @@
  ******************************************************************************/
 package ca.uqac.info.trace.generation;
 
-import java.text.ParseException;
-import java.util.Random;
-import java.util.Vector;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
-import com.sun.corba.se.impl.orbutil.graph.Node;
-
-import ca.uqac.info.trace.Event;
-import ca.uqac.info.trace.EventTrace;
-import ca.uqac.info.trace.generation.AmazonEcsGenerator.Action;
-import ca.uqac.info.util.RandomPicker;
 /**
  * Generate a random trace of requests and responses for the Amazon Bookstore
  * example. The control flow followed by the sequence of messages is exactly
