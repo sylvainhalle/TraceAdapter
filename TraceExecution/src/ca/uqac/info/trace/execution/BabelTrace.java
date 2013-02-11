@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import ca.uqac.info.ltl.*; 
+import ca.uqac.info.ltl.*;
 import ca.uqac.info.ltl.Operator.ParseException;
 import ca.uqac.info.trace.*;
 import ca.uqac.info.trace.conversion.*;
@@ -36,8 +36,7 @@ public class BabelTrace
   /**
    * Build string
    */
- // public static final String BUILD_STRING = "20120110";
-	 public static final String BUILD_STRING = "20120122";
+  public static final String BUILD_STRING = "20130210";
   
   /**
    * Return codes
@@ -300,7 +299,15 @@ public class BabelTrace
     // Now that all conversions have been made, run the tool
     if (run_tool)
     {
-      ex.run();
+    	try
+    	{
+    		ex.run();
+    	}
+    	catch (Execution.CommandLineException e)
+    	{
+    		System.err.println("Error running command");
+    		System.exit(ERR_TOOL_EXECUTION);
+    	}
       
       // Print results
       ReturnVerdict ex_retval = ex.getReturnVerdict();

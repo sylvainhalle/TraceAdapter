@@ -94,6 +94,12 @@ public abstract class Execution
    */
   protected String m_trace = "";
   
+  /**
+   * Whether or not to compute running time only on the
+   * last command called, in case there are many commands to call
+   * in sequence
+   */
+  protected boolean m_timeOnlyLastCommand = false;
 
   /**
    * Set the signature used for the tool. Depending on the
@@ -218,7 +224,7 @@ public abstract class Execution
    * Run the tool with the parameters passed, and count the time
    * and memory consumed.
    */
-  public final void run()
+  public final void run() throws CommandLineException
   {
     long start_time = 0, end_time = 0;
     String[] command_list = getCommandLines();
@@ -227,6 +233,11 @@ public abstract class Execution
     if (!s_cwd.isEmpty())
     {
       cwd = new File(s_cwd);
+    }
+    if (!m_timeOnlyLastCommand)
+    {
+    	// Start stopwatch here if we count running time for all commands
+    	start_time = System.nanoTime();
     }
     for (int i = 0; i < command_list.length; i++)
     {
@@ -241,13 +252,19 @@ public abstract class Execution
           m_returnCode = p.waitFor(); // Must wait till command is finished
           if (m_returnCode != 0)
           {
-            // We *may* want to do something in case the command does not
-            // exit with return code 0 (for the moment we do nothing)
+            // Throw an exception in case the command does not
+            // exit with return code 0 (indicating an error)
+          	System.err.println(m_returnCode + command_list[i]);
+          	throw new CommandLineException(m_returnCode, command_list[i]);
           }
           continue;
         }
-        // Last command: compute running time and process its output
-        start_time = System.nanoTime();
+        // Last command
+        if (m_timeOnlyLastCommand)
+        {
+        	// Start stopwatch here if we count running time for last command only
+        	start_time = System.nanoTime();
+        }
         Process p = rt.exec(command_to_run, null, cwd);
         StreamGobbler errorGobbler = new 
             StreamGobbler(p.getErrorStream());            
@@ -293,7 +310,8 @@ public abstract class Execution
    * Get the command line(s) to run the tool. Each command will be
    * executed in sequence; if more than one
    * command is given, only the <em>last</em> will be checked for
-   * stdin/stdout and measured for elapsed time.
+   * stdin/stdout (and possibly measured for elapsed time; see
+   * the {@link Execution#m_timeOnlyLastCommand} field).
    */
   protected abstract String[] getCommandLines();
 
@@ -367,5 +385,18 @@ public abstract class Execution
       {
         return m_contents.toString();
       }
+  }
+  
+  public class CommandLineException extends Exception
+  {
+    private static final long serialVersionUID = 1L;
+		protected int m_returnCode = 0;
+  	protected String m_commandLine = "";
+  	
+  	public CommandLineException(int returnCode, String commandLine)
+  	{
+  		m_returnCode = returnCode;
+  		m_commandLine = commandLine;
+  	}
   }
 }
