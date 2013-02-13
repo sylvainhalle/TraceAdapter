@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1XmlTraceReader.html#aa6020badd727e9980db65f72da21b2d0" title="ca.uqac.info.trace.XmlTraceReader.parseEventTrace" alt="" coords="352,165,683,195"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1BeepBeepTranslator.html#a82699cd3c4e5d899408980cf0f9d7978" title="ca.uqac.info.trace.conversion.BeepBeepTranslator.main" alt="" coords="739,5,1085,35"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1FilterTranslator.html#a61c80f35fe516332909f7de372724e0e" title="ca.uqac.info.trace.conversion.FilterTranslator.main" alt="" coords="755,59,1069,88"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MaudeTranslator.html#a0756ec21fc0a0c5dd0a6f23af46a357e" title="ca.uqac.info.trace.conversion.MaudeTranslator.main" alt="" coords="749,112,1075,141"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MonpolyTranslator.html#a48988b12cb8ddbc7d691bc4d0795027e" title="ca.uqac.info.trace.conversion.MonpolyTranslator.main" alt="" coords="744,165,1080,195"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1PropositionalTranslator.html#a84d86bcca70ac8184b8426e47b38be2e" title="ca.uqac.info.trace.conversion.PropositionalTranslator.main" alt="" coords="731,219,1093,248"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html#ab5fe530db538283e0c099601fe359232" title="ca.uqac.info.trace.conversion.SmvTranslator.main" alt="" coords="755,272,1069,301"/>
+<area shape="rect" id="node17" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#a83dc8a81ccdbb42bac8ee15c91d58c5e" title="ca.uqac.info.trace.conversion.SqlTranslator.main" alt="" coords="759,325,1065,355"/>
+</map>

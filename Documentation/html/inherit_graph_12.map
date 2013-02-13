@@ -1,0 +1,19 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html" title="ca.uqac.info.trace.conversion.Translator" alt="" coords="7,325,260,355"/>
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1AtomicTranslator.html" title="ca.uqac.info.trace.conversion.AtomicTranslator" alt="" coords="327,5,623,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1BeepBeepTranslator.html" title="ca.uqac.info.trace.conversion.BeepBeepTranslator" alt="" coords="317,59,632,88"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1FilterTranslator.html" title="ca.uqac.info.trace.conversion.FilterTranslator" alt="" coords="333,112,616,141"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1FlatTranslator.html" title="ca.uqac.info.trace.conversion.FlatTranslator" alt="" coords="336,165,613,195"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1JsonTranslator.html" title="ca.uqac.info.trace.conversion.JsonTranslator" alt="" coords="333,219,616,248"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MaudeTranslator.html" title="ca.uqac.info.trace.conversion.MaudeTranslator" alt="" coords="328,272,621,301"/>
+<area shape="rect" id="node17" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MonpolyTranslator.html" title="ca.uqac.info.trace.conversion.MonpolyTranslator" alt="" coords="323,325,627,355"/>
+<area shape="rect" id="node19" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1PromelaTranslator.html" title="ca.uqac.info.trace.conversion.PromelaTranslator" alt="" coords="324,379,625,408"/>
+<area shape="rect" id="node21" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1PropositionalTranslator.html" title="ca.uqac.info.trace.conversion.PropositionalTranslator" alt="" coords="309,432,640,461"/>
+<area shape="rect" id="node23" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html" title="ca.uqac.info.trace.conversion.SmvTranslator" alt="" coords="333,485,616,515"/>
+<area shape="rect" id="node25" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html" title="ca.uqac.info.trace.conversion.SqlTranslator" alt="" coords="337,539,612,568"/>
+<area shape="rect" id="node31" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1XesTranslator.html" title="ca.uqac.info.trace.conversion.XesTranslator" alt="" coords="336,592,613,621"/>
+<area shape="rect" id="node33" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1XmlTranslator.html" title="ca.uqac.info.trace.conversion.XmlTranslator" alt="" coords="336,645,613,675"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SaxonTranslator.html" title="ca.uqac.info.trace.conversion.SaxonTranslator" alt="" coords="692,59,983,88"/>
+<area shape="rect" id="node27" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslator.html" title="ca.uqac.info.trace.conversion.MySQLTranslator" alt="" coords="688,539,987,568"/>
+<area shape="rect" id="node29" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslatorOptimized.html" title="ca.uqac.info.trace.conversion.MySQLTranslatorOptimized" alt="" coords="1036,539,1393,568"/>
+</map>

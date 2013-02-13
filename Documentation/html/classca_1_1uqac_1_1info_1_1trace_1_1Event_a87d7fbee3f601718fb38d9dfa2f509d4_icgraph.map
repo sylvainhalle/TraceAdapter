@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a5c9ebcb761d1f4224224ec38e459f0e3" title="ca.uqac.info.trace.Event.isFlat" alt="" coords="285,32,485,61"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html#adc0017cab28e732319d29b829ef9ea27" title="ca.uqac.info.trace.conversion.SmvTranslator.translateTrace" alt="" coords="535,5,903,35"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#a13ddd3a114f7cd70e5882de244e62d9d" title="ca.uqac.info.trace.conversion.SqlTranslator.translateTrace" alt="" coords="539,59,899,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html#a1422908b1bee584e8adb6eecf4880252" title="ca.uqac.info.trace.conversion.SmvTranslator.translateTrace" alt="" coords="953,5,1321,35"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#a8c37de37bdde7a1d488a8289d61af701" title="ca.uqac.info.trace.conversion.SqlTranslator.translateTrace" alt="" coords="957,59,1317,88"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslator.html#ac0d8a81bdca417a576f5ed32009b0562" title="ca.uqac.info.trace.conversion.MySQLTranslator.translateFormula" alt="" coords="459,5,859,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslatorOptimized.html#a20644e7ff8211e04d9b185243f21dfd8" title="ca.uqac.info.trace.conversion.MySQLTranslatorOptimized.translateFormula" alt="" coords="429,59,888,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#aea146bb8df423cc2895ba8aabb0552aa" title="ca.uqac.info.trace.conversion.SqlTranslator.translateFormula" alt="" coords="472,112,845,141"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#ac73ed82603a532fa963084c21a46cd41" title="ca.uqac.info.trace.conversion.SqlTranslator.translateFormulaNegated" alt="" coords="447,165,871,195"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslator.html#aea83a9cc445f1337a5bdde2d4e99a386" title="ca.uqac.info.trace.conversion.MySQLTranslator.translateFormula" alt="" coords="936,139,1336,168"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#ad6d8ddfde4d326a3febdd29300e433c6" title="ca.uqac.info.trace.conversion.SqlTranslator.translateFormula" alt="" coords="949,192,1323,221"/>
+</map>

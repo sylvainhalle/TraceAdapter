@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1FlatTranslator.html#aa197dc4557550201d3a3966d7bb83a8c" title="ca.uqac.info.trace.conversion.FlatTranslator.translateFormula" alt="" coords="432,32,811,61"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1ltl_1_1Operator.html#a07492a39462884dc55067b7e0a323fd4" title="ca.uqac.info.ltl.Operator.accept" alt="" coords="963,5,1165,35"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1FlatTranslator_1_1FlatVisitor.html#a04d76c14c2cba5fb72e7fe8f0fab38ad" title="ca.uqac.info.trace.conversion.FlatTranslator.FlatVisitor.getFormula" alt="" coords="860,59,1268,88"/>
+</map>

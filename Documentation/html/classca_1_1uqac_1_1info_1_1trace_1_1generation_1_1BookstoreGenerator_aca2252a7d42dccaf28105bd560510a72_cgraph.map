@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#ad7fd8b006f7e284417fb65cea15a79c0" title="ca.uqac.info.trace.generation.TraceGenerator.process" alt="" coords="447,139,780,168"/>
+<area shape="rect" id="node19" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1BookstoreGenerator.html#a65624f88f4f8570759d661d94a97bc9a" title="ca.uqac.info.trace.generation.BookstoreGenerator.BookstoreGenerator" alt="" coords="399,192,828,221"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#a3022535011356993b013a2686e4371b7" title="ca.uqac.info.trace.generation.TraceGenerator.getCommandLineOptions" alt="" coords="877,5,1312,35"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#afa4f3a3674c56cb9a3a8ab97f3a75eff" title="ca.uqac.info.trace.generation.TraceGenerator.getAppName" alt="" coords="913,59,1276,88"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#ad340bbe6c0e9c3b69991926f623ebcbb" title="ca.uqac.info.trace.generation.TraceGenerator.initialize" alt="" coords="928,112,1261,141"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#ab4a5d382c435cd7ba47fea324997e80f" title="ca.uqac.info.trace.generation.TraceGenerator.generate" alt="" coords="925,165,1264,195"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a25f4d38909e0ec4dfdd9b2b1604f9481" title="ca.uqac.info.trace.conversion.Translator.setTrace" alt="" coords="940,219,1249,248"/>
+<area shape="rect" id="node17" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a50a4db2723172fa3a94cd75a1192c700" title="ca.uqac.info.trace.conversion.Translator.translateTrace" alt="" coords="924,272,1265,301"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#a15cece52b415790db1ee6fefe20c838e" title="ca.uqac.info.trace.generation.TraceGenerator.setSeed" alt="" coords="1360,112,1696,141"/>
+</map>

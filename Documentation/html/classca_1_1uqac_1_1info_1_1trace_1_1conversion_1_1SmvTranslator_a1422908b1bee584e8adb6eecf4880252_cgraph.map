@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a25f4d38909e0ec4dfdd9b2b1604f9481" title="ca.uqac.info.trace.conversion.Translator.setTrace" alt="" coords="455,5,764,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html#adc0017cab28e732319d29b829ef9ea27" title="ca.uqac.info.trace.conversion.SmvTranslator.translateTrace" alt="" coords="425,59,793,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1EventTrace.html#ac18b848368a1fe6747ebee0c8341bd2f" title="ca.uqac.info.trace.EventTrace.getParameterDomain" alt="" coords="844,5,1167,35"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a5c9ebcb761d1f4224224ec38e459f0e3" title="ca.uqac.info.trace.Event.isFlat" alt="" coords="905,59,1105,88"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a4bc9a528f7f49724736cadf95ae866f9" title="ca.uqac.info.trace.Event.isMultiValued" alt="" coords="883,112,1128,141"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#ab5a99cfa17b7af7f959032935d791f2c" title="ca.uqac.info.trace.Event.getParameterDomain" alt="" coords="1216,5,1507,35"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a87d7fbee3f601718fb38d9dfa2f509d4" title="ca.uqac.info.trace.Event.getNesting" alt="" coords="1247,59,1476,88"/>
+</map>

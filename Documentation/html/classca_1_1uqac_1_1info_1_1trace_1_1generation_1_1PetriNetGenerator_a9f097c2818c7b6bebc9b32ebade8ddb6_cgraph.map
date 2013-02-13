@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator.html#ac8a39172847e0a4a9a36915b5855d820" title="ca.uqac.info.trace.generation.PetriNetGenerator.parseFromString" alt="" coords="407,112,804,141"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Place.html#aab890c7a19f2dfb05d8a347680934340" title="ca.uqac.info.trace.generation.PetriNetGenerator.Place.addOutgoingTransition" alt="" coords="855,5,1324,35"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Transition.html#ac859b40b94c343d40fbd8113a4bb56e2" title="ca.uqac.info.trace.generation.PetriNetGenerator.Transition.addIncomingPlace" alt="" coords="855,59,1324,88"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Place.html#aa31a7e91d3cbdb886aa1e8a1c9a3e630" title="ca.uqac.info.trace.generation.PetriNetGenerator.Place.addIncomingTransition" alt="" coords="855,112,1324,141"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Transition.html#aad3c11ffa51cd185a386531223334ca8" title="ca.uqac.info.trace.generation.PetriNetGenerator.Transition.addOutgoingPlace" alt="" coords="855,165,1324,195"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Place.html#af1ef7ace7ba6cffb7e5b9e94a6e836dc" title="ca.uqac.info.trace.generation.PetriNetGenerator.Place.setMarking" alt="" coords="888,219,1291,248"/>
+</map>
