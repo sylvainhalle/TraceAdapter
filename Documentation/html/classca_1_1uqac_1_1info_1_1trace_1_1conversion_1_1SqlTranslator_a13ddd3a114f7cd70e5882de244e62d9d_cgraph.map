@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1EventTrace.html#ac18b848368a1fe6747ebee0c8341bd2f" title="ca.uqac.info.trace.EventTrace.getParameterDomain" alt="" coords="417,5,740,35"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a5c9ebcb761d1f4224224ec38e459f0e3" title="ca.uqac.info.trace.Event.isFlat" alt="" coords="479,59,679,88"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a4bc9a528f7f49724736cadf95ae866f9" title="ca.uqac.info.trace.Event.isMultiValued" alt="" coords="456,112,701,141"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#ab5a99cfa17b7af7f959032935d791f2c" title="ca.uqac.info.trace.Event.getParameterDomain" alt="" coords="789,5,1080,35"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#a87d7fbee3f601718fb38d9dfa2f509d4" title="ca.uqac.info.trace.Event.getNesting" alt="" coords="820,59,1049,88"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MonpolyTranslator.html#ae4695d1cf438e39a73b3282eaade8d45" title="ca.uqac.info.trace.conversion.MonpolyTranslator.getSignature" alt="" coords="384,5,765,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1PromelaTranslator.html#a000cd79ea44d60cb3387f41163127584" title="ca.uqac.info.trace.conversion.PromelaTranslator.translateTrace" alt="" coords="380,59,769,88"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html#adc0017cab28e732319d29b829ef9ea27" title="ca.uqac.info.trace.conversion.SmvTranslator.translateTrace" alt="" coords="391,112,759,141"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#a13ddd3a114f7cd70e5882de244e62d9d" title="ca.uqac.info.trace.conversion.SqlTranslator.translateTrace" alt="" coords="395,165,755,195"/>
+<area shape="rect" id="node17" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#aa5910cdf64e60d4e34027ef2d31e3cb6" title="ca.uqac.info.trace.conversion.SqlTranslator.getSignature" alt="" coords="400,219,749,248"/>
+<area shape="rect" id="node19" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1XesTranslator.html#a0c488aa4a065e6e376f53fe8db093186" title="ca.uqac.info.trace.conversion.XesTranslator.translateTrace" alt="" coords="392,272,757,301"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1PromelaTranslator.html#a5e0638b57baf6c14e3c021ee78bb1b9b" title="ca.uqac.info.trace.conversion.PromelaTranslator.translateTrace" alt="" coords="820,59,1209,88"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SmvTranslator.html#a1422908b1bee584e8adb6eecf4880252" title="ca.uqac.info.trace.conversion.SmvTranslator.translateTrace" alt="" coords="831,112,1199,141"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#a8c37de37bdde7a1d488a8289d61af701" title="ca.uqac.info.trace.conversion.SqlTranslator.translateTrace" alt="" coords="835,165,1195,195"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1AtomicTranslator_1_1AtomicFormulaTranslator.html#ad0992df50f2f319e7554dec07317b914" title="ca.uqac.info.trace.conversion.AtomicTranslator.AtomicFormulaTranslator.visit" alt="" coords="304,5,779,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MaudeTranslator_1_1MaudeEqualityGetter.html#a7458a12f3e630f48de028a9db5448693" title="ca.uqac.info.trace.conversion.MaudeTranslator.MaudeEqualityGetter.visit" alt="" coords="317,59,765,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslator.html#ac0d8a81bdca417a576f5ed32009b0562" title="ca.uqac.info.trace.conversion.MySQLTranslator.translateFormula" alt="" coords="341,112,741,141"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslatorOptimized.html#a20644e7ff8211e04d9b185243f21dfd8" title="ca.uqac.info.trace.conversion.MySQLTranslatorOptimized.translateFormula" alt="" coords="312,165,771,195"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#a02d59e85dc6b941431f7c63a87f00696" title="ca.uqac.info.trace.conversion.SqlTranslator.translateFormula" alt="" coords="355,219,728,248"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#ac73ed82603a532fa963084c21a46cd41" title="ca.uqac.info.trace.conversion.SqlTranslator.translateFormulaNegated" alt="" coords="329,272,753,301"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1MySQLTranslator.html#aea83a9cc445f1337a5bdde2d4e99a386" title="ca.uqac.info.trace.conversion.MySQLTranslator.translateFormula" alt="" coords="827,245,1227,275"/>
+<area shape="rect" id="node17" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1SqlTranslator.html#ad6d8ddfde4d326a3febdd29300e433c6" title="ca.uqac.info.trace.conversion.SqlTranslator.translateFormula" alt="" coords="840,299,1213,328"/>
+</map>

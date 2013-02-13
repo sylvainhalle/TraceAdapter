@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a25f4d38909e0ec4dfdd9b2b1604f9481" title="ca.uqac.info.trace.conversion.Translator.setTrace" alt="" coords="487,5,796,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1PromelaTranslator.html#a000cd79ea44d60cb3387f41163127584" title="ca.uqac.info.trace.conversion.PromelaTranslator.translateTrace" alt="" coords="447,59,836,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1EventTrace.html#ac18b848368a1fe6747ebee0c8341bd2f" title="ca.uqac.info.trace.EventTrace.getParameterDomain" alt="" coords="887,32,1209,61"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#abb6255313627e71194192817f8924523" title="ca.uqac.info.trace.Event.getDomNode" alt="" coords="925,85,1171,115"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1Event.html#ab5a99cfa17b7af7f959032935d791f2c" title="ca.uqac.info.trace.Event.getParameterDomain" alt="" coords="1259,32,1549,61"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1TraceReader.html#a6f36a13da5026551f1f306db2e6e1b91" title="ca.uqac.info.trace.TraceReader.parseEventTrace" alt="" coords="399,5,705,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a25f4d38909e0ec4dfdd9b2b1604f9481" title="ca.uqac.info.trace.conversion.Translator.setTrace" alt="" coords="397,59,707,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a50a4db2723172fa3a94cd75a1192c700" title="ca.uqac.info.trace.conversion.Translator.translateTrace" alt="" coords="381,112,723,141"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1ltl_1_1Operator.html#a4125638250f66fdff7ea29ffe8666df4" title="ca.uqac.info.ltl.Operator.parseFromString" alt="" coords="421,165,683,195"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a2aab2a4b8e64c2154717009b7b8f7e7b" title="ca.uqac.info.trace.conversion.Translator.setFormula" alt="" coords="391,219,713,248"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1conversion_1_1Translator.html#a84f4504301e4862aa52b90346ff5b947" title="ca.uqac.info.trace.conversion.Translator.translateFormula" alt="" coords="375,272,729,301"/>
+</map>

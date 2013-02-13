@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#ad7fd8b006f7e284417fb65cea15a79c0" title="ca.uqac.info.trace.generation.TraceGenerator.process" alt="" coords="489,165,823,195"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1AmazonEcsGenerator.html#aaa03308a7d5177a6ea4142fa40f246f4" title="ca.uqac.info.trace.generation.AmazonEcsGenerator.main" alt="" coords="877,5,1232,35"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1BookstoreGenerator.html#aca2252a7d42dccaf28105bd560510a72" title="ca.uqac.info.trace.generation.BookstoreGenerator.main" alt="" coords="884,59,1225,88"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1CycleGenerator.html#a65a59cd374da662776c1b3d2001c966a" title="ca.uqac.info.trace.generation.CycleGenerator.main" alt="" coords="896,112,1213,141"/>
+<area shape="rect" id="node11" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1FsmGenerator.html#aa36af7c4122f0b9c177862180a219323" title="ca.uqac.info.trace.generation.FsmGenerator.main" alt="" coords="900,165,1209,195"/>
+<area shape="rect" id="node13" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1LlrpGenerator.html#a06a37e896862c18bb3f726f49b465794" title="ca.uqac.info.trace.generation.LlrpGenerator.main" alt="" coords="903,219,1207,248"/>
+<area shape="rect" id="node15" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator.html#ab06c8a36a81ad28d1c7524edd4591bc4" title="ca.uqac.info.trace.generation.PetriNetGenerator.main" alt="" coords="889,272,1220,301"/>
+<area shape="rect" id="node17" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1RandomTraceGenerator.html#ad6d0592540e524835c1635879b4433e6" title="ca.uqac.info.trace.generation.RandomTraceGenerator.main" alt="" coords="872,325,1237,355"/>
+</map>

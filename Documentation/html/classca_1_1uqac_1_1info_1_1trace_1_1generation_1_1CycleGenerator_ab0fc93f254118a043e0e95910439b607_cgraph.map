@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#a15cece52b415790db1ee6fefe20c838e" title="ca.uqac.info.trace.generation.TraceGenerator.setSeed" alt="" coords="408,5,744,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1CycleGenerator.html#a0d26aacb8fe03f35705014f7e92e1977" title="ca.uqac.info.trace.generation.CycleGenerator.addTag" alt="" coords="411,59,741,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1CycleGenerator.html#aebddbb36c99c54ece3c41eecad31c78c" title="ca.uqac.info.trace.generation.CycleGenerator.removeTag" alt="" coords="399,112,753,141"/>
+<area shape="rect" id="node9" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1CycleGenerator.html#af2decba9a030bec748bca265732cf853" title="ca.uqac.info.trace.generation.CycleGenerator.getErrorRead" alt="" coords="393,165,759,195"/>
+</map>

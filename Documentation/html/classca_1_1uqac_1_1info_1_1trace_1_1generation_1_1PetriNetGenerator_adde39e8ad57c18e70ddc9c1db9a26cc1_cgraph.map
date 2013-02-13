@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1TraceGenerator.html#a15cece52b415790db1ee6fefe20c838e" title="ca.uqac.info.trace.generation.TraceGenerator.setSeed" alt="" coords="432,5,768,35"/>
+<area shape="rect" id="node5" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Transition.html#a9e94499d421e4cd1c71b4be098d49fbb" title="ca.uqac.info.trace.generation.PetriNetGenerator.Transition.fire" alt="" coords="409,59,791,88"/>
+<area shape="rect" id="node7" href="$classca_1_1uqac_1_1info_1_1trace_1_1generation_1_1PetriNetGenerator_1_1Transition.html#abf5c3966a955c78324eeab5ca0945bb9" title="ca.uqac.info.trace.generation.PetriNetGenerator.Transition.isEnabled" alt="" coords="840,59,1261,88"/>
+</map>
