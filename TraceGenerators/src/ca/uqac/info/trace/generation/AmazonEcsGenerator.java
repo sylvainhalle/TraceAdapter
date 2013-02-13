@@ -197,8 +197,15 @@ public class AmazonEcsGenerator extends TraceGenerator
 			Node n_items = trace.createElement("Items");
 			for (Item it : items_to_add)
 			{
-				n_items.appendChild(it.toNode(trace));
+				Node n_item = trace.createElement("Item");
+				n_item.appendChild(createKeyValue(trace, "ItemId", it.getId()));
+				n_item.appendChild(createKeyValue(trace, "Quantity", 1));
+				n_items.appendChild(n_item);
 			}
+			/*for (Item it : items_to_add)
+			{
+				n_items.appendChild(it.toNode(trace));
+			}*/
 			n.appendChild(n_items);
 			trace.add(new Event(n));
 		}
@@ -245,6 +252,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 			Node n = trace.getNode();
 			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
 			n.appendChild(createKeyValue(trace, "Action", "CartAdd"));
+			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
 			Node n_items = trace.createElement("Items");
 			for (Item it : items_to_add)
 			{
@@ -319,7 +327,7 @@ public class AmazonEcsGenerator extends TraceGenerator
 		}
 		{ // Create the cart clear response message
 			Node n = trace.getNode();
-			n.appendChild(trace.createElement("SessionKey").appendChild(trace.createTextNode("0")));
+			n.appendChild(createKeyValue(trace, "SessionKey", "0"));
 			n.appendChild(createKeyValue(trace, "Action", "CartClearResponse"));
 			n.appendChild(createKeyValue(trace, "CartId", chosen_cart.getId()));
 			trace.add(new Event(n));
