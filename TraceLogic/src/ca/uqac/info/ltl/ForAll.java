@@ -30,7 +30,7 @@ public class ForAll extends Quantifier
 	@Override
 	public void accept(OperatorVisitor v)
 	{
-    super.accept(v);
-    v.visit(this);
-	}
+      super.accept(v);
+      v.visit(this);
+ 	}
 }

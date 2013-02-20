@@ -373,7 +373,7 @@ public class MonpolyTranslator extends Translator
     {
       StringBuilder operand = m_pieces.pop();
       StringBuilder variable = m_pieces.pop();
-      StringBuilder var = m_pieces.peek();
+      StringBuilder var = m_pieces.pop();
       StringBuilder out = new StringBuilder();
       out.append("EXISTS ").append(var).append(". ").append("(")
           .append(variable).append("(").append(var).append(")")
@@ -386,7 +386,7 @@ public class MonpolyTranslator extends Translator
     {
       StringBuilder operand = m_pieces.pop();
       StringBuilder variable = m_pieces.pop();
-      StringBuilder var = m_pieces.peek();
+      StringBuilder var = m_pieces.pop();
       StringBuilder out = new StringBuilder();
       out.append("FORALL ").append(var).append(". ").append("(")
           .append(variable).append("(").append(var).append(")")

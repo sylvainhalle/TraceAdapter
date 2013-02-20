@@ -178,45 +178,44 @@ public class BeepBeepTranslator extends Translator
 	}
 
 	@Override
-  public void visit(Exists o)
-  {
-		StringBuffer operand = m_pieces.pop();
-		StringBuffer path = m_pieces.pop();
-		StringBuffer variable = m_pieces.pop();
-		StringBuffer out = new StringBuffer();
-		out.append("<").append(variable).append(" /").append(path).append("> (").append(operand).append(")");
-		m_pieces.push(out);
-  }
+    public void visit(Exists o)
+    {
+	  StringBuffer operand = m_pieces.pop();
+	  StringBuffer path = m_pieces.pop();
+	  StringBuffer variable = m_pieces.pop();
+	  StringBuffer out = new StringBuffer();
+	  out.append("<").append(variable).append(" /").append(path).append("> (").append(operand).append(")");
+	  m_pieces.push(out);
+    }
 
 	@Override
-  public void visit(ForAll o)
-  {
-		StringBuffer operand = m_pieces.pop();
-		StringBuffer path = m_pieces.pop();
-		StringBuffer variable = m_pieces.pop();
-		StringBuffer out = new StringBuffer();
-		out.append("[").append(variable).append(" /").append(path).append("] (").append(operand).append(")");
-		m_pieces.push(out);
-  }
+    public void visit(ForAll o)
+    {
+	  StringBuffer operand = m_pieces.pop();
+	  StringBuffer path = m_pieces.pop();
+	  StringBuffer variable = m_pieces.pop();
+	  StringBuffer out = new StringBuffer();
+	  out.append("[").append(variable).append(" /").append(path).append("] (").append(operand).append(")");
+  	  m_pieces.push(out);
+    }
 
 	@Override
-  public void visit(XPathAtom p)
-  {
-		m_pieces.push(new StringBuffer(p.toString(true)));
-  }
+    public void visit(XPathAtom p)
+    {
+	  m_pieces.push(new StringBuffer(p.toString(true)));
+    }
 
-  @Override
-  public void visit(OperatorTrue o)
-  {
-    m_pieces.push(new StringBuffer("TRUE"));
-    
-  }
+    @Override
+    public void visit(OperatorTrue o)
+    {
+      m_pieces.push(new StringBuffer("TRUE"));
+    }
 
-  @Override
-  public void visit(OperatorFalse o)
-  {
-    m_pieces.push(new StringBuffer("FALSE"));
-  }
+	@Override
+	public void visit(OperatorFalse o)
+	{
+	  m_pieces.push(new StringBuffer("FALSE"));
+	}
 
   }
   

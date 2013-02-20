@@ -50,7 +50,7 @@ public abstract class Operator
 	{
 		Set<Atom> bound_variables = new HashSet<Atom>();
 		s = trimComments(s);
-		return parseFromString(s, bound_variables);
+	    return parseFromString(s, bound_variables);
 	}
 	
 	protected static Operator parseFromString(String s, Set<Atom> bound_variables) throws ParseException
@@ -70,6 +70,7 @@ public abstract class Operator
 				oq = new ForAll();
 			}
 			// Quantifier: get end
+			
 			int end_quantif = s.indexOf(":");
 			if (end_quantif == -1)
 				throw new ParseException();
@@ -124,6 +125,7 @@ public abstract class Operator
 			int pars_right = s.length() - s.lastIndexOf(right) - right.length();
 			assert pars_left >= 0 && pars_right >= 0;
 			String op = getOperator(s, left.length() + pars_left * 2, right.length() + pars_right * 2);
+			
 			Operator o_left = parseFromString(left, bound_variables);
 			Operator o_right = parseFromString(right, bound_variables);
 			if (o_left == null || o_right == null)
@@ -154,7 +156,7 @@ public abstract class Operator
 			if (s.startsWith("/"))
 				out = new XPathAtom(s);
 			else
-			{
+			{	
 				if (s.compareTo(OperatorFalse.SYMBOL) == 0)
 					out = new OperatorFalse();
 				else if (s.compareTo(OperatorTrue.SYMBOL) == 0)
@@ -237,7 +239,7 @@ public abstract class Operator
 				String c = s.substring(i, i+1);
 				if (c.compareTo("(") == 0 || c.compareTo(")") == 0 || 
 						c.compareTo("&") == 0  || c.compareTo("|") == 0 || 
-						  c.compareTo("=") == 0)
+						  c.compareTo("=") == 0 || c.compareTo(OperatorImplies.SYMBOL) == 0)
 					return s.substring(0, i);
 				if (i < s.length() - 1 && s.substring(i, i+2).compareTo("->") == 0)
 					return s.substring(0, i);
@@ -271,7 +273,7 @@ public abstract class Operator
 				String c = s.substring(i, i+1);
 				if (c.compareTo("(") == 0 || c.compareTo(")") == 0 || 
 						c.compareTo("&") == 0  || c.compareTo("|") == 0 || 
-					  c.compareTo("=") == 0)
+					  c.compareTo("=") == 0 || c.compareTo(OperatorImplies.SYMBOL) == 0)
 					return s.substring(i + 1);
 				if (i < s.length() - 1 && s.substring(i, i+2).compareTo("->") == 0)
 					return s.substring(i + 2);

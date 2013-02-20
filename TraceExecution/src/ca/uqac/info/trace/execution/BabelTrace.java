@@ -74,7 +74,7 @@ public class BabelTrace
       System.out.println("\nBabelTrace build " + BUILD_STRING);
       System.out.println("(C) 2012-2013 Sylvain Hallé et al., Université du Québec à Chicoutimi");
       System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
-      System.out.println("This is free software, and you are welcome to redistribute it");
+      System.out.println("This is a free software, and you are welcome to redistribute it");
       System.out.println("under certain conditions. See the file COPYING for details.\n");
       System.exit(ERR_OK);
     }
@@ -368,6 +368,7 @@ public class BabelTrace
    * <li>Monpoly</li>
    * <li>MySQL</li>
    * <li>NuSMV</li>
+   * <li>PromLTL</li>
    * <li>Saxon</li>
    * <li>Spin</li>
    * </ul> 
@@ -407,6 +408,8 @@ public class BabelTrace
       tr = new PromelaTranslator(); 
     else if (type.compareToIgnoreCase("monpoly") == 0)
       tr = new MonpolyTranslator(); 
+    else if (type.compareToIgnoreCase("promltl") == 0)
+        tr = new XesTranslator(); 
     return tr;
   }
   
@@ -421,6 +424,7 @@ public class BabelTrace
    * <li>Monpoly</li>
    * <li>MySQL</li>
    * <li>NuSMV</li>
+   * <li>PromLTL</li>
    * <li>Saxon</li>
    * <li>Spin</li>
    * </ul> 
@@ -451,7 +455,9 @@ public class BabelTrace
     else if (type.compareToIgnoreCase("spin") == 0)
       tr = new SpinExecution(); 
     else if (type.compareToIgnoreCase("monpoly") == 0)
-      tr = new MonpolyExecution(); 
+      tr = new MonpolyExecution();
+    else if (type.compareToIgnoreCase("promltl") == 0)
+      tr = new PromLTLExecution();
     return tr;
   }
       
