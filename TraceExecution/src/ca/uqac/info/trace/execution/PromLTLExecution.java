@@ -27,9 +27,6 @@ package ca.uqac.info.trace.execution;
  */
 public class PromLTLExecution extends Execution
 {
-  private final String m_commandLocation = "";
-  private final String m_key = "";
-  private final String m_sep = "";
 
   @Override
   protected String[] getCommandLines()

@@ -172,7 +172,7 @@ public class XesTranslator extends Translator
       if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0)
       	out.append("rename ate.WorkflowModelElement as " + tmp + ";").append(CRLF);
       else
-        out.append("rename string." + tmp + " as " + tmp + ";").append(CRLF);
+        out.append("rename ate." + tmp + " as " + tmp + ";").append(CRLF);
     }
     out.append("rename ate.ReservedValueForTheTrueOrFalseStatement as ReservedValueForTheTrueOrFalseStatement;").append(CRLF)
     	.append(CRLF)
