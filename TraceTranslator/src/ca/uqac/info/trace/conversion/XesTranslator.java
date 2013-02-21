@@ -68,10 +68,12 @@ public class XesTranslator extends Translator
     while(itr.hasNext())
     {
       String tmp = itr.next();
-      if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0)
-    	  out.append("\t\t<string key=\"concept:name\" value =\"NULL\"/>").append(CRLF);
+      if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0 || tmp.compareTo("p0") == 0)
+    	tmp="concept:name";
+      else if (tmp.compareTo("CartId") == 0)
+    	tmp="org:resource";
       else
-    	  out.append("\t\t<string key=\"" + tmp + "\" value =\"NULL\"/>").append(CRLF);
+        out.append("\t\t<string key=\"" + tmp + "\" value =\"NULL\"/>").append(CRLF);
     }
     out.append("\t</global>").append(CRLF)
     	.append("\t<string key=\"concept:name\" value=\"current-trace.xes\"/>").append(CRLF);
@@ -111,8 +113,10 @@ public class XesTranslator extends Translator
     {
       Set<String> values = domain.get(p);
       String val="_UNDEFINED_";
-      if (p.compareTo("Action") == 0 || p.compareTo("Name") == 0)
+      if (p.compareTo("Action") == 0 || p.compareTo("Name") == 0 || p.compareTo("p0") == 0)
     	  p="concept:name";
+      if (p.compareTo("CartId") == 0)
+    	  p="org:resource";
       for (String v : values)
       {
         val = v ;
@@ -154,10 +158,12 @@ public class XesTranslator extends Translator
     while(itr.hasNext())
     {
       String tmp = itr.next();
-      if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0)
+      if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0 || tmp.compareTo("p0") == 0)
     	out.append("set ate.WorkflowModelElement;").append(CRLF);
+      if (tmp.compareTo("CartId") == 0)
+    	out.append("set ate.Originator;").append(CRLF);
       else
-    	out.append("string ate." + tmp + ";").append(CRLF);
+        out.append("string ate." + tmp + ";").append(CRLF);
     }
     out.append("number ate.ReservedValueForTheTrueOrFalseStatement;").append(CRLF)
     	.append(CRLF)
@@ -169,8 +175,10 @@ public class XesTranslator extends Translator
     while(itr.hasNext())
     {
       String tmp = itr.next();
-      if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0)
+      if (tmp.compareTo("Action") == 0 || tmp.compareTo("Name") == 0 || tmp.compareTo("p0") == 0)
       	out.append("rename ate.WorkflowModelElement as " + tmp + ";").append(CRLF);
+      else if (tmp.compareTo("CartId") == 0)
+        	out.append("rename ate.Originator as " + tmp + ";").append(CRLF);
       else
         out.append("rename ate." + tmp + " as " + tmp + ";").append(CRLF);
     }

@@ -36,7 +36,7 @@ public class BabelTrace
   /**
    * Build string
    */
-  public static final String BUILD_STRING = "20130210";
+  public static final String BUILD_STRING = "20130221";
   
   /**
    * Return codes
