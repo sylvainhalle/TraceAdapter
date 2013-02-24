@@ -211,7 +211,7 @@ public abstract class Operator
 	
 	private static boolean containsBinaryOperator(String s)
 	{
-		return s.indexOf(OperatorAnd.SYMBOL) != -1 || s.indexOf(OperatorOr.SYMBOL) != -1 || s.indexOf(OperatorImplies.SYMBOL) != -1 || s.indexOf(OperatorEquals.SYMBOL) != -1;
+		return s.indexOf(OperatorAnd.SYMBOL) != -1 || s.indexOf(OperatorOr.SYMBOL) != -1 || s.indexOf(OperatorImplies.SYMBOL) != -1 || s.indexOf(OperatorEquals.SYMBOL) != -1 || s.indexOf(" " + OperatorU.SYMBOL + " ") != -1;
 	}
 	
 	private static String getLeft(String s)
@@ -238,8 +238,8 @@ public abstract class Operator
 			{
 				String c = s.substring(i, i+1);
 				if (c.compareTo("(") == 0 || c.compareTo(")") == 0 || 
-						c.compareTo("&") == 0  || c.compareTo("|") == 0 || 
-						  c.compareTo("=") == 0 || c.compareTo(OperatorImplies.SYMBOL) == 0)
+						c.compareTo(OperatorAnd.SYMBOL) == 0  || c.compareTo(OperatorOr.SYMBOL) == 0 || 
+					  c.compareTo(OperatorEquals.SYMBOL) == 0 || c.compareTo(OperatorImplies.SYMBOL) == 0)
 					return s.substring(0, i);
 				if (i < s.length() - 1 && s.substring(i, i+2).compareTo("->") == 0)
 					return s.substring(0, i);
@@ -272,8 +272,8 @@ public abstract class Operator
 			{
 				String c = s.substring(i, i+1);
 				if (c.compareTo("(") == 0 || c.compareTo(")") == 0 || 
-						c.compareTo("&") == 0  || c.compareTo("|") == 0 || 
-					  c.compareTo("=") == 0 || c.compareTo(OperatorImplies.SYMBOL) == 0)
+						c.compareTo(OperatorAnd.SYMBOL) == 0  || c.compareTo(OperatorOr.SYMBOL) == 0 || 
+					  c.compareTo(OperatorEquals.SYMBOL) == 0 || c.compareTo(OperatorImplies.SYMBOL) == 0)
 					return s.substring(i + 1);
 				if (i < s.length() - 1 && s.substring(i, i+2).compareTo("->") == 0)
 					return s.substring(i + 2);
