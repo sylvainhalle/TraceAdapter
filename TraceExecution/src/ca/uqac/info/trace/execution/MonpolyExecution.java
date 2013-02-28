@@ -50,8 +50,7 @@ public class MonpolyExecution extends Execution
   @Override
   public boolean isReady()
   {
-    return !(m_trace.isEmpty() || m_property.isEmpty() ||
-        m_signature.isEmpty());
+    return !(m_trace.isEmpty() || m_property.isEmpty() || m_signature.isEmpty());
   }
 
   @Override

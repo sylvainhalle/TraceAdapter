@@ -174,7 +174,10 @@ public class BeepBeepTranslator extends Translator
 	@Override
 	public void visit(OperatorU o)
 	{
-		
+      StringBuffer o_right = m_pieces.pop(); // Pop right-hand side
+      StringBuffer o_left = m_pieces.pop(); // Pop left-hand side
+      StringBuffer out = new StringBuffer("(").append(o_left).append(") U (").append(o_right).append(")");
+      m_pieces.push(out);
 	}
 
 	@Override
@@ -208,13 +211,13 @@ public class BeepBeepTranslator extends Translator
     @Override
     public void visit(OperatorTrue o)
     {
-      m_pieces.push(new StringBuffer("TRUE"));
+      m_pieces.push(new StringBuffer("{TRUE}"));
     }
 
 	@Override
 	public void visit(OperatorFalse o)
 	{
-	  m_pieces.push(new StringBuffer("FALSE"));
+	  m_pieces.push(new StringBuffer("{FALSE}"));
 	}
 
   }
