@@ -364,7 +364,7 @@ public class MonpolyTranslator extends Translator
       StringBuilder left = m_pieces.pop();  // Pop left-hand side
       StringBuilder out = new StringBuilder("(").append(left).append(" UNTIL [")
       .append(m_leftBound).append(",").append(m_rightBound)
-      .append("] ( ").append(right).append(" )");
+      .append("] ( ").append(right).append(" ))");
       m_pieces.push(out);
     }
 

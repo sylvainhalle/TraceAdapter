@@ -311,7 +311,7 @@ public class MaudeTranslator extends Translator
         .append("\n");
     out_Trace.append("endfm\n");
     out_Trace.append("reduce").append(" ");
-    out_Trace.append(maude_trace).append(".");
+    out_Trace.append(maude_trace).append(" .");
     out_Trace.append("\n quit");
     return out_Trace.toString();
   }
