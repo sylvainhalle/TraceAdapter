@@ -36,7 +36,7 @@ public class BabelTrace
   /**
    * Build string
    */
-  public static final String BUILD_STRING = "20130221";
+  public static final String BUILD_STRING = "20130619";
   
   /**
    * Return codes
@@ -362,7 +362,7 @@ public class BabelTrace
    * on a string representing the target tool. Currently the following
    * tools are supported:
    * <ul>
-   * <li>BeepBeep</li>
+   * <li>BeepBeep (0.9 and 1.5)</li>
    * <li>Filter</li>
    * <li>ltlfo2mon</li>
    * <li>Maude</li>
@@ -413,6 +413,8 @@ public class BabelTrace
         tr = new XesTranslator(); 
     else if (type.compareToIgnoreCase("ltlfo2mon") == 0)
       tr = new Ltlfo2monTranslator(); 
+    else if (type.compareToIgnoreCase("newbeepbeep") == 0)
+      tr = new NewBeepBeepTranslator(); 
     return tr;
   }
   
@@ -464,6 +466,8 @@ public class BabelTrace
       tr = new PromLTLExecution();
     else if (type.compareToIgnoreCase("ltlfo2mon") == 0)
       tr = new Ltlfo2monExecution();
+    else if (type.compareToIgnoreCase("newbeepbeep") == 0)
+      tr = new NewBeepBeepExecution();
     return tr;
   }
       

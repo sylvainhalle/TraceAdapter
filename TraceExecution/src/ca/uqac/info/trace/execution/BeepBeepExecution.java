@@ -20,7 +20,7 @@ package ca.uqac.info.trace.execution;
 
 public class BeepBeepExecution extends Execution
 {
-  private final String m_jarLocation = "/usr/local/lib/BeepBeepValidator.jar";
+  protected String m_jarLocation = "/usr/local/lib/BeepBeepValidator.jar";
 
   @Override
   protected String[] getCommandLines()
