@@ -364,6 +364,7 @@ public class BabelTrace
    * <ul>
    * <li>BeepBeep</li>
    * <li>Filter</li>
+   * <li>ltlfo2mon</li>
    * <li>Maude</li>
    * <li>Monpoly</li>
    * <li>MySQL</li>
@@ -410,6 +411,8 @@ public class BabelTrace
       tr = new MonpolyTranslator(); 
     else if (type.compareToIgnoreCase("promltl") == 0)
         tr = new XesTranslator(); 
+    else if (type.compareToIgnoreCase("ltlfo2mon") == 0)
+      tr = new Ltlfo2monTranslator(); 
     return tr;
   }
   
@@ -420,6 +423,7 @@ public class BabelTrace
    * <ul>
    * <li>BeepBeep</li>
    * <li>Filter</li>
+   * <li>ltlfo2mon</li>
    * <li>Maude</li>
    * <li>Monpoly</li>
    * <li>MySQL</li>
@@ -458,6 +462,8 @@ public class BabelTrace
       tr = new MonpolyExecution();
     else if (type.compareToIgnoreCase("promltl") == 0)
       tr = new PromLTLExecution();
+    else if (type.compareToIgnoreCase("ltlfo2mon") == 0)
+      tr = new Ltlfo2monExecution();
     return tr;
   }
       

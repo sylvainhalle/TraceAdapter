@@ -19,19 +19,19 @@ package ca.uqac.info.ltl;
 
 public class Exists extends Quantifier
 {
-	public static final String SYMBOL = "\u2203";
-	
-	public Exists()
-	{
-		super();
-		m_symbol = SYMBOL;
-	}
+  public static final String SYMBOL = "\u2203";
 
-	@Override
-	public void accept(OperatorVisitor v)
-	{
-      super.accept(v);
-      v.visit(this);
-	}
+  public Exists()
+  {
+    super();
+    m_symbol = SYMBOL;
+  }
+
+  @Override
+  public void accept(OperatorVisitor v)
+  {
+    super.accept(v);
+    v.visit(this);
+  }
 
 }

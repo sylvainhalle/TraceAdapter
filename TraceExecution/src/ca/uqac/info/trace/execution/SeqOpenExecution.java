@@ -32,8 +32,9 @@ public class SeqOpenExecution extends Execution
   protected String[] getCommandLines()
   {
     String[] cl = new String[1];
-    StringBuilder out = new StringBuilder();
-    /*out.append(m_commandLocation)
+    /*
+     StringBuilder out = new StringBuilder();
+     out.append(m_commandLocation)
     .append(" ").append(conditionalQuote(m_trace));
     out.append("/usr/bin/java ")
     	.append("-classpath ")

@@ -18,33 +18,9 @@
  ******************************************************************************/
 package ca.uqac.info.trace.conversion;
 
-import java.text.SimpleDateFormat;
-import java.util.AbstractSet;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
-import ca.uqac.info.ltl.Atom;
-import ca.uqac.info.ltl.Constant;
-import ca.uqac.info.ltl.Exists;
-import ca.uqac.info.ltl.ForAll;
-import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.ltl.OperatorAnd;
-import ca.uqac.info.ltl.OperatorEquals;
-import ca.uqac.info.ltl.OperatorEquiv;
-import ca.uqac.info.ltl.OperatorF;
-import ca.uqac.info.ltl.OperatorFalse;
-import ca.uqac.info.ltl.OperatorG;
-import ca.uqac.info.ltl.OperatorImplies;
-import ca.uqac.info.ltl.OperatorNot;
-import ca.uqac.info.ltl.OperatorOr;
-import ca.uqac.info.ltl.OperatorTrue;
-import ca.uqac.info.ltl.OperatorU;
-import ca.uqac.info.ltl.OperatorVisitor;
-import ca.uqac.info.ltl.OperatorX;
-import ca.uqac.info.ltl.XPathAtom;
+import ca.uqac.info.ltl.*;
 import ca.uqac.info.trace.Event;
 import ca.uqac.info.trace.EventTrace;
 import ca.uqac.info.util.Relation;
@@ -62,8 +38,7 @@ public class JavaMOPTranslator extends Translator {
     StringBuffer out_header = new StringBuffer();
     StringBuffer out = new StringBuffer();
     String CRLF = System.getProperty("line.separator");
-    Relation<String,String> domains = m_trace.getParameterDomain();
-    Set<String> params = domains.keySet();
+    //Relation<String,String> domains = m_trace.getParameterDomain();
     //methods = (AbstractSet<String>) domains.keySet();
     //methods.clear();
 
@@ -140,8 +115,8 @@ public class JavaMOPTranslator extends Translator {
   public String translateFormula()
   {
 	String CRLF = System.getProperty("line.separator");
-	Date now = new Date();
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	//Date now = new Date();
+	//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 	StringBuffer out = new StringBuffer();
 	//out.append("// *************").append(CRLF)
 	//	.append("// * Automatically generated JavaMop File").append(CRLF)
@@ -324,26 +299,24 @@ public class JavaMOPTranslator extends Translator {
 		
     public void visit(Exists o)
     {
-    	//System.err.println("Unexpected behaviour, Exists can not be used with JavaMop"); 
-      StringBuffer operand = m_pieces.pop();
-      StringBuffer variable = m_pieces.pop();
-      StringBuffer var = m_pieces.pop();
+      // Not supposed to happen!
+      // System.err.println("Unexpected behaviour, Exists can not be used with JavaMop");
+      /*StringBuffer operand = */ m_pieces.pop();
+      /*StringBuffer variable = */ m_pieces.pop();
+      /*StringBuffer var = */ m_pieces.pop();
       StringBuffer out = new StringBuffer();
-      //out.append("exists [ ").append(var).append(": ").append(variable)
-      //  .append(" | ").append("").append(operand).append("").append(" ]");
       m_pieces.push(out);
     }
 
     @Override
     public void visit(ForAll o)
     {
-    	//System.err.println("Unexpected behaviour, ForAll can not be used with JavaMop");
-      StringBuffer operand = m_pieces.pop();
-      StringBuffer variable = m_pieces.pop();
-      StringBuffer var = m_pieces.pop();
+      // Not supposed to happen!
+      // System.err.println("Unexpected behaviour, Exists can not be used with JavaMop");
+      /*StringBuffer operand = */ m_pieces.pop();
+      /*StringBuffer variable = */ m_pieces.pop();
+      /*StringBuffer var = */ m_pieces.pop();
       StringBuffer out = new StringBuffer();
-      //out.append("forall [ ").append(var).append(": ").append(variable)
-      //  .append(" | ").append("").append(operand).append("").append(" ]");
       m_pieces.push(out);
     }
 

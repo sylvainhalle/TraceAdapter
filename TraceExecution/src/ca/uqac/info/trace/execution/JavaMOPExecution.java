@@ -36,32 +36,32 @@ public class JavaMOPExecution extends Execution
     /*out.append(m_commandLocation)
     .append(" ").append(conditionalQuote(m_trace));*/
     out.append("/usr/bin/java ")
-    	.append("-classpath ")
-    		.append("/usr/local/lib/LTLChecker.jar:")
-    		.append("/usr/local/lib/OpenXES.jar:")
-    		.append("/usr/local/lib/ProM62.jar:")
-    		.append("/usr/local/lib/Spex.jar:")
-    		.append("./PromCliLTLChecker.jar")
-    		.append(" ")
-    	.append("MainChecker ")
-    		.append(m_property).append(" ")
-    		.append(m_trace).append(" ")
-    		.append("current_formula"); 
+    .append("-classpath ")
+    .append("/usr/local/lib/LTLChecker.jar:")
+    .append("/usr/local/lib/OpenXES.jar:")
+    .append("/usr/local/lib/ProM62.jar:")
+    .append("/usr/local/lib/Spex.jar:")
+    .append("./PromCliLTLChecker.jar")
+    .append(" ")
+    .append("MainChecker ")
+    .append(m_property).append(" ")
+    .append(m_trace).append(" ")
+    .append("current_formula"); 
 
     cl[0] = out.toString();
-    
+
     out.append("/usr/bin/java ")
-	.append("-classpath ")
-		.append("/usr/local/lib/LTLChecker.jar:")
-		.append("/usr/local/lib/OpenXES.jar:")
-		.append("/usr/local/lib/ProM62.jar:")
-		.append("/usr/local/lib/Spex.jar:")
-		.append("./PromCliLTLChecker.jar")
-		.append(" ")
-	.append("MainChecker ")
-		.append(m_property).append(" ")
-		.append(m_trace).append(" ")
-		.append("current_formula"); 
+    .append("-classpath ")
+    .append("/usr/local/lib/LTLChecker.jar:")
+    .append("/usr/local/lib/OpenXES.jar:")
+    .append("/usr/local/lib/ProM62.jar:")
+    .append("/usr/local/lib/Spex.jar:")
+    .append("./PromCliLTLChecker.jar")
+    .append(" ")
+    .append("MainChecker ")
+    .append(m_property).append(" ")
+    .append(m_trace).append(" ")
+    .append("current_formula"); 
 
     cl[0] = out.toString();
     return cl;
@@ -70,7 +70,7 @@ public class JavaMOPExecution extends Execution
   @Override
   /* package */ ReturnVerdict parseReturnString(String strValue)
   {
-	ReturnVerdict val = ReturnVerdict.INCONCLUSIVE;
+    ReturnVerdict val = ReturnVerdict.INCONCLUSIVE;
     String[] lines = strValue.split(CRLF);
     for (String line : lines)
     {
@@ -101,16 +101,16 @@ public class JavaMOPExecution extends Execution
   {
     return null;
   }
-  
+
   @Override
   public String getTraceExtension()
   {
     return "java";
   }
-  
+
   @Override
   public String getFormulaExtension()
   {
-	    return "mop";
-	  }
+    return "mop";
+  }
 }
