@@ -41,22 +41,9 @@ import org.w3c.dom.*;
  */
 public class AmazonEcsGenerator extends TraceGenerator
 {
-
-	/**
-	 * The seed used to initialize the generator
-	 */
-	protected long m_seed = 0;
-
-	/**
-	 * The random number generator
-	 */
-	protected Random m_random;
-
 	/**
 	 * Intervals for all the aforementioned parameters
 	 */
-	protected int m_minMessages = 1;
-	protected int m_maxMessages = 10;
 	protected int m_maxCartSize = 10;
 	protected int m_catalogSize = 10;
 	protected int m_maxCarts = 1;
@@ -73,11 +60,6 @@ public class AmazonEcsGenerator extends TraceGenerator
 	 * about that)
 	 */
 	protected static final int MAX_QTY = 10;
-
-	/**
-	 * Whether to use the system clock as the seed
-	 */
-	protected boolean m_clockAsSeed = false;
 	
 	/**
 	 * Actions one can take on the cart
@@ -92,7 +74,10 @@ public class AmazonEcsGenerator extends TraceGenerator
 	 */
 	public AmazonEcsGenerator()
 	{
-		m_random = new Random();
+	  m_seed = 0;
+	  m_random = new Random(m_seed);
+	  m_minMessages = 1;
+	  m_maxMessages = 10;
 	}
 
 	/**

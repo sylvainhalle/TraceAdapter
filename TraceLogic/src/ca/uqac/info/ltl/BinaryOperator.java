@@ -83,7 +83,7 @@ public abstract class BinaryOperator extends Operator
 		return m_left.hashCode() + m_right.hashCode();
 	}
 	
-	public boolean equals(BinaryOperator o)
+	protected boolean equals(BinaryOperator o)
 	{
 		if (m_left.equals(o.m_left) && m_right.equals(o.m_right))
 			return true;

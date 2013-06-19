@@ -43,17 +43,10 @@ import ca.uqac.info.trace.EventTrace;
  *
  */
 public class RandomTraceGenerator extends TraceGenerator
-{
-  /**
-   * The seed used to initialize the generator
-   */
-  protected long m_seed = 0;
-    
+{    
   /**
    * Intervals for all the aforementioned parameters
    */
-  protected int m_minMessages = 1;
-  protected int m_maxMessages = 10;
   protected int m_minArity = 1;
   protected int m_maxArity = 5;
   protected int m_numParameters = 5;
@@ -95,6 +88,8 @@ public class RandomTraceGenerator extends TraceGenerator
   public RandomTraceGenerator()
   {
     m_random = new Random();
+    m_minMessages = 1;
+    m_maxMessages = 10;
   }
   
   /**

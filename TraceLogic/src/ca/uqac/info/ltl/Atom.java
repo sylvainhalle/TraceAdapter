@@ -56,6 +56,8 @@ public class Atom extends Operator
 	@Override
 	public boolean equals(Object o)
 	{
+	  if (o == null)
+	    return false;
 		if (o.getClass() != this.getClass())
 			return false;
 		return equals((Atom) o);

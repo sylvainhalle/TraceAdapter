@@ -26,24 +26,7 @@ public class CycleGenerator extends TraceGenerator{
 	protected Vector<String > vectContenu ;
 	protected Vector<Integer>vectTags = new Vector<Integer>();
 	
-	
-	
-	protected int m_minMessages ;
-	protected int m_maxMessages  ;
-	
 	protected int t_maxTags ;
-	
-	/**
-	 * Whether to use the system clock as the seed
-	 */
-	protected boolean m_clockAsSeed = false;
-
-	
-	/**
-	 * The random number generator
-	 */
-	protected Random m_random;
-
 	
 	/**
 	 * Creates a trace generator with default settings
@@ -231,7 +214,7 @@ public class CycleGenerator extends TraceGenerator{
 	
 	public int getErrorRead( int nbError, int nbElement)
 	{
-		int mistake = (nbElement * nbError)/100;
+		double mistake = (nbElement * nbError)/100;
 	    int resultat = (int) Math.ceil(nbElement- mistake);
 	    
 		return resultat;
