@@ -1,5 +1,5 @@
 /******************************************************************************
-  Event trace translator
+  Execution of trace validation tools
   Copyright (C) 2012 Sylvain Halle
 
   This program is free software; you can redistribute it and/or modify
@@ -16,59 +16,57 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ******************************************************************************/
-package ca.uqac.info.trace.conversion;
+package ca.uqac.info.trace.execution;
 
-import ca.uqac.info.ltl.Operator;
-import ca.uqac.info.trace.EventTrace;
-
-public class NewBeepBeepTranslator extends Translator
+public class Ltlfo2monExecution extends Execution
 {
+  private final String m_jarLocation = "/usr/local/lib/ltlfo2mon.jar";
+
   @Override
-  public String translateTrace()
+  public boolean isReady()
   {
-    return m_trace.toString();
+    return !m_trace.isEmpty() && !m_property.isEmpty();
   }
 
   @Override
-  public String translateFormula()
+  protected String[] getCommandLines()
   {
-    return m_formula.toString();
+    String[] s = new String[1];
+    StringBuilder out = new StringBuilder();
+    out.append("java -jar ").append(m_jarLocation)
+    .append(" \"$(cat ").append(m_property).append(")\" \"$(cat ").append(m_trace).append(")\"");
+    s[0] = out.toString();
+    return s;
   }
 
   @Override
-  public boolean requiresFlat()
+  protected String getStdin()
   {
-    return false;
+    return null;
   }
 
   @Override
-  public boolean requiresPropositional()
+  public String getTraceExtension()
   {
-    return false;
+    return "trace";
   }
 
   @Override
-  public boolean requiresAtomic()
+  public String getFormulaExtension()
   {
-    return false;
+    return "ltlfo";
   }
 
   @Override
-  public String getSignature()
+  ReturnVerdict parseReturnString(String strValue)
   {
-    return "";
-  }
-
-  @Override
-  public String translateTrace(EventTrace t)
-  {
-    return t.toString();
-  }
-
-  @Override
-  public String translateFormula(Operator o)
-  {
-    return o.toString();
+    if (strValue.contains("⊥"))
+      return ReturnVerdict.FALSE;
+    if (strValue.contains("⊤"))
+      return ReturnVerdict.TRUE;
+    if (strValue.contains("?"))
+      return ReturnVerdict.INCONCLUSIVE;
+    return ReturnVerdict.ERROR;
   }
 
 }

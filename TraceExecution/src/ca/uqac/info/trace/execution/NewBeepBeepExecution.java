@@ -32,7 +32,7 @@ public class NewBeepBeepExecution extends BeepBeepExecution
     String[] cl = new String[1];
     StringBuilder out = new StringBuilder();
     out.append("java -jar ").append(m_jarLocation)
-    .append(" --verbosity 0 --stats -t ").append(conditionalQuote(m_trace)).append(" ").append(conditionalQuote(m_property));
+    .append(" --verbosity 1 --stats -t ").append(conditionalQuote(m_trace)).append(" ").append(conditionalQuote(m_property));
     cl[0] = out.toString();
     return cl;
   }
